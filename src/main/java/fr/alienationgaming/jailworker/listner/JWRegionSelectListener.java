@@ -3,10 +3,11 @@ package fr.alienationgaming.jailworker.listner;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
+
 import fr.alienationgaming.jailworker.JailWorker;
 import fr.alienationgaming.jailworker.Utils;
 
@@ -16,14 +17,17 @@ public class JWRegionSelectListener implements Listener {
     Utils utils = new Utils(plugin);
     Player user;
 
-    public JWRegionSelectListener(JailWorker jailworker, Player _user) {
-        plugin = jailworker;
+    public JWRegionSelectListener(JailWorker jailworker, Player user) {
+        this.plugin = jailworker;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        user = _user;
+        this.user = user;
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getHand() == EquipmentSlot.OFF_HAND) {
+            return;
+        }
 
         Player player = event.getPlayer();
         if (event.getClickedBlock() != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
