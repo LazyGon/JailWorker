@@ -23,7 +23,6 @@ public class JailPlayer implements CommandExecutor {
         plugin = jailworker;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length < 2)

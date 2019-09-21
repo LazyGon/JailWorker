@@ -1,10 +1,10 @@
 package fr.alienationgaming.jailworker;
 
-public class GetConfigValues {
+public class Config {
 
     JailWorker plugin;
 
-    public GetConfigValues(JailWorker jailworker) {
+    public Config(JailWorker jailworker) {
         plugin = jailworker;
     }
 

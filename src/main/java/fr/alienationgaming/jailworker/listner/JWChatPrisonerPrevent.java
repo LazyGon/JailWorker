@@ -9,7 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import fr.alienationgaming.jailworker.GetConfigValues;
+import fr.alienationgaming.jailworker.Config;
 import fr.alienationgaming.jailworker.JailWorker;
 
 public class JWChatPrisonerPrevent implements Listener {
@@ -20,19 +20,18 @@ public class JWChatPrisonerPrevent implements Listener {
         plugin = jailworker;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerCommand(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        GetConfigValues gcv = new GetConfigValues(plugin);
-        if (!gcv.prisonersSpeak()) {
+        Config config = new Config(plugin);
+        if (!config.prisonersSpeak()) {
             if (plugin.getJailConfig().contains("Prisoners." + player.getName())) {
                 event.setCancelled(true);
                 player.sendMessage(plugin.toLanguage("info-listener-justwork"));
             }
         }
 
-        if (!gcv.prisonersEar()) {
+        if (!config.prisonersEar()) {
             Set<String> s = plugin.getJailConfig().getConfigurationSection("Prisoners").getKeys(false);
             Iterator<String> it = s.iterator();
             while (it.hasNext()) {

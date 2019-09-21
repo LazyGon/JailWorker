@@ -25,7 +25,6 @@ public class JWSelectPrisonerSpawn implements Listener {
         user = _user;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -36,8 +35,7 @@ public class JWSelectPrisonerSpawn implements Listener {
             event.setCancelled(true);
             plugin.JailPrisonerSpawn.put(player, new Location(block.getWorld(), block.getX(), block.getY() + 1, block.getZ()));
             player.sendMessage(plugin.toLanguage("info-listener-spawnset"));
-            block.setType(Material.WOOL);
-            block.setData((byte) 14);
+            block.setType(Material.RED_WOOL);
             player.sendMessage(plugin.toLanguage("info-listener-allok"));
         }
         PlayerInteractEvent.getHandlerList().unregister(this);

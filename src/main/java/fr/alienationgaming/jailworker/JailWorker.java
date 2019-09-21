@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.milkbowl.vault.permission.Permission;
 
@@ -96,7 +95,7 @@ public class JailWorker extends JavaPlugin {
     public UpdateFiles uf = new UpdateFiles(this);
     private Map<String, Object> lang = new HashMap<String, Object>();
     /* Other*/
-    public GetConfigValues getdefaultvalues = new GetConfigValues(this);
+    public Config getdefaultvalues = new Config(this);
     public JWPlayerInteract interactWithPlayer = new JWPlayerInteract(this);
     public Utils utils = new Utils(this);
     public JWInventorySaver iv = new JWInventorySaver(this);
@@ -254,7 +253,6 @@ public class JailWorker extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        Logger.getLogger("Minecraft");
         setupPermissions();
         boolean worldEditFound = setupWorldEdit();
         if (worldEditFound == false)

@@ -16,7 +16,6 @@ public class Free implements CommandExecutor {
         plugin = jailworker;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         Player target = null;

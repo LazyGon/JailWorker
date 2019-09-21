@@ -22,7 +22,6 @@ public class Clean implements CommandExecutor {
         plugin = jailWorker;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (args.length == 0)
@@ -39,10 +38,10 @@ public class Clean implements CommandExecutor {
             World world = plugin.getServer().getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
             Location Blk1 = new Location(world, vec1.getX(), vec1.getY(), vec1.getZ());
             Location Blk2 = new Location(world, vec2.getX(), vec2.getY(), vec2.getZ());
-            Material mat = Material.getMaterial(plugin.getJailConfig().getString("Jails." + jailName + ".Type").toUpperCase());
-            int var = utils.DelBlocksInRegion(mat.getId(), Blk1, Blk2);
-            if (mat.getId() == 3)
-                var += utils.DelBlocksInRegion(mat.getId() - 1, Blk1, Blk2);
+            Material material = Material.getMaterial(plugin.getJailConfig().getString("Jails." + jailName + ".Type").toUpperCase());
+            int var = utils.removeBlockInRegion(material, Blk1, Blk2);
+            if (material == Material.DIRT)
+                var += utils.removeBlockInRegion(Material.GRASS_BLOCK, Blk1, Blk2);
             sender.sendMessage(plugin.toLanguage("info-command-blocksdeleted", var));
         } else if (!plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(((Player) sender).getName())) {
             sender.sendMessage(plugin.toLanguage("error-command-notowner"));

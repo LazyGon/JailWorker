@@ -18,7 +18,6 @@ public class Give implements CommandExecutor {
         plugin = jailworker;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         Player target = null;
@@ -30,7 +29,7 @@ public class Give implements CommandExecutor {
                 return false;
             target = plugin.getServer().getPlayer(args[0]);
             try {
-                item = Material.getMaterial(Integer.parseInt(args[1]));
+                item = Material.valueOf(args[1].toUpperCase());
             } catch (Exception e) {
                 sender.sendMessage(plugin.toLanguage("info-command-materialidlink"));
                 return false;

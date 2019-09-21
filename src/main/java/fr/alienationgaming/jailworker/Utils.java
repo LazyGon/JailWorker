@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -45,60 +46,58 @@ public class Utils {
         player.sendMessage(ChatColor.BLUE + "z :" + ChatColor.RESET + block.getZ());
     }
 
-    @SuppressWarnings("deprecation")
-    public int getNbrBlockInRegion(int BlockId, Location loc1, Location loc2) {
-        int res = 0;
+    public int countBlockInRegion(Material blockMaterial, Location loc1, Location loc2) {
+        int result = 0;
         int x = Math.min(loc1.getBlockX(), loc2.getBlockX());
         int y = Math.min(loc1.getBlockY(), loc2.getBlockY()) - 1;
         int z = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
-        Location tmpLoc = new Location(loc1.getWorld(), x, y, z);
+        Location tempLocation = new Location(loc1.getWorld(), x, y, z);
 
         while (z < Math.max(loc1.getBlockZ(), loc2.getBlockZ())) {
             y = Math.min(loc1.getBlockY(), loc2.getBlockY()) - 1;
             while (y < Math.max(loc1.getBlockY(), loc2.getBlockY())) {
                 x = Math.min(loc1.getBlockX(), loc2.getBlockX());
                 while (x < Math.max(loc1.getX(), loc2.getX())) {
-                    tmpLoc.setX(x);
-                    if (tmpLoc.getBlock().getTypeId() == BlockId || (BlockId == -1 && tmpLoc.getBlock().getTypeId() != 0)) {
-                        res++;
+                    tempLocation.setX(x);
+                    if (tempLocation.getBlock().getType() == blockMaterial || tempLocation.getBlock().getType() != Material.AIR) {
+                        result++;
                     }
                     x++;
                 }
                 y++;
-                tmpLoc.setY(y);
+                tempLocation.setY(y);
             }
             z++;
-            tmpLoc.setZ(z);
+            tempLocation.setZ(z);
         }
-        return (res);
+        return result;
     }
 
-    @SuppressWarnings("deprecation")
-    public int DelBlocksInRegion(int BlockId, Location loc1, Location loc2) {
-        int res = 0;
+    public int removeBlockInRegion(Material blockMaterial, Location loc1, Location loc2) {
+        int result = 0;
         int x = (int) Math.min(loc1.getX(), loc2.getX());
         int y = (int) (Math.min(loc1.getY(), loc2.getY()) - 1);
         int z = (int) Math.min(loc1.getZ(), loc2.getZ());
-        Location tmpLoc = new Location(loc1.getWorld(), x, y, z);
+        Location tempLocation = new Location(loc1.getWorld(), x, y, z);
 
         while (z <= Math.max(loc1.getZ(), loc2.getZ())) {
             y = (int) (Math.min(loc1.getY(), loc2.getY()) - 1);
             while (y <= Math.max(loc1.getY(), loc2.getY())) {
                 x = (int) Math.min(loc1.getX(), loc2.getX());
                 while (x <= Math.max(loc1.getX(), loc2.getX())) {
-                    tmpLoc.setX(x);
-                    if (tmpLoc.getBlock().getTypeId() == BlockId) {
-                        tmpLoc.getBlock().setTypeId(0);
-                        res++;
+                    tempLocation.setX(x);
+                    if (tempLocation.getBlock().getType() == blockMaterial) {
+                        tempLocation.getBlock().setType(Material.AIR);
+                        result++;
                     }
                     x++;
                 }
                 y++;
-                tmpLoc.setY(y);
+                tempLocation.setY(y);
             }
             z++;
-            tmpLoc.setZ(z);
+            tempLocation.setZ(z);
         }
-        return (res);
+        return result;
     }
 }

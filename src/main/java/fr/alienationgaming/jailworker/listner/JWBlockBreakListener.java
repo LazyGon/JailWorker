@@ -25,7 +25,6 @@ public class JWBlockBreakListener implements Listener {
         plugin = jailworker;
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
@@ -50,10 +49,10 @@ public class JWBlockBreakListener implements Listener {
         if (plugin.getJailConfig().contains("Prisoners." + player.getName()) || plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(player.getName())) {
             if (plugin.getJailConfig().contains("Prisoners." + player.getName())) {
                 Material type = Material.getMaterial(plugin.getJailConfig().getString("Jails." + jailName + ".Type"));
-                if (event.getBlock().getTypeId() == 2)
-                    event.getBlock().setTypeId(3);
+                if (event.getBlock().getType() == Material.GRASS_BLOCK)
+                    event.getBlock().setType(Material.DIRT);
                 if (event.getBlock().getType() == type) {
-                    event.getBlock().setTypeId(0);
+                    event.getBlock().setType(Material.AIR);
                     int remain = plugin.getJailConfig().getInt("Prisoners." + player.getName() + ".RemainingBlocks") - 1;
                     if (remain > 0) {
                         plugin.getJailConfig().set("Prisoners." + player.getName() + ".RemainingBlocks", remain);
