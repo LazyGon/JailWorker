@@ -6,8 +6,13 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
-*.war
-*.ear
+target/
 
 hs_err_pid*
+
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
