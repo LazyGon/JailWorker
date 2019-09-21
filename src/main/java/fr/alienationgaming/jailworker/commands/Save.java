@@ -138,6 +138,10 @@ public class Save implements CommandExecutor {
     private Region getWorldEditSelection(Player player) {
         if (plugin.worldEdit != null) {
             LocalSession playerSession = plugin.worldEdit.getSession(player);
+            if (playerSession.getSelectionWorld() == null) {
+                return null;
+            }
+
             try {
                 return playerSession.getSelection(playerSession.getSelectionWorld());
             } catch (IncompleteRegionException e) {
