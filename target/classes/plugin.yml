@@ -3,152 +3,152 @@ main: fr.alienationgaming.jailworker.JailWorker
 version: 2.0.0
 depends: [Vault]
 commands:
-   jw-player:
-      description: send player to prison.
-      aliases: jail-player
-      usage: /jw-player <player> <JailName> [nbr_block_to_break] [reason]
-      permission: jailworker.jw-player
-      permission-message: You don't have permission!
-   jw-free:
-      description: let player out of jail.
-      aliases: jail-free
-      usage: /jw-free <player> [reason]
-      permission: jailworker.jw-free
-      permission-message: You don't have permission!
-   jw-setjail:
-      description: set jail region.
-      usage: /jw-setjail
-      aliases: [jail-set, jw-create, jail-create]
-      permission: jailworker.jw-create
-      permission-message: You don't have permission!
-   jw-start:
-      description: start jail system.
-      usage: /jw-start <JailName>
-      aliases: jail-start
-      permission: jailworker.jw-start
-      permission-message: You don't have permission!
-   jw-stop:
-      description: stop jail system.
-      aliases: jail-stop
-      usage: /jw-stop <JailName>
-      permission: jailworker.jw-stop
-      permission-message: You don't have permission!
-   jw-setspawn:
-      description: set the prisoner spawn on jail.
-      aliases: jail-setspawn
-      usage: /jw-setspawn
-      permission: jailworker.jw-create
-      permission-message: You don't have permission!
-   jw-clean:
-      description: delete all sand blocks on jail.
-      aliases: jail-clean
-      usage: /jw-clean
-      permission: jailworker.jw-clean
-      permission-message: You don't have permission!
-   jw-save:
-      description: save the jail.
-      aliases: jail-save
-      usage: /jw-save <name>
-      permission: jailworker.jw-create
-      permission-message: You don't have permission!
-   jw-config:
-      description: let you to config your jail.
-      aliases: jail-config 
-      usage: /jw-config <Jailname>
-      permission: jailworker.jw-config
-      permission-message: You don't have permission!
-   jw-list:
-      description: show jails list
-      aliases: [jails, jail-list] 
-      usage: /jw-list
-      permission: jailworker.jw-list
-      permission-message: You don't have permission!
-   jw-delete:
-      description: delete the jail.
-      aliases: [jw-del, jw-remove, jw-rm, jail-delete, jail-del, jail-rm, jail-remove]
-      usage: /jw-delete <Jailname>
-      permission: jailworker.jw-delete
-      permission-message: You don't have permission!
-   jw-restart:
-      description: restart a jail (simple stop and start for lazy).
-      aliases: jail-restart
-      usage: /jw-restart <Jailname>
-      permission: jailworker.jw-restart
-      permission-message: You don't have permission!
-   jw-info:
-      description: get info about a jail.
-      aliases: jail-info
-      usage: /jw-info <Jailname>
-      permission: jailworker.jw-info
-      permission-message: You don't have permission!
-   jw-goto:
-      description: teleport to the jail. Usefull when it's far.
-      aliases: jail-goto
-      usage: /jw-goto <Jailname>
-      permission: jailworker.jw-goto
-      permission-message: You don't have permission!
-   jw-give:
-      description: give an item to the prisoner.
-      aliases: jail-give
-      usage: /jw-give <player> <item ID>
-      permission: jailworker.jw-give
-      permission-message: You don't have permission!
-   jw-whitecmd:
-      description: add or delete command from whitelisted-commands (allowed commands for prisoners)
-      aliases: jail-whitecmd
-      usage: /jw-whitecmd <add/del/list> <cmd> [cmd2] [cmdx]
-      permission: jailworker.jw-whitecmd
-      permission-message: You don't have permission!
-   jw-reload:
-      description: reload all configuration files
-      aliases: jail-reload
-      usage: /jw-reload
-      permission: jailworker.jw-reload
-      permission-message: You don't have permission!
-   jw-increase:
-      description: increase a player punishment of <nbr> blocks
-      aliases: jail-increase
-      usage: /jw-increase <player> <nbr> [reason]
-      permission: jailworker.jw-increase
-      permission-message: You don't have permission!
-   jw-manageowners:
-      description: add, remove or list jail owners
-      aliases: [jw-owners, jail-manageusers, jail-owners]
-      usage: /jw-manageowners <add/remove/list> <jail_name> <username1> [username2] [usernameX]
-      permission: jailworker.jw-manageowners
-      permission-message: You don't have permission!
-      
+  jw-player:
+    description: send player to prison.
+    aliases: jail-player
+    usage: /jw-player <player> <JailName> [nbr_block_to_break] [reason]
+    permission: jailworker.jw-player
+    permission-message: You don't have permission!
+  jw-free:
+    description: let player out of jail.
+    aliases: jail-free
+    usage: /jw-free <player> [reason]
+    permission: jailworker.jw-free
+    permission-message: You don't have permission!
+  jw-setjail:
+    description: set jail region.
+    usage: /jw-setjail
+    aliases: [jail-set, jw-create, jail-create]
+    permission: jailworker.jw-create
+    permission-message: You don't have permission!
+  jw-start:
+    description: start jail system.
+    usage: /jw-start <JailName>
+    aliases: jail-start
+    permission: jailworker.jw-start
+    permission-message: You don't have permission!
+  jw-stop:
+    description: stop jail system.
+    aliases: jail-stop
+    usage: /jw-stop <JailName>
+    permission: jailworker.jw-stop
+    permission-message: You don't have permission!
+  jw-setspawn:
+    description: set the prisoner spawn on jail.
+    aliases: jail-setspawn
+    usage: /jw-setspawn
+    permission: jailworker.jw-create
+    permission-message: You don't have permission!
+  jw-clean:
+    description: delete all sand blocks on jail.
+    aliases: jail-clean
+    usage: /jw-clean
+    permission: jailworker.jw-clean
+    permission-message: You don't have permission!
+  jw-save:
+    description: save the jail.
+    aliases: jail-save
+    usage: /jw-save <name>
+    permission: jailworker.jw-create
+    permission-message: You don't have permission!
+  jw-config:
+    description: let you to config your jail.
+    aliases: jail-config
+    usage: /jw-config <Jailname>
+    permission: jailworker.jw-config
+    permission-message: You don't have permission!
+  jw-list:
+    description: show jails list
+    aliases: [jails, jail-list]
+    usage: /jw-list
+    permission: jailworker.jw-list
+    permission-message: You don't have permission!
+  jw-delete:
+    description: delete the jail.
+    aliases: [jw-del, jw-remove, jw-rm, jail-delete, jail-del, jail-rm, jail-remove]
+    usage: /jw-delete <Jailname>
+    permission: jailworker.jw-delete
+    permission-message: You don't have permission!
+  jw-restart:
+    description: restart a jail (simple stop and start for lazy).
+    aliases: jail-restart
+    usage: /jw-restart <Jailname>
+    permission: jailworker.jw-restart
+    permission-message: You don't have permission!
+  jw-info:
+    description: get info about a jail.
+    aliases: jail-info
+    usage: /jw-info <Jailname>
+    permission: jailworker.jw-info
+    permission-message: You don't have permission!
+  jw-goto:
+    description: teleport to the jail. Usefull when it's far.
+    aliases: jail-goto
+    usage: /jw-goto <Jailname>
+    permission: jailworker.jw-goto
+    permission-message: You don't have permission!
+  jw-give:
+    description: give an item to the prisoner.
+    aliases: jail-give
+    usage: /jw-give <player> <item ID>
+    permission: jailworker.jw-give
+    permission-message: You don't have permission!
+  jw-whitecmd:
+    description: add or delete command from whitelisted-commands (allowed commands for prisoners)
+    aliases: jail-whitecmd
+    usage: /jw-whitecmd <add/del/list> <cmd> [cmd2] [cmdx]
+    permission: jailworker.jw-whitecmd
+    permission-message: You don't have permission!
+  jw-reload:
+    description: reload all configuration files
+    aliases: jail-reload
+    usage: /jw-reload
+    permission: jailworker.jw-reload
+    permission-message: You don't have permission!
+  jw-increase:
+    description: increase a player punishment of <nbr> blocks
+    aliases: jail-increase
+    usage: /jw-increase <player> <nbr> [reason]
+    permission: jailworker.jw-increase
+    permission-message: You don't have permission!
+  jw-manageowners:
+    description: add, remove or list jail owners
+    aliases: [jw-owners, jail-manageusers, jail-owners]
+    usage: /jw-manageowners <add/remove/list> <jail_name> <username1> [username2] [usernameX]
+    permission: jailworker.jw-manageowners
+    permission-message: You don't have permission!
+
 permissions:
-   jailworker.*:
-      description: Gives access to all jailworker commands
-      children:
-         jailworker.jw-player: true
-         jailworker.jw-free: true
-         jailworker.jw-create: true
-         jailworker.jw-start: true
-         jailworker.jw-stop: true
-         jailworker.jw-clean: true
-         jailworker.jw-config: true
-         jailworker.jw-list: true
-         jailworker.jw-delete: true
-         jailworker.jw-restart: true
-         jailworker.jw-info: true
-         jailworker.jw-goto: true
-         jailworker.jw-give: true
-         jailworker.jw-whitecmd: true
-         jailworker.jw-reload: true
-         jailworker.jw-increase: true
-         jailworker.jw-manageowners: true
-         jailworker.jw-admin: true
-      default: op
-   jailworker.modo:
-      description: Give access to utils commands for moderators
-      children:
-         jailworker.jw-player: true
-         jailworker.jw-free: true
-         jailworker.jw-clean: true
-         jailworker.jw-list: true
-         jailworker.jw-info: true
-         jailworler.jw-goto: true
-         jailworker.jw-give: true
-         jailworker.jw-increase : true
+  jailworker.*:
+    description: Gives access to all jailworker commands
+    children:
+      jailworker.jw-player: true
+      jailworker.jw-free: true
+      jailworker.jw-create: true
+      jailworker.jw-start: true
+      jailworker.jw-stop: true
+      jailworker.jw-clean: true
+      jailworker.jw-config: true
+      jailworker.jw-list: true
+      jailworker.jw-delete: true
+      jailworker.jw-restart: true
+      jailworker.jw-info: true
+      jailworker.jw-goto: true
+      jailworker.jw-give: true
+      jailworker.jw-whitecmd: true
+      jailworker.jw-reload: true
+      jailworker.jw-increase: true
+      jailworker.jw-manageowners: true
+      jailworker.jw-admin: true
+    default: op
+  jailworker.modo:
+    description: Give access to utils commands for moderators
+    children:
+      jailworker.jw-player: true
+      jailworker.jw-free: true
+      jailworker.jw-clean: true
+      jailworker.jw-list: true
+      jailworker.jw-info: true
+      jailworler.jw-goto: true
+      jailworker.jw-give: true
+      jailworker.jw-increase: true

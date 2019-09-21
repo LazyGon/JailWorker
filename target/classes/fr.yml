@@ -39,7 +39,7 @@ Messages:
   info-command-jwinfostoped: '$blueEtat: $redA l&apos;arret'
   info-command-jwinfotype: '$blueMateriel: $reset$s'
   info-command-jwinfomaxblk: '$blueCapacite: $reset$s'
-  info-command-jwinfodefaultbreak: '$bluePunition par default: $reset$s' 
+  info-command-jwinfodefaultbreak: '$bluePunition par default: $reset$s'
   info-command-jwinfospeed: '$blueFrequence: $red1 chaque $s seconde'
   info-command-jwinfoworld: '$light_purpleCette prison se situe dans $dark_purple$s'
   info-command-jwinfoprisoners: '$blue-PRISONIERS-'

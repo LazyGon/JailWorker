@@ -13,20 +13,21 @@ import fr.alienationgaming.jailworker.JailWorker;
 
 public class JWPrisonerDieListener implements Listener {
 
-	JailWorker plugin;
-	public JWPrisonerDieListener(JailWorker jailworker){
-		plugin = jailworker;
-	}
-	
-	 	@EventHandler(priority = EventPriority.HIGHEST)
-	    public void onPlayerRespawn(PlayerRespawnEvent event) {
-	        
-		 Player player = event.getPlayer();
-		 if (plugin.getJailConfig().contains("Prisoners." + player.getName())){
-			 String jailName = plugin.getJailConfig().getString("Prisoners." + player.getName() + ".Prison");
-			 Vector spawn = plugin.getJailConfig().getVector("Jails." + jailName + ".Location.PrisonerSpawn");
-			 World world = plugin.getServer().getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
-			 event.setRespawnLocation(new Location(world, spawn.getX(), spawn.getY(), spawn.getZ()));
-			 }
-	 	}
+    JailWorker plugin;
+
+    public JWPrisonerDieListener(JailWorker jailworker) {
+        plugin = jailworker;
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+
+        Player player = event.getPlayer();
+        if (plugin.getJailConfig().contains("Prisoners." + player.getName())) {
+            String jailName = plugin.getJailConfig().getString("Prisoners." + player.getName() + ".Prison");
+            Vector spawn = plugin.getJailConfig().getVector("Jails." + jailName + ".Location.PrisonerSpawn");
+            World world = plugin.getServer().getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
+            event.setRespawnLocation(new Location(world, spawn.getX(), spawn.getY(), spawn.getZ()));
+        }
+    }
 }
