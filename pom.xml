@@ -20,10 +20,10 @@
     </repositories>
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
             <version>1.14.4-R0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
@@ -36,6 +36,11 @@
             <artifactId>worldedit-bukkit</artifactId>
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+	        <groupId>com.github.ucchyocean</groupId>
+	        <artifactId>LunaChat</artifactId>
+	        <version>v2.8.12</version>
+	    </dependency>
     </dependencies>
     <build>
         <resources>
@@ -65,8 +70,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <target>9</target>
-                    <source>9</source>
+                    <target>1.8</target>
+                    <source>1.8</source>
                     <encoding>UTF-8</encoding>
                     <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
