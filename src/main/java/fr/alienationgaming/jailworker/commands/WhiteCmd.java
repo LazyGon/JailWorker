@@ -87,6 +87,7 @@ public class WhiteCmd extends JWSubCommand {
 
     public boolean listAllowedCommands(CommandSender sender, String jail) {
         List<String> commands = plugin.getConfig().getStringList("Plugin.Whitelisted-Commands");
+        // TODO: command list format
         sender.sendMessage(plugin.toLanguage("info-command-jailownerslist", jail, commands));
         return true;
     }
@@ -104,7 +105,12 @@ public class WhiteCmd extends JWSubCommand {
 
     @Override
     String getDescription() {
+        return "add, delete or list allowed commands for prisoners.";
+    }
+
+    @Override
+    String getUsage() {
         // TODO Auto-generated method stub
-        return null;
+        return "/jailworker allowedcommand <add|remove|list> <jail-name> [command1] [command2]";
     }
 }

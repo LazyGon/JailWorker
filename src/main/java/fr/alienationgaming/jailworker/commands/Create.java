@@ -38,13 +38,16 @@ public class Create extends JWSubCommand {
 
     @Override
     String getPermissionNode() {
-        // TODO Auto-generated method stub
-        return null;
+        return "jailworker.create";
     }
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return "jailworker.create";
+        return "set jail region";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker create <jail-name>";
     }
 }

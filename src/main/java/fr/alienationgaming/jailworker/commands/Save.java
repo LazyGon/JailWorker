@@ -28,6 +28,12 @@ public class Save extends JWSubCommand {
             sender.sendMessage("error-command-notconsole");
             return true;
         }
+
+        if (args.length == 1) {
+            // TODO: not enough argument
+            return false;
+        }
+
         final Player player = (Player) sender;
 
         Region worldEditSelection = this.getWorldEditSelection(player);
@@ -49,7 +55,7 @@ public class Save extends JWSubCommand {
             useWorldEditSelection = true;
         }
 
-        String jailName = args[0];
+        String jailName = args[1];
         boolean redefined = false;
         if (Jail.exist(jailName)) {
             redefined = true;
@@ -157,7 +163,11 @@ public class Save extends JWSubCommand {
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "save the jail.";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker save <jail-name>";
     }
 }

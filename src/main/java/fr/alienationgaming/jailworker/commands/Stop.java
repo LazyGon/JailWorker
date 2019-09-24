@@ -61,8 +61,12 @@ public class Stop extends JWSubCommand {
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "stop jail system.";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker stop <jail-name>";
     }
 
 }

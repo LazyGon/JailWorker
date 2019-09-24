@@ -23,7 +23,7 @@ public class JWCommand implements CommandExecutor, TabCompleter {
         STOP(new Stop()),
         CLEAN(new Clean()),
         SAVE(new Save()),
-        CONFIG_COMMAND(new ConfigCmd()),
+        EDIT(new Edit()),
         LIST(new fr.alienationgaming.jailworker.commands.List()),
         DELETE(new Delete()),
         RESTART(new Restart()),
@@ -34,7 +34,7 @@ public class JWCommand implements CommandExecutor, TabCompleter {
         ALLOWED_COMMAND(new WhiteCmd()),
         RELOAD(new Reload()),
         INCREASE(new Increase()),
-        MANAGE_OWNER(new OwnerManager()),
+        MANAGE_OWNER(new Owner()),
         ;
 
         private JWSubCommand subCommand;
@@ -65,7 +65,7 @@ public class JWCommand implements CommandExecutor, TabCompleter {
                 case "save":
                 return SubCommands.SAVE.getInstance();
                 case "edit":
-                return SubCommands.CONFIG_COMMAND.getInstance();
+                return SubCommands.EDIT.getInstance();
                 case "list":
                 return SubCommands.LIST.getInstance();
                 case "delete":

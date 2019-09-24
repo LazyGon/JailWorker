@@ -41,7 +41,11 @@ public class SetSpawn extends JWSubCommand {
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "set the prisoner spawn on jail.";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker setspawn";
     }
 }

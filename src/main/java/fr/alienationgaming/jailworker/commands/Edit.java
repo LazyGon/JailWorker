@@ -7,17 +7,17 @@ import org.bukkit.command.CommandSender;
 import fr.alienationgaming.jailworker.Jail;
 import fr.alienationgaming.jailworker.listner.JWConfigJailListener;
 
-public class ConfigCmd extends JWSubCommand {
+public class Edit extends JWSubCommand {
 
-    ConfigCmd() {
+    Edit() {
     }
 
     @Override
     boolean runCommand(CommandSender sender, String[] args) {
-        if (args.length == 0) {
+        if (args.length == 1) {
             return false;
         }
-        String jailName = args[0];
+        String jailName = args[1];
 
         if (!Jail.exist(jailName)) {
             sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
@@ -28,7 +28,7 @@ public class ConfigCmd extends JWSubCommand {
             return false;
         }
 
-        new JWConfigJailListener(plugin, args[0], sender);
+        new JWConfigJailListener(plugin, jailName, sender);
         sender.sendMessage(plugin.toLanguage("help-command-config-instru1"));
         sender.sendMessage(plugin.toLanguage("help-command-config-example1"));
         return true;
@@ -36,18 +36,22 @@ public class ConfigCmd extends JWSubCommand {
 
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     String getPermissionNode() {
-        return "jailworker.config";
+        return "jailworker.edit";
     }
 
     @Override
     String getDescription() {
+        return "start to edit config of your jail.";
+    }
+
+    @Override
+    String getUsage() {
         // TODO Auto-generated method stub
-        return null;
+        return "/jailworker edit <jail>";
     }
 }

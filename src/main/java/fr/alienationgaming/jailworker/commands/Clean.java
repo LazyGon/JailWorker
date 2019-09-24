@@ -19,7 +19,11 @@ public class Clean extends JWSubCommand {
 
     @Override
     boolean runCommand(CommandSender sender, String[] args) {
-        String jailName = args[0];
+        if (args.length == 1) {
+            return false;
+        }
+
+        String jailName = args[1];
 
         if (!Jail.exist(jailName)) {
             sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
@@ -46,19 +50,21 @@ public class Clean extends JWSubCommand {
 
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     String getPermissionNode() {
-        // TODO Auto-generated method stub
         return "jailworker.clean";
     }
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "delete all sand blocks on jail.";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker clean <jail-name>";
     }
 }

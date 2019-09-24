@@ -62,7 +62,11 @@ public class Start extends JWSubCommand {
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "start jail system.";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker start <jail-name>";
     }
 }

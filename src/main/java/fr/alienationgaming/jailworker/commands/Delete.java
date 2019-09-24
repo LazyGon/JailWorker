@@ -19,8 +19,12 @@ public class Delete extends JWSubCommand {
 
     @Override
     boolean runCommand(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            // TODO: not enough argument message.
+            return false;
+        }
 
-        String jailName = args[0];
+        String jailName = args[1];
 
         if (!Jail.exist(jailName)) {
             sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
@@ -75,7 +79,11 @@ public class Delete extends JWSubCommand {
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "delete the jail.";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker delete <jail-name>";
     }
 }

@@ -46,6 +46,13 @@ public abstract class JWSubCommand {
      */
     abstract String getDescription();
 
+    /**
+     * Gets usage of this subcommand.
+     * 
+     * @return
+     */
+    abstract String getUsage();
+
     protected boolean hasPermission(CommandSender sender) {
         if (sender instanceof ConsoleCommandSender) {
             return true;
@@ -69,7 +76,7 @@ public abstract class JWSubCommand {
      * 
      * @param sender
      * @param jailName
-     * @return Weather sender can use command.
+     * @return True if sender is admin or jail owner otherwise false.
      */
     protected boolean isAdminOrOwner(CommandSender sender, String jailName) {
         // Admin can bypass this check.

@@ -128,7 +128,11 @@ public class Put extends JWSubCommand {
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "send player to prison.";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker put <player> <jail-name> <block-amount-to-get-out> [reason]";
     }
 }

@@ -46,7 +46,11 @@ public class List extends JWSubCommand {
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "show jails list";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker list";
     }
 }

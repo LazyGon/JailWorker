@@ -17,7 +17,7 @@ public class Increase extends JWSubCommand {
     @Override
     boolean runCommand(CommandSender sender, String[] args) {
 
-        if (args.length < 2) {
+        if (args.length < 3) {
             return false;
         }
 
@@ -54,9 +54,9 @@ public class Increase extends JWSubCommand {
         
         target.sendMessage(plugin.toLanguage("info-command-increasement", sender.getName(), add));
 
-        if (args.length > 2) {
+        if (args.length > 3) {
             StringBuilder reasonBuilder = new StringBuilder();
-            for (int i = 2; i < args.length; ++i) {
+            for (int i = 3; i < args.length; ++i) {
                 reasonBuilder.append(args[i]).append(" ");
             }
             String reason = ChatColor.translateAlternateColorCodes('&', reasonBuilder.toString());
@@ -83,8 +83,12 @@ public class Increase extends JWSubCommand {
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "increase a player punishment of <number> blocks";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker increase <player> <number> [reason]";
     }
 
 }

@@ -17,9 +17,9 @@ public class Free extends JWSubCommand {
     @Override
     boolean runCommand(CommandSender sender, String[] args) {
 
-        if (args.length == 2) {
-            sender.sendMessage(plugin.toLanguage("error-command-notenougharguments"));
-            // TODO: new message.
+        if (args.length == 1) {
+            // TODO: not enough arg message.
+            // sender.sendMessage(plugin.toLanguage("error-command-notenougharguments"));
             return false;
         }
 
@@ -66,14 +66,17 @@ public class Free extends JWSubCommand {
 
     @Override
     String getPermissionNode() {
-        // TODO Auto-generated method stub
         return "jailworker.free";
     }
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "let player out of jail.";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker free <player> [reason]";
     }
 
 }

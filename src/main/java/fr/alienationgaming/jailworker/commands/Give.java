@@ -44,14 +44,22 @@ public class Give extends JWSubCommand {
         Material item;
         try {
             item = Material.valueOf(args[2].toUpperCase());
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             sender.sendMessage(plugin.toLanguage("info-command-materialidlink"));
             return false;
         }
 
+        int amount = 1;
+        if (args.length > 3) {
+            try {
+                amount = Integer.parseInt(args[3]);
+            } catch (NumberFormatException ignore) {
+            }
+        }
+
         // TODO: remove "error-command-invalidmaterial"
 
-        target.getInventory().addItem(new ItemStack(item));
+        target.getInventory().addItem(new ItemStack(item, amount));
         target.sendMessage(plugin.toLanguage("info-command-giveitem", sender.getName(), item.toString()));
         sender.sendMessage(plugin.toLanguage("info-command-itemgiven", item.toString()));
 
@@ -71,7 +79,12 @@ public class Give extends JWSubCommand {
 
     @Override
     String getDescription() {
+        return "give an item to the prisoner.";
+    }
+
+    @Override
+    String getUsage() {
         // TODO Auto-generated method stub
-        return null;
+        return "/jailworker give <player> <material-name> [amount]";
     }
 }

@@ -22,7 +22,12 @@ public class Goto extends JWSubCommand {
             return false;
         }
 
-        String jailName = args[0];
+        if (args.length == 1) {
+            // TODO: not enough arg message
+            return false;
+        }
+
+        String jailName = args[1];
 
         if (!Jail.exist(jailName)) {
             sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
@@ -55,13 +60,16 @@ public class Goto extends JWSubCommand {
 
     @Override
     String getPermissionNode() {
-        // TODO Auto-generated method stub
         return "jailworker.goto";
     }
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "teleport to the jail. Usefull when it's far.";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker goto <jail-name>";
     }
 }

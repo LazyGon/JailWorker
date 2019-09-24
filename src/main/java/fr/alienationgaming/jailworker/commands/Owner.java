@@ -8,9 +8,9 @@ import org.bukkit.command.CommandSender;
 
 import fr.alienationgaming.jailworker.Jail;
 
-public class OwnerManager extends JWSubCommand {
+public class Owner extends JWSubCommand {
 
-    OwnerManager() {
+    Owner() {
     }
 
     // jw owner add <jail> <player1> [player2] [player3] ...
@@ -19,6 +19,7 @@ public class OwnerManager extends JWSubCommand {
     @Override
     boolean runCommand(CommandSender sender, String[] args) {
         if (args.length < 3) {
+            //TODO: not enough argument
             return false;
         }
 
@@ -35,6 +36,11 @@ public class OwnerManager extends JWSubCommand {
 
         if (arg.equals("list")) {
             return listOwnersFromJail(sender, jail);
+        }
+
+        if (args.length == 3) {
+            //TODO: not enough argument
+            return false;
         }
 
         List<String> values = new ArrayList<>();
@@ -96,8 +102,12 @@ public class OwnerManager extends JWSubCommand {
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "add, remove or list jail owners";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker owner <add|remove|list> <jail-name> [player1] [player2] ...";
     }
 
 }

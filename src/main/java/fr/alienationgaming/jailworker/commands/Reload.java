@@ -35,7 +35,11 @@ public class Reload extends JWSubCommand {
 
     @Override
     String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "reload all configuration files.";
+    }
+
+    @Override
+    String getUsage() {
+        return "/jailworker reload";
     }
 }
