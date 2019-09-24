@@ -40,12 +40,12 @@ public class Clean extends JWSubCommand {
         Vector vec1 = plugin.getJailConfig().getVector("Jails." + jailName + ".Location.Block1");
         Vector vec2 = plugin.getJailConfig().getVector("Jails." + jailName + ".Location.Block2");
         World world = Bukkit.getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
-        Location Blk1 = new Location(world, vec1.getX(), vec1.getY(), vec1.getZ());
-        Location Blk2 = new Location(world, vec2.getX(), vec2.getY(), vec2.getZ());
+        Location block1 = new Location(world, vec1.getX(), vec1.getY(), vec1.getZ());
+        Location block2 = new Location(world, vec2.getX(), vec2.getY(), vec2.getZ());
         Material material = Material.valueOf(plugin.getJailConfig().getString("Jails." + jailName + ".Type").toUpperCase());
-        int var = Utils.removeBlockInRegion(material, Blk1, Blk2);
+        int var = Utils.removeBlockInRegion(material, block1, block2);
         if (material == Material.DIRT)
-            var += Utils.removeBlockInRegion(Material.GRASS_BLOCK, Blk1, Blk2);
+            var += Utils.removeBlockInRegion(Material.GRASS_BLOCK, block1, block2);
         sender.sendMessage(plugin.toLanguage("info-command-blocksdeleted", var));
 
         return true;

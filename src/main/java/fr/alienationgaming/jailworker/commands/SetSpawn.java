@@ -23,7 +23,7 @@ public class SetSpawn extends JWSubCommand {
         plugin.JailPrisonerSpawn.put(player, null);
         /* Listener */
         new JWSelectPrisonerSpawn(plugin, player);
-        player.sendMessage(plugin.toLanguage("info-command-definespawnblk"));
+        player.sendMessage(plugin.toLanguage("info-command-definespawnblock"));
         
         return true;
     }

@@ -26,7 +26,7 @@ public class Create extends JWSubCommand {
         new JWRegionSelectListener(plugin, player);
 
         player.sendMessage(plugin.toLanguage("info-command-definetips"));
-        player.sendMessage(plugin.toLanguage("info-command-waitfirstblk"));
+        player.sendMessage(plugin.toLanguage("info-command-waitfirstblock"));
         return true;
     }
 

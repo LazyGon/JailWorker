@@ -43,7 +43,7 @@ public class Info extends JWSubCommand {
         sender.sendMessage("------------------------\n");
         sender.sendMessage(plugin.toLanguage("info-command-jwinfo" + (isStarted ? "started" : "stoped")));
         sender.sendMessage(plugin.toLanguage("info-command-jwinfotype", Type));
-        sender.sendMessage(plugin.toLanguage("info-command-jwinfomaxblk", MaxSand));
+        sender.sendMessage(plugin.toLanguage("info-command-jwinfomaxblock", MaxSand));
         sender.sendMessage(plugin.toLanguage("info-command-jwinfodefaultbreak", Blocks));
         sender.sendMessage(plugin.toLanguage("info-command-jwinfospeed", Speed));
         sender.sendMessage("\n");

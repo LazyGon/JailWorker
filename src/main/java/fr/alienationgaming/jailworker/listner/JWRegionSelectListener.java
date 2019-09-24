@@ -39,7 +39,7 @@ public class JWRegionSelectListener implements Listener {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.BLUE + "Block 1:");
                 Utils.printBlockPos(player, plugin.blockJail1.get(player));
-                player.sendMessage(plugin.toLanguage("info-listener-selectblk2"));
+                player.sendMessage(plugin.toLanguage("info-listener-selectblock2"));
             } else if (plugin.blockJail1.get(player) != null && plugin.blockJail2.get(player) == null) {
                 plugin.blockJail2.put(player, event.getClickedBlock());
                 event.setCancelled(true);

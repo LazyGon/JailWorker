@@ -65,34 +65,34 @@ public class Save extends JWSubCommand {
                 player.sendMessage(plugin.toLanguage("error-command-notpermtoredefine"));
                 return true;
             } else {
-                Vector locBlk1, locBlk2, locspawn = plugin.JailPrisonerSpawn.get(player).toVector();
+                Vector location1, location2, locspawn = plugin.JailPrisonerSpawn.get(player).toVector();
                 if (useWorldEditSelection) {
                     BlockVector3 minPoint = worldEditSelection.getMinimumPoint();
                     BlockVector3 maxPoint = worldEditSelection.getMaximumPoint();
-                    locBlk1 = new Vector(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ());
-                    locBlk2 = new Vector(maxPoint.getBlockX(), maxPoint.getBlockY(), maxPoint.getBlockZ());
+                    location1 = new Vector(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ());
+                    location2 = new Vector(maxPoint.getBlockX(), maxPoint.getBlockY(), maxPoint.getBlockZ());
                 } else {
-                    locBlk1 = plugin.blockJail1.get(player).getLocation().toVector();
-                    locBlk2 = plugin.blockJail2.get(player).getLocation().toVector();
+                    location1 = plugin.blockJail1.get(player).getLocation().toVector();
+                    location2 = plugin.blockJail2.get(player).getLocation().toVector();
                 }
-                plugin.getJailConfig().set("Jails." + jailName + ".Location.Block1", locBlk1);
-                plugin.getJailConfig().set("Jails." + jailName + ".Location.Block2", locBlk2);
+                plugin.getJailConfig().set("Jails." + jailName + ".Location.Block1", location1);
+                plugin.getJailConfig().set("Jails." + jailName + ".Location.Block2", location2);
                 plugin.getJailConfig().set("Jails." + jailName + ".Location.PrisonerSpawn", locspawn);
             }
         } else {
             /* Setup Default values */
-            Vector locBlk1, locBlk2, locspawn = plugin.JailPrisonerSpawn.get(player).toVector();
+            Vector location1, location2, locspawn = plugin.JailPrisonerSpawn.get(player).toVector();
             if (useWorldEditSelection) {
                 BlockVector3 minPoint = worldEditSelection.getMinimumPoint();
                 BlockVector3 maxPoint = worldEditSelection.getMaximumPoint();
-                locBlk1 = new Vector(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ());
-                locBlk2 = new Vector(maxPoint.getBlockX(), maxPoint.getBlockY(), maxPoint.getBlockZ());
+                location1 = new Vector(minPoint.getBlockX(), minPoint.getBlockY(), minPoint.getBlockZ());
+                location2 = new Vector(maxPoint.getBlockX(), maxPoint.getBlockY(), maxPoint.getBlockZ());
             } else {
-                locBlk1 = plugin.blockJail1.get(player).getLocation().toVector();
-                locBlk2 = plugin.blockJail2.get(player).getLocation().toVector();
+                location1 = plugin.blockJail1.get(player).getLocation().toVector();
+                location2 = plugin.blockJail2.get(player).getLocation().toVector();
             }
-            plugin.getJailConfig().set("Jails." + jailName + ".Location.Block1", locBlk1);
-            plugin.getJailConfig().set("Jails." + jailName + ".Location.Block2", locBlk2);
+            plugin.getJailConfig().set("Jails." + jailName + ".Location.Block1", location1);
+            plugin.getJailConfig().set("Jails." + jailName + ".Location.Block2", location2);
             plugin.getJailConfig().set("Jails." + jailName + ".Location.PrisonerSpawn", locspawn);
 
             plugin.getJailConfig().set("Jails." + jailName + ".MaxSand", plugin.getdefaultvalues.MaxSand());
