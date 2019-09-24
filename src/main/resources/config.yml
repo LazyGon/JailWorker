@@ -13,7 +13,7 @@ Prisoners:
   Speak: false
   Ear: false
 
-  # Allow admin to use all commands, even if there are prisoners
+  # Allow admin to use all commands, even if they are prisoners
   Admin-cmds: false
 
 Jails:
