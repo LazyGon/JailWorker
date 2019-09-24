@@ -30,7 +30,10 @@ public final class Utils {
     }
 
     public static boolean isInRegion(Location loc, Location loc1, Location loc2) {
-        if (loc1.getWorld().equals(loc2.getWorld()) && loc.getWorld().equals(loc1.getWorld()) && ((Math.min(loc1.getBlockX(), loc2.getBlockX()) <= loc.getBlockX()) && (loc.getBlockX() <= Math.max(loc1.getBlockX(), loc2.getBlockX()))) &&
+        if (loc1.getWorld() == null || loc2.getWorld() == null || !loc1.getWorld().equals(loc2.getWorld())) {
+            return false;
+        }
+        if (loc.getWorld().equals(loc1.getWorld()) && ((Math.min(loc1.getBlockX(), loc2.getBlockX()) <= loc.getBlockX()) && (loc.getBlockX() <= Math.max(loc1.getBlockX(), loc2.getBlockX()))) &&
                 ((Math.min(loc1.getBlockY(), loc2.getBlockY()) <= loc.getBlockY()) && (loc.getBlockY() <= Math.max(loc1.getBlockY(), loc2.getBlockY()))) &&
                 ((Math.min(loc1.getBlockZ(), loc2.getBlockZ()) <= loc.getBlockZ()) && (loc.getBlockZ() <= Math.max(loc1.getBlockZ(), loc2.getBlockZ())))) {
             return true;
@@ -45,6 +48,9 @@ public final class Utils {
     }
 
     public static int countBlockInRegion(Material blockMaterial, Location loc1, Location loc2) {
+        if (loc1.getWorld() == null || loc2.getWorld() == null || !loc1.getWorld().equals(loc2.getWorld())) {
+            return 0;
+        }
         int result = 0;
         int x = Math.min(loc1.getBlockX(), loc2.getBlockX());
         int y = Math.min(loc1.getBlockY(), loc2.getBlockY()) - 1;
@@ -72,6 +78,9 @@ public final class Utils {
     }
 
     public static int removeBlockInRegion(Material blockMaterial, Location loc1, Location loc2) {
+        if (loc1.getWorld() == null || loc2.getWorld() == null || !loc1.getWorld().equals(loc2.getWorld())) {
+            return 0;
+        }
         int result = 0;
         int x = (int) Math.min(loc1.getX(), loc2.getX());
         int y = (int) (Math.min(loc1.getY(), loc2.getY()) - 1);
