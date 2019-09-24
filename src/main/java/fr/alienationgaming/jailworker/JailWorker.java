@@ -25,6 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
+import fr.alienationgaming.jailworker.commands.JWCommand;
 import fr.alienationgaming.jailworker.listner.JWBlockBreakListener;
 import fr.alienationgaming.jailworker.listner.JWChatPrisonerPrevent;
 import fr.alienationgaming.jailworker.listner.JWPlayerCommandProtector;
@@ -234,6 +235,8 @@ public class JailWorker extends JavaPlugin {
         allowBlocks.add("DIRT");
         allowBlocks.add("STONE");
         allowBlocks.add("OBSIDIAN");
+
+        new JWCommand();
     }
 
     public String colorFormat(String str) {
