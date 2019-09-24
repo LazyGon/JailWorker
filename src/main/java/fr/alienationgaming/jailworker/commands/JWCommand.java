@@ -42,7 +42,7 @@ public class JWCommand implements CommandExecutor, TabCompleter {
         ;
 
         private JWSubCommand subCommand;
-        private static final List<String> subCommandInputs = List.of("create", "put", "start", "setSpawn", "stop", "clean", "save", "edit", "list", "delete", "restart", "info", "free", "goto", "give", "allowedcommand", "reload", "increase", "owner");
+        private static final List<String> subCommandInputs = List.of("create", "put", "start", "setspawn", "stop", "clean", "save", "edit", "list", "delete", "restart", "info", "free", "goto", "give", "allowedcommand", "reload", "increase", "owner");
 
         private SubCommands(JWSubCommand subCommand) {
             this.subCommand = subCommand;
@@ -54,14 +54,13 @@ public class JWCommand implements CommandExecutor, TabCompleter {
 
         public static JWSubCommand getSubCommand(String name) {
             switch (name.toLowerCase(Locale.ROOT)) {
-                // TODO: Command and class should have same name.
                 case "create":
                 return SubCommands.CREATE.getInstance();
                 case "put":
                 return SubCommands.PUT.getInstance();
                 case "start":
                 return SubCommands.START.getInstance();
-                case "setSpawn":
+                case "setspawn":
                 return SubCommands.SET_SPAWN.getInstance();
                 case "stop":
                 return SubCommands.STOP.getInstance();
@@ -94,6 +93,7 @@ public class JWCommand implements CommandExecutor, TabCompleter {
                 case "owner":
                 return SubCommands.OWNER.getInstance();
                 default:
+                System.out.println(name + " produced null.");
                 return null;
             }
         }
@@ -109,7 +109,7 @@ public class JWCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    JWCommand() {
+    public JWCommand() {
         Optional.ofNullable(jailWorker.getCommand("jailworker")).ifPresent(command -> {
             command.setExecutor(this);
             command.setTabCompleter(this);
