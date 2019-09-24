@@ -1,5 +1,8 @@
 package fr.alienationgaming.jailworker.listner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,13 +18,19 @@ import fr.alienationgaming.jailworker.JailWorker;
 
 public class JWSelectPrisonerSpawn implements Listener {
 
+    private static Map<Player, JWSelectPrisonerSpawn> listeners = new HashMap<>();
+
     JailWorker plugin;
     Player user;
 
     public JWSelectPrisonerSpawn(JailWorker jailworker, Player user) {
+        if (listeners.containsKey(user)) {
+            return;
+        }
         plugin = jailworker;
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.user = user;
+        listeners.put(user, this);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -38,5 +47,6 @@ public class JWSelectPrisonerSpawn implements Listener {
             player.sendMessage(plugin.toLanguage("info-listener-allok"));
         }
         PlayerInteractEvent.getHandlerList().unregister(this);
+        listeners.remove(user);
     }
 }
