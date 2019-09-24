@@ -3,6 +3,7 @@ package fr.alienationgaming.jailworker.listner;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -18,7 +19,7 @@ import fr.alienationgaming.jailworker.Utils;
 public class JWPutBlockListener implements Listener {
 
     private JailWorker plugin;
-    private Utils utils = new Utils(plugin);
+
 
     public JWPutBlockListener(JailWorker jailworker) {
         plugin = jailworker;
@@ -38,10 +39,10 @@ public class JWPutBlockListener implements Listener {
         Iterator<String> it = s.iterator();
         while (it.hasNext()) {
             String elem = (String) it.next();
-            World world1 = plugin.getServer().getWorld(plugin.getJailConfig().getString("Jails." + elem + ".World"));
+            World world1 = Bukkit.getWorld(plugin.getJailConfig().getString("Jails." + elem + ".World"));
             Vector vec1 = plugin.getJailConfig().getVector("Jails." + elem + ".Location.Block1");
             Vector vec2 = plugin.getJailConfig().getVector("Jails." + elem + ".Location.Block2");
-            if (utils.isInRegion(event.getBlock().getLocation(), new Location(world1, vec1.getX(), vec1.getY(), vec1.getZ()), new Location(world1, vec2.getX(), vec2.getY(), vec2.getZ()))) {
+            if (Utils.isInRegion(event.getBlock().getLocation(), new Location(world1, vec1.getX(), vec1.getY(), vec1.getZ()), new Location(world1, vec2.getX(), vec2.getY(), vec2.getZ()))) {
                 jailName = elem;
                 break;
             }

@@ -1,8 +1,6 @@
 package fr.alienationgaming.jailworker.listner;
 
-import java.util.Iterator;
-import java.util.Set;
-
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import fr.alienationgaming.jailworker.Config;
+import fr.alienationgaming.jailworker.Jail;
 import fr.alienationgaming.jailworker.JailWorker;
 
 public class JWChatPrisonerPrevent implements Listener {
@@ -21,23 +20,27 @@ public class JWChatPrisonerPrevent implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void PlayerCommand(AsyncPlayerChatEvent event) {
+    public void onChat(AsyncPlayerChatEvent event) {
+        if (Bukkit.getPluginManager().isPluginEnabled("LunaChat")) {
+            return;
+        }
         Player player = event.getPlayer();
         Config config = new Config(plugin);
         if (!config.prisonersSpeak()) {
-            if (plugin.getJailConfig().contains("Prisoners." + player.getName())) {
+            if (Jail.isJailed(player)) {
                 event.setCancelled(true);
                 player.sendMessage(plugin.toLanguage("info-listener-justwork"));
             }
         }
 
         if (!config.prisonersEar()) {
-            Set<String> s = plugin.getJailConfig().getConfigurationSection("Prisoners").getKeys(false);
-            Iterator<String> it = s.iterator();
-            while (it.hasNext()) {
-                String elem = (String) it.next();
-                event.getRecipients().remove(plugin.getServer().getPlayer(elem));
-            }
+            plugin.getJailConfig().getConfigurationSection("Prisoners").getKeys(false).forEach(prisonerName -> {
+                @SuppressWarnings("deprecation")
+                Player prisoner = Bukkit.getPlayer(prisonerName);
+                if (prisoner != null) {
+                    event.getRecipients().remove(prisoner);
+                }
+            });
         }
     }
 }

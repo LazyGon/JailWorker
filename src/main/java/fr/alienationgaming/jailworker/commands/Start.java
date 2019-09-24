@@ -1,54 +1,68 @@
 package fr.alienationgaming.jailworker.commands;
 
+import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.alienationgaming.jailworker.Jail;
-import fr.alienationgaming.jailworker.JailWorker;
-import fr.alienationgaming.jailworker.Utils;
 
-public class Start implements CommandExecutor {
+public class Start extends JWSubCommand {
 
-    JailWorker plugin;
-    Utils utils = new Utils(plugin);
-
-    public Start(JailWorker jailworker) {
-        plugin = jailworker;
+    Start() {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (args.length == 0) {
+    boolean runCommand(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            // TODO: send not enough argument message
             return false;
         }
-        String jailName = args[0];
+        String jailName = args[1];
 
-        if (sender instanceof ConsoleCommandSender || plugin.hasPerm(((Player) sender), "jailworker.jw-admin") || (plugin.hasPerm(((Player) sender), "jailworker.jw-start") && plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(((Player) sender).getName()))) {
-            if (!plugin.getJailConfig().contains("Jails." + jailName)) {
-                sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
-                return true;
-            }
-            if (plugin.getJailConfig().getBoolean("Jails." + jailName + ".isStarted")) {
-                sender.sendMessage(plugin.toLanguage("error-command-alreadystarted"));
-                return true;
-            }
-
-            World world = plugin.getServer().getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
-            Jail runjailsystem = new Jail(plugin, world, jailName);
-            int task = runjailsystem.getTaskId();
-            plugin.tasks.put(jailName, task);
-            plugin.getServer().getPluginManager().registerEvents(plugin.jwblockbreaklistener, plugin);
-            plugin.getJailConfig().set("Jails." + jailName + ".isStarted", true);
-            plugin.saveJailConfig();
-            plugin.reloadJailConfig();
-            sender.sendMessage(plugin.toLanguage("info-command-jailstarted"));
-        } else if (!plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(((Player) sender).getName())) {
-            ((Player) sender).sendMessage(plugin.toLanguage("error-command-notowner"));
+        if (!Jail.exist(jailName)) {
+            sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
+            return true;
         }
+
+        if (isAdminOrOwner(sender, jailName)) {
+            return false;
+        }
+
+        if (plugin.getJailConfig().getBoolean("Jails." + jailName + ".isStarted")) {
+            sender.sendMessage(plugin.toLanguage("error-command-alreadystarted"));
+            return true;
+        }
+
+        World world = Bukkit.getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
+        Jail runjailsystem = new Jail(world, jailName);
+        BukkitRunnable task = runjailsystem.getTask();
+        plugin.tasks.put(jailName, task);
+        Bukkit.getPluginManager().registerEvents(plugin.jwblockbreaklistener, plugin);
+        plugin.getJailConfig().set("Jails." + jailName + ".isStarted", true);
+        plugin.saveJailConfig();
+        plugin.reloadJailConfig();
+        sender.sendMessage(plugin.toLanguage("info-command-jailstarted"));
+
         return true;
+    }
+
+    @Override
+    List<String> runTabComplete(CommandSender sender, String[] args) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    String getPermissionNode() {
+        return "jailworker.start";
+    }
+
+    @Override
+    String getDescription() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -1,39 +1,40 @@
 package fr.stevecohen.jailworker.configsign;
 
+import fr.alienationgaming.jailworker.Jail;
 import fr.alienationgaming.jailworker.JailWorker;
 
 public class JailConfig {
 
     private JailWorker plugin;
-    private String jailname;
+    private String jailName;
 
     private String type;
     private int blocks;
     private int maxSand;
     private int speed;
 
-    public JailConfig(String jailname) {
+    public JailConfig(String jailName) {
         this.plugin = JailWorker.getInstance();
-        this.jailname = jailname;
+        this.jailName = jailName;
     }
 
     public boolean loadJailConfig() {
-        if (plugin.getJailConfig().contains("Jails." + jailname)) {
-            setType(plugin.getJailConfig().getString("Jails." + jailname + ".Type"));
-            setBlocks(plugin.getJailConfig().getInt("Jails." + jailname + ".Blocks"));
-            setMaxSand(plugin.getJailConfig().getInt("Jails." + jailname + ".MaxSand"));
-            setSpeed(plugin.getJailConfig().getInt("Jails." + jailname + ".Speed"));
+        if (Jail.exist(jailName)) {
+            setType(plugin.getJailConfig().getString("Jails." + jailName + ".Type"));
+            setBlocks(plugin.getJailConfig().getInt("Jails." + jailName + ".Blocks"));
+            setMaxSand(plugin.getJailConfig().getInt("Jails." + jailName + ".MaxSand"));
+            setSpeed(plugin.getJailConfig().getInt("Jails." + jailName + ".Speed"));
             return true;
         }
         return false;
     }
 
     public boolean saveJailConfig() {
-        if (plugin.getJailConfig().contains("Jails." + jailname)) {
-            plugin.getJailConfig().set("Jails." + jailname + ".Type", type);
-            plugin.getJailConfig().set("Jails." + jailname + ".Blocks", blocks);
-            plugin.getJailConfig().set("Jails." + jailname + ".MaxSand", maxSand);
-            plugin.getJailConfig().set("Jails." + jailname + ".Speed", speed);
+        if (Jail.exist(jailName)) {
+            plugin.getJailConfig().set("Jails." + jailName + ".Type", type);
+            plugin.getJailConfig().set("Jails." + jailName + ".Blocks", blocks);
+            plugin.getJailConfig().set("Jails." + jailName + ".MaxSand", maxSand);
+            plugin.getJailConfig().set("Jails." + jailName + ".Speed", speed);
             plugin.saveJailConfig();
             plugin.reloadJailConfig();
             return true;

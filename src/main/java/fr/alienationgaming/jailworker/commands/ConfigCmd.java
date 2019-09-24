@@ -1,40 +1,53 @@
 package fr.alienationgaming.jailworker.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
+import java.util.List;
 
-import fr.alienationgaming.jailworker.JailWorker;
+import org.bukkit.command.CommandSender;
+
+import fr.alienationgaming.jailworker.Jail;
 import fr.alienationgaming.jailworker.listner.JWConfigJailListener;
 
-public class ConfigCmd implements CommandExecutor {
+public class ConfigCmd extends JWSubCommand {
 
-    JailWorker plugin;
-
-    public ConfigCmd(JailWorker jailworker) {
-        plugin = jailworker;
+    ConfigCmd() {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+    boolean runCommand(CommandSender sender, String[] args) {
         if (args.length == 0) {
             return false;
         }
         String jailName = args[0];
 
-        if (sender instanceof ConsoleCommandSender || plugin.hasPerm((Player) sender, "jailworker.jw-admin") || (plugin.hasPerm((Player) sender, "jailworker.jw-config") && plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(((Player) sender).getName()))) {
-            if (!plugin.getJailConfig().contains("Jails." + jailName)) {
-                sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
-                return true;
-            }
-            new JWConfigJailListener(plugin, args[0], sender);
-            sender.sendMessage(plugin.toLanguage("help-command-config-instru1"));
-            sender.sendMessage(plugin.toLanguage("help-command-config-example1"));
-        } else if (!plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(((Player) sender).getName())) {
-            ((Player) sender).sendMessage(plugin.toLanguage("error-command-notowner"));
+        if (!Jail.exist(jailName)) {
+            sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
+            return false;
         }
+
+        if (!isAdminOrOwner(sender, jailName)) {
+            return false;
+        }
+
+        new JWConfigJailListener(plugin, args[0], sender);
+        sender.sendMessage(plugin.toLanguage("help-command-config-instru1"));
+        sender.sendMessage(plugin.toLanguage("help-command-config-example1"));
         return true;
+    }
+
+    @Override
+    List<String> runTabComplete(CommandSender sender, String[] args) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    String getPermissionNode() {
+        return "jailworker.config";
+    }
+
+    @Override
+    String getDescription() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

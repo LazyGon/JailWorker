@@ -24,19 +24,19 @@ public class SignConfigurator {
 
     private Player processingPlayer;
     private State state;
-    private String jailname;
+    private String jailName;
     private SignConfigurator.Util cfgSignUtil;
     private JailConfig currentConfig;
 
-    private int nbrValue;
+    private int numberValue;
     private int index;
 
-    public SignConfigurator(Player player, String jailname) {
+    public SignConfigurator(Player player, String jailName) {
         this.processingPlayer = player;
-        this.jailname = jailname;
+        this.jailName = jailName;
         this.cfgSignUtil = new SignConfigurator.Util();
         this.plugin = JailWorker.getInstance();
-        this.currentConfig = new JailConfig(jailname);
+        this.currentConfig = new JailConfig(jailName);
     }
 
     public void initConfigProcess() {
@@ -59,7 +59,7 @@ public class SignConfigurator {
         upSign.setClickListener(new OnConfigSignClickedListener(upSign, processingPlayer, new SignClickedCallback() { // Up clicked
             @Override
             public void onSignClicked() {
-                nbrValue = nbrValue > 1 ? cfgSignUtil.getPreviousNumber(nbrValue) : 1;
+                numberValue = numberValue > 1 ? cfgSignUtil.getPreviousNumber(numberValue) : 1;
                 index = index - (index > 0 ? 1 : 0);
                 updateCentralSign(state);
             }
@@ -67,7 +67,7 @@ public class SignConfigurator {
         downSign.setClickListener(new OnConfigSignClickedListener(downSign, processingPlayer, new SignClickedCallback() { // Down clicked
             @Override
             public void onSignClicked() {
-                nbrValue = cfgSignUtil.getNextNumber(nbrValue);
+                numberValue = cfgSignUtil.getNextNumber(numberValue);
                 if (state == State.MATERIAL)
                     index = index + (index < plugin.getAllowBlocks().size() - 1 ? 1 : 0);
                 updateCentralSign(state);
@@ -117,7 +117,7 @@ public class SignConfigurator {
         switch (state) {
             case INTRO:
                 centralSign.setCustomText(
-                        "[" + jailname + "]",
+                        "[" + jailName + "]",
                         "To start the",
                         "configuration",
                         "click GO ->")
@@ -138,7 +138,7 @@ public class SignConfigurator {
                 break;
             case CONFIRMATION:
                 centralSign.setCustomText(
-                        "[" + jailname + "]",
+                        "[" + jailName + "]",
                         "M: " + currentConfig.getType(),
                         "P: " + currentConfig.getBlocks(),
                         "C: " + currentConfig.getMaxSand() + " | F: " + currentConfig.getSpeed())
@@ -146,9 +146,9 @@ public class SignConfigurator {
                 break;
             default:
                 String line0d = "[" + state.label + "]";
-                String line1d = " " + (nbrValue > 1 ? cfgSignUtil.getPreviousNumber(nbrValue) : "");
-                String line2d = ">" + nbrValue;
-                String line3d = " " + cfgSignUtil.getNextNumber(nbrValue);
+                String line1d = " " + (numberValue > 1 ? cfgSignUtil.getPreviousNumber(numberValue) : "");
+                String line2d = ">" + numberValue;
+                String line3d = " " + cfgSignUtil.getNextNumber(numberValue);
 
                 centralSign.setLine(0, line0d);
                 centralSign.setLine(1, line1d + "               ".substring(line1d.length()));
@@ -183,7 +183,7 @@ public class SignConfigurator {
         nextSign.drawRightArrow().update();
         upSign.drawUpArrow().update();
         downSign.drawDownArrow().update();
-        nbrValue = currentConfig.getBlocks();
+        numberValue = currentConfig.getBlocks();
         updateCentralSign(state);
         processingPlayer.sendMessage(plugin.toLanguage("help-listener-configsign-cross-punishmentstate"));
     }
@@ -193,7 +193,7 @@ public class SignConfigurator {
         nextSign.drawRightArrow().update();
         upSign.drawUpArrow().update();
         downSign.drawDownArrow().update();
-        nbrValue = currentConfig.getMaxSand();
+        numberValue = currentConfig.getMaxSand();
         updateCentralSign(state);
         processingPlayer.sendMessage(plugin.toLanguage("help-listener-configsign-cross-capacitystate"));
     }
@@ -203,7 +203,7 @@ public class SignConfigurator {
         nextSign.drawRightArrow().update();
         upSign.drawUpArrow().update();
         downSign.drawDownArrow().update();
-        nbrValue = currentConfig.getSpeed();
+        numberValue = currentConfig.getSpeed();
         updateCentralSign(state);
         processingPlayer.sendMessage(plugin.toLanguage("help-listener-configsign-cross-frequencystate"));
     }
@@ -380,38 +380,38 @@ public class SignConfigurator {
     /********** Inner util class **********/
     private class Util {
 
-        public int getNextNumberByAlpha(int nbr, int alpha) {
-            if (nbr < 20)
-                return nbr + (1 * alpha);
-            else if (nbr < 50)
-                return nbr + (5 * alpha);
-            else if (nbr < 200)
-                return nbr + (10 * alpha);
-            else if (nbr < 1000)
-                return nbr + (50 * alpha);
+        public int getNextNumberByAlpha(int number, int alpha) {
+            if (number < 20)
+                return number + (1 * alpha);
+            else if (number < 50)
+                return number + (5 * alpha);
+            else if (number < 200)
+                return number + (10 * alpha);
+            else if (number < 1000)
+                return number + (50 * alpha);
             else
-                return nbr + (100 * alpha);
+                return number + (100 * alpha);
         }
 
-        public int getNextNumber(int nbr) {
-            return getNextNumberByAlpha(nbr, 1);
+        public int getNextNumber(int number) {
+            return getNextNumberByAlpha(number, 1);
         }
 
-        public int getPreviousNumber(int nbr) {
-            return getNextNumberByAlpha(nbr, -1);
+        public int getPreviousNumber(int number) {
+            return getNextNumberByAlpha(number, -1);
         }
 
-        //		public int getPrevNumber(int nbr) {
-        //			if (nbr > 1000)
-        //				return nbr-100;
-        //			else if (nbr > 200)
-        //				return nbr-50;
-        //			else if (nbr > 50)
-        //				return nbr-10;
-        //			else if (nbr > 20)
-        //				return nbr-5;
+        //		public int getPrevNumber(int number) {
+        //			if (number > 1000)
+        //				return number-100;
+        //			else if (number > 200)
+        //				return number-50;
+        //			else if (number > 50)
+        //				return number-10;
+        //			else if (number > 20)
+        //				return number-5;
         //			else
-        //				return nbr-1;
+        //				return number-1;
         //		}
     }
 }

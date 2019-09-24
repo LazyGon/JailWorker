@@ -1,5 +1,6 @@
 package fr.alienationgaming.jailworker.listner;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,18 +12,16 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import fr.alienationgaming.jailworker.JailWorker;
-import fr.alienationgaming.jailworker.Utils;
 
 public class JWSelectPrisonerSpawn implements Listener {
 
     JailWorker plugin;
-    Utils utils = new Utils(plugin);
     Player user;
 
-    public JWSelectPrisonerSpawn(JailWorker jailworker, Player _user) {
+    public JWSelectPrisonerSpawn(JailWorker jailworker, Player user) {
         plugin = jailworker;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        user = _user;
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+        this.user = user;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

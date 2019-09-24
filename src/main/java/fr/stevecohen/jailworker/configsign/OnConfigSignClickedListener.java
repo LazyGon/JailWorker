@@ -1,5 +1,6 @@
 package fr.stevecohen.jailworker.configsign;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,7 +23,7 @@ public class OnConfigSignClickedListener implements Listener {
         this.sign = sign;
         this.processingPlayer = processingPlayer;
         this.callback = callback;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        Bukkit.getPluginManager().registerEvents(this, plugin);
         System.out.println("ClickEvent registered");
     }
 

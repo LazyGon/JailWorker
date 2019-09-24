@@ -1,66 +1,79 @@
 package fr.alienationgaming.jailworker.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import fr.alienationgaming.jailworker.JailWorker;
+import fr.alienationgaming.jailworker.Jail;
 
-public class Free implements CommandExecutor {
+public class Free extends JWSubCommand {
 
-    JailWorker plugin;
-
-    public Free(JailWorker jailworker) {
-        plugin = jailworker;
+    Free() {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        Player target = null;
-        boolean prisonnerOnline = true;
-        boolean prisonnerFound = true;
-        String reason = "";
-        if (sender instanceof ConsoleCommandSender || plugin.hasPerm(((Player) sender), "jailworker.jw-admin") || (plugin.hasPerm(((Player) sender), "jailworker.jw-free"))) {
-            if (args.length == 0)
-                return false;
-            target = plugin.getServer().getPlayer(args[0]);
-            // Player offline
-            if (target == null) {
-                sender.sendMessage(plugin.toLanguage("error-command-playeroffline", args[0]));
-                prisonnerOnline = false;
-            }
-            //player not on jail
-            if (!plugin.getJailConfig().contains("Prisoners." + args[0])) {
-                sender.sendMessage(plugin.toLanguage("error-command-missingonjail", args[0]));
-                prisonnerFound = false;
-            } else {
-                prisonnerFound = true;
-            }
-            if (prisonnerFound && !prisonnerOnline) {
-                sender.sendMessage(plugin.toLanguage("error-command-actionofflineplayer"));
-                return true;
-            } else if (prisonnerFound && prisonnerOnline) {
-                String jailName = plugin.getJailConfig().getString("Prisoners." + target.getName() + ".Prison");
-                if (sender instanceof ConsoleCommandSender || plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(((Player) sender).getName())) {
-                    plugin.interactWithPlayer.freePlayer(target);
-                    if (args.length > 1)
-                        for (int i = 1; i < args.length; ++i) {
-                            reason += args[i];
-                            reason += " ";
-                        }
-                    else
-                        reason = "No Reason.";
-                    target.sendMessage(plugin.toLanguage("info-command-playerfree", sender.getName()));
-                    if (!reason.equals("No Reason."))
-                        target.sendMessage(plugin.toLanguage("info-command-displayreason", reason));
-                } else {
-                    sender.sendMessage(plugin.toLanguage("error-command-notowner"));
-                }
-            }
+    boolean runCommand(CommandSender sender, String[] args) {
+
+        if (args.length == 2) {
+            sender.sendMessage(plugin.toLanguage("error-command-notenougharguments"));
+            // TODO: new message.
+            return false;
         }
+
+        @SuppressWarnings("deprecation")
+        Player target = Bukkit.getPlayer(args[1]);
+
+        // Player offline
+        if (target == null) {
+            sender.sendMessage(plugin.toLanguage("error-command-playeroffline", args[1]));
+            return false;
+        }
+
+        // player not on jail
+        if (!Jail.isJailed(target)) {
+            sender.sendMessage(plugin.toLanguage("error-command-missingonjail", args[1]));
+            return false;
+        }
+
+        String jailName = plugin.getJailConfig().getString("Prisoners." + target.getName() + ".Prison");
+        if (!isAdminOrOwner(sender, jailName)) {
+            return false;
+        }
+
+        plugin.interactWithPlayer.freePlayer(target);
+        target.sendMessage(plugin.toLanguage("info-command-playerfree", sender.getName()));
+
+        if (args.length > 2) {
+            StringBuilder reasonBuilder = new StringBuilder();
+            for (int i = 2; i < args.length; ++i) {
+                reasonBuilder.append(args[i]).append(" ");
+            }
+            String reason = ChatColor.translateAlternateColorCodes('&', reasonBuilder.toString());
+            target.sendMessage(plugin.toLanguage("info-command-displayreason", reason));
+        }
+
         return true;
+    }
+
+    @Override
+    List<String> runTabComplete(CommandSender sender, String[] args) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    String getPermissionNode() {
+        // TODO Auto-generated method stub
+        return "jailworker.free";
+    }
+
+    @Override
+    String getDescription() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

@@ -11,16 +11,14 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-public class Utils {
-    JailWorker plugin;
-    JWPlayerInteract iv = new JWPlayerInteract(plugin);
+public final class Utils {
 
-    public Utils(JailWorker jailWorker) {
-        plugin = jailWorker;
+    //private static JailWorker plugin = JailWorker.getInstance();
+
+    private Utils(JailWorker jailWorker) {
     }
 
-
-    public String getDate() {
+    public static String getDate() {
         /* Get Date*/
         @SuppressWarnings("unused")
         Locale locale = Locale.getDefault();
@@ -31,22 +29,22 @@ public class Utils {
         return date;
     }
 
-    public boolean isInRegion(Location myLoc, Location loc1, Location loc2) {
-        if (((Math.min(loc1.getBlockX(), loc2.getBlockX()) <= myLoc.getBlockX()) && (myLoc.getBlockX() <= Math.max(loc1.getBlockX(), loc2.getBlockX()))) &&
-                ((Math.min(loc1.getBlockY(), loc2.getBlockY()) <= myLoc.getBlockY()) && (myLoc.getBlockY() <= Math.max(loc1.getBlockY(), loc2.getBlockY()))) &&
-                ((Math.min(loc1.getBlockZ(), loc2.getBlockZ()) <= myLoc.getBlockZ()) && (myLoc.getBlockZ() <= Math.max(loc1.getBlockZ(), loc2.getBlockZ())))) {
+    public static boolean isInRegion(Location loc, Location loc1, Location loc2) {
+        if (loc1.getWorld().equals(loc2.getWorld()) && loc.getWorld().equals(loc1.getWorld()) && ((Math.min(loc1.getBlockX(), loc2.getBlockX()) <= loc.getBlockX()) && (loc.getBlockX() <= Math.max(loc1.getBlockX(), loc2.getBlockX()))) &&
+                ((Math.min(loc1.getBlockY(), loc2.getBlockY()) <= loc.getBlockY()) && (loc.getBlockY() <= Math.max(loc1.getBlockY(), loc2.getBlockY()))) &&
+                ((Math.min(loc1.getBlockZ(), loc2.getBlockZ()) <= loc.getBlockZ()) && (loc.getBlockZ() <= Math.max(loc1.getBlockZ(), loc2.getBlockZ())))) {
             return true;
         }
         return false;
     }
 
-    public void printBlockPos(Player player, Block block) {
+    public static void printBlockPos(Player player, Block block) {
         player.sendMessage(ChatColor.BLUE + "x :" + ChatColor.RESET + block.getX());
         player.sendMessage(ChatColor.BLUE + "y :" + ChatColor.RESET + block.getY());
         player.sendMessage(ChatColor.BLUE + "z :" + ChatColor.RESET + block.getZ());
     }
 
-    public int countBlockInRegion(Material blockMaterial, Location loc1, Location loc2) {
+    public static int countBlockInRegion(Material blockMaterial, Location loc1, Location loc2) {
         int result = 0;
         int x = Math.min(loc1.getBlockX(), loc2.getBlockX());
         int y = Math.min(loc1.getBlockY(), loc2.getBlockY()) - 1;
@@ -73,7 +71,7 @@ public class Utils {
         return result;
     }
 
-    public int removeBlockInRegion(Material blockMaterial, Location loc1, Location loc2) {
+    public static int removeBlockInRegion(Material blockMaterial, Location loc1, Location loc2) {
         int result = 0;
         int x = (int) Math.min(loc1.getX(), loc2.getX());
         int y = (int) (Math.min(loc1.getY(), loc2.getY()) - 1);

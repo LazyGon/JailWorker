@@ -1,62 +1,81 @@
 package fr.alienationgaming.jailworker.commands;
 
+import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import fr.alienationgaming.jailworker.JailWorker;
+import fr.alienationgaming.jailworker.Jail;
 
-public class Delete implements CommandExecutor {
+public class Delete extends JWSubCommand {
 
-    JailWorker plugin;
-
-    public Delete(JailWorker jailworker) {
-        plugin = jailworker;
+    Delete() {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (args.length == 0)
-            return false;
+    boolean runCommand(CommandSender sender, String[] args) {
+
         String jailName = args[0];
 
-        if (sender instanceof ConsoleCommandSender || plugin.hasPerm(((Player) sender), "jailworker.jw-admin") || (plugin.hasPerm(((Player) sender), "jailworker.jw-delete") && plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(((Player) sender).getName()))) {
-            if (!plugin.getJailConfig().contains("Jails." + jailName)) {
-                sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
-                return true;
-            }
-
-            if (plugin.getJailConfig().getBoolean("Jails." + jailName + ".isStarted")) {
-                plugin.getServer().getScheduler().cancelTask(plugin.tasks.get(jailName));
-                PlayerInteractEvent.getHandlerList().unregister(plugin.jwblockbreaklistener);
-            }
-            /* Delete task */
-            plugin.tasks.remove(jailName);
-            Vector spawn = plugin.getJailConfig().getVector("Jails." + jailName + ".Location.PrisonerSpawn");
-            World world = plugin.getServer().getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
-
-            /* Delete red block for prisoner spawn */
-            Location locSp = new Location(world, spawn.getBlockX(), spawn.getBlockY() - 1, spawn.getBlockZ());
-            Location locSpNei = new Location(world, spawn.getBlockX() - 1, spawn.getBlockY() - 1, spawn.getBlockZ());
-            locSp.getBlock().setType(locSpNei.getBlock().getType());
-
-            /* Delete "jailName" section */
-            plugin.getJailConfig().set("Jails." + jailName, null);
-            plugin.saveJailConfig();
-            plugin.reloadJailConfig();
-            if (!plugin.getJailConfig().contains("Jails." + jailName))
-                sender.sendMessage(plugin.toLanguage("info-command-jailremovesuccess", jailName));
-            else
-                sender.sendMessage(plugin.toLanguage("error-command-jailremoveechec"));
-        } else if (!plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(((Player) sender).getName())) {
-            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
+        if (!Jail.exist(jailName)) {
+            sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
+            return false;
         }
+
+        if (!isAdminOrOwner(sender, jailName)) {
+            return false;
+        }
+
+        if (plugin.getJailConfig().getBoolean("Jails." + jailName + ".isStarted")) {
+            BukkitRunnable task = plugin.tasks.get(jailName);
+            if (!task.isCancelled()) {
+                task.cancel();
+            }
+            PlayerInteractEvent.getHandlerList().unregister(plugin.jwblockbreaklistener);
+        }
+        /* Delete task */
+        plugin.tasks.remove(jailName);
+        Vector spawn = plugin.getJailConfig().getVector("Jails." + jailName + ".Location.PrisonerSpawn");
+        World world = Bukkit.getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
+
+        /* Delete red block for prisoner spawn */
+        Location locSp = new Location(world, spawn.getBlockX(), spawn.getBlockY() - 1, spawn.getBlockZ());
+        Location locSpNei = new Location(world, spawn.getBlockX() - 1, spawn.getBlockY() - 1, spawn.getBlockZ());
+        locSp.getBlock().setType(locSpNei.getBlock().getType());
+
+        /* Delete "jailName" section */
+        plugin.getJailConfig().set("Jails." + jailName, null);
+        plugin.saveJailConfig();
+        plugin.reloadJailConfig();
+        if (!Jail.exist(jailName)) {
+            sender.sendMessage(plugin.toLanguage("info-command-jailremovesuccess", jailName));
+        } else {
+            sender.sendMessage(plugin.toLanguage("error-command-jailremoveechec"));
+            return false;
+        }
+
         return true;
+    }
+
+    @Override
+    List<String> runTabComplete(CommandSender sender, String[] args) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    String getPermissionNode() {
+        return "jailworker.delete";
+    }
+
+    @Override
+    String getDescription() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

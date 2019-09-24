@@ -1,39 +1,32 @@
 package fr.alienationgaming.jailworker.commands;
 
-import java.util.Iterator;
-import java.util.Set;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 
-import fr.alienationgaming.jailworker.JailWorker;
+import fr.alienationgaming.jailworker.Jail;
 
-public class Info implements CommandExecutor {
+public class Info extends JWSubCommand {
 
-    JailWorker plugin;
-
-    public Info(JailWorker jailworker) {
-        plugin = jailworker;
+    Info() {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (sender instanceof ConsoleCommandSender || plugin.hasPerm(((Player) sender), "jailworker.jw-admin") || plugin.hasPerm(((Player) sender), "jailworker.jw-info")) {
-            if (args.length == 0)
-                return false;
+    boolean runCommand(CommandSender sender, String[] args) {
+
             String jailName = args[0];
 
-            if (!plugin.getJailConfig().contains("Jails." + jailName)) {
+            if (!Jail.exist(jailName)) {
                 sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
                 return true;
             }
+
+            if (!isAdminOrOwner(sender, jailName)) {
+                return false;
+            }
+
             /* getValues */
-            String Name = jailName;
             List<String> Owners = plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners");
             boolean isStarted = plugin.getJailConfig().getBoolean("Jails." + jailName + ".isStarted");
             int MaxSand = plugin.getJailConfig().getInt("Jails." + jailName + ".MaxSand");
@@ -42,13 +35,10 @@ public class Info implements CommandExecutor {
             String World = plugin.getJailConfig().getString("Jails." + jailName + ".World");
             String Type = plugin.getJailConfig().getString("Jails." + jailName + ".Type");
 
-            sender.sendMessage(plugin.toLanguage("info-command-jwinfoname", Name.toLowerCase()));
-            sender.sendMessage(plugin.toLanguage("info-command-jailownerslist", Name, Owners));
+            sender.sendMessage(plugin.toLanguage("info-command-jwinfoname", jailName.toLowerCase()));
+            sender.sendMessage(plugin.toLanguage("info-command-jailownerslist", jailName, Owners));
             sender.sendMessage("------------------------\n");
-            if (isStarted)
-                sender.sendMessage(plugin.toLanguage("info-command-jwinfostarted"));
-            else
-                sender.sendMessage(plugin.toLanguage("info-command-jwinfostoped"));
+            sender.sendMessage(plugin.toLanguage("info-command-jwinfo" + (isStarted ? "started" : "stoped")));
             sender.sendMessage(plugin.toLanguage("info-command-jwinfotype", Type));
             sender.sendMessage(plugin.toLanguage("info-command-jwinfomaxblk", MaxSand));
             sender.sendMessage(plugin.toLanguage("info-command-jwinfodefaultbreak", Blocks));
@@ -57,16 +47,29 @@ public class Info implements CommandExecutor {
             sender.sendMessage(plugin.toLanguage("info-command-jwinfoworld", World));
             sender.sendMessage("------------------------\n");
             sender.sendMessage(plugin.toLanguage("info-command-jwinfoprisoners"));
-            Set<String> s = plugin.getJailConfig().getConfigurationSection("Prisoners").getKeys(false);
-            Iterator<String> it = s.iterator();
-
-            while (it.hasNext()) {
-                String prisoner = (String) it.next();
+            plugin.getJailConfig().getConfigurationSection("Prisoners").getKeys(false).forEach(prisoner -> {
                 int remain = plugin.getJailConfig().getInt("Prisoners." + prisoner + ".RemainingBlocks");
                 sender.sendMessage(ChatColor.BLUE + prisoner + ChatColor.RESET + " => " + ChatColor.RED + remain);
-            }
+            });
             sender.sendMessage("------------------------\n");
-        }
+        
         return true;
+    }
+
+    @Override
+    List<String> runTabComplete(CommandSender sender, String[] args) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    String getPermissionNode() {
+        return "jailworker.info";
+    }
+
+    @Override
+    String getDescription() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

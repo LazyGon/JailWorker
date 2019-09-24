@@ -1,5 +1,6 @@
 package fr.alienationgaming.jailworker.listner;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,18 +17,20 @@ public class JWConfigJailListener implements Listener {
 
     private CommandSender user;
 
-    public JWConfigJailListener(JailWorker jailworker, String jailname, CommandSender _user) {
-        plugin = jailworker;
-        jailName = jailname;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        user = _user;
+    public JWConfigJailListener(JailWorker jailworker, String jailName, CommandSender user) {
+        this.plugin = jailworker;
+        this.jailName = jailName;
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+        this.user = user;
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        if (player != user)
+        if (player != user) {
             return;
+        }
+
         if (event.getMessage().startsWith("M:")) {
             if (plugin.getAllowBlocks().contains(event.getMessage().substring(2).toUpperCase())) {
                 plugin.getJailConfig().set("Jails." + jailName + ".Type", event.getMessage().substring(2).toUpperCase());
@@ -45,7 +48,7 @@ public class JWConfigJailListener implements Listener {
                 player.sendMessage(plugin.toLanguage("info-listener-configtips3"));
                 player.sendMessage(plugin.toLanguage("help-listener-config-example3"));
                 event.setCancelled(true);
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 player.sendMessage(plugin.toLanguage("error-command-invalidumber"));
             }
         }
@@ -55,7 +58,7 @@ public class JWConfigJailListener implements Listener {
                 player.sendMessage(plugin.toLanguage("info-listener-configtips4"));
                 player.sendMessage(plugin.toLanguage("help-listener-config-example4"));
                 event.setCancelled(true);
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 player.sendMessage(plugin.toLanguage("error-command-invalidumber"));
             }
         }
@@ -67,7 +70,7 @@ public class JWConfigJailListener implements Listener {
                 plugin.reloadJailConfig();
                 AsyncPlayerChatEvent.getHandlerList().unregister(this);
                 player.sendMessage(plugin.toLanguage("info-listener-configsaved"));
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 player.sendMessage(plugin.toLanguage("error-command-invalidumber"));
             }
         }

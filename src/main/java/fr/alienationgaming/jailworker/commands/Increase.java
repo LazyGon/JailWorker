@@ -1,67 +1,90 @@
 package fr.alienationgaming.jailworker.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import fr.alienationgaming.jailworker.JailWorker;
+import fr.alienationgaming.jailworker.Jail;
 
-public class Increase implements CommandExecutor {
+public class Increase extends JWSubCommand {
 
-    JailWorker plugin;
-
-    public Increase(JailWorker jailworker) {
-        plugin = jailworker;
+    Increase() {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        Player target = null;
-        String reason = "";
-        if (sender instanceof ConsoleCommandSender || plugin.hasPerm(((Player) sender), "jailworker.jw-admin") || plugin.hasPerm(((Player) sender), "jailworker.jw-increase")) {
-            if (args.length < 2)
-                return false;
-            target = plugin.getServer().getPlayer(args[0]);
-            String jailName = plugin.getJailConfig().getString("Prisoners." + target.getName() + ".Prison");
-            //player not on jail
-            if (!plugin.getJailConfig().contains("Prisoners." + args[0])) {
-                sender.sendMessage(plugin.toLanguage("error-command-missingonjail", args[0]));
-                return true;
-            }
-            if (sender instanceof ConsoleCommandSender || plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(((Player) sender).getName())) {
-                /* GetNbr */
-                int add = 0;
-                try {
-                    add = Integer.parseInt(args[1]);
-                } catch (Exception e) {
-                    sender.sendMessage(plugin.toLanguage("error-command-invalidnumber"));
-                    return false;
-                }
-                /* Increment punishement */
-                int newVal = plugin.getJailConfig().getInt("Prisoners." + args[0] + ".RemainingBlocks") + add;
-                plugin.getJailConfig().set("Prisoners." + args[0] + ".RemainingBlocks", newVal);
-                if (args.length > 2)
-                    for (int i = 2; i < args.length; ++i) {
-                        reason += args[i];
-                        reason += " ";
-                    }
-                else
-                    reason = "No Reason.";
-                if (target != null) {
-                    target.sendMessage(plugin.toLanguage("info-command-increasement", sender.getName(), add));
-                    if (!reason.equals("No Reason"))
-                        target.sendMessage(plugin.toLanguage("info-command-displayreason", reason));
-                }
-                plugin.saveJailConfig();
-                plugin.reloadJailConfig();
-                sender.sendMessage(plugin.toLanguage("info-command-increasesuccess", add, args[0]));
-            }
-        } else {
-            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
+    boolean runCommand(CommandSender sender, String[] args) {
+
+        if (args.length < 2) {
+            return false;
         }
+
+        @SuppressWarnings("deprecation")
+        Player target = Bukkit.getPlayer(args[1]);
+        if (target == null) {
+            sender.sendMessage(plugin.toLanguage("error-command-playeroffline", args[1]));
+            return false;
+        }
+
+        // player not on jail
+        if (!Jail.isJailed(target)) {
+            sender.sendMessage(plugin.toLanguage("error-command-missingonjail", args[1]));
+            return true;
+        }
+
+        String jailName = plugin.getJailConfig().getString("Prisoners." + target.getName() + ".Prison");
+        if (!isAdminOrOwner(sender, jailName)) {
+            return false;
+        }
+
+        // Get number
+        int add;
+        try {
+            add = Integer.parseInt(args[2]);
+        } catch (NumberFormatException e) {
+            sender.sendMessage(plugin.toLanguage("error-command-invalidnumber"));
+            return false;
+        }
+
+        /* Increment punishement */
+        int newVal = plugin.getJailConfig().getInt("Prisoners." + args[1] + ".RemainingBlocks") + add;
+        plugin.getJailConfig().set("Prisoners." + args[1] + ".RemainingBlocks", newVal);
+        
+        target.sendMessage(plugin.toLanguage("info-command-increasement", sender.getName(), add));
+
+        if (args.length > 2) {
+            StringBuilder reasonBuilder = new StringBuilder();
+            for (int i = 2; i < args.length; ++i) {
+                reasonBuilder.append(args[i]).append(" ");
+            }
+            String reason = ChatColor.translateAlternateColorCodes('&', reasonBuilder.toString());
+            target.sendMessage(plugin.toLanguage("info-command-displayreason", reason));
+        }
+        
+        plugin.saveJailConfig();
+        plugin.reloadJailConfig();
+        sender.sendMessage(plugin.toLanguage("info-command-increasesuccess", add, args[1]));
+
         return true;
+    }
+
+    @Override
+    List<String> runTabComplete(CommandSender sender, String[] args) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    String getPermissionNode() {
+        return "jailworker.increase";
+    }
+
+    @Override
+    String getDescription() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

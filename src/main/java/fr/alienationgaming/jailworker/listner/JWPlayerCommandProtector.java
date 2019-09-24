@@ -11,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import fr.alienationgaming.jailworker.Jail;
 import fr.alienationgaming.jailworker.JailWorker;
 
 public class JWPlayerCommandProtector implements Listener {
@@ -27,7 +28,7 @@ public class JWPlayerCommandProtector implements Listener {
         Player player = event.getPlayer();
         String cmd = event.getMessage();
 
-        if (plugin.getJailConfig().contains("Prisoners." + player.getName())) {
+        if (Jail.isJailed(player)) {
             List<String> whitecmds = plugin.getConfig().getStringList("Plugin.Whitelisted-Commands");
             boolean allowed = false;
             for (int i = 0; i < whitecmds.size(); i++) {
@@ -35,7 +36,7 @@ public class JWPlayerCommandProtector implements Listener {
                     allowed = true;
                 }
             }
-            if (!allowed && !plugin.hasPerm(player, "jailworker.jw-cmdsonjail", true)) {
+            if (!allowed && !player.hasPermission("jailworker.cmdsonjail")) {
                 event.setCancelled(true);
                 player.sendMessage(plugin.toLanguage("error-listener-cantusecmd"));
             }

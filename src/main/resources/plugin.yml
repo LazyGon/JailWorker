@@ -6,7 +6,7 @@ commands:
   jw-player:
     description: send player to prison.
     aliases: jail-player
-    usage: /jw-player <player> <JailName> [nbr_block_to_break] [reason]
+    usage: /jw-player <player> <JailName> [number_block_to_break] [reason]
     permission: jailworker.jw-player
     permission-message: You don't have permission!
   jw-free:
@@ -106,9 +106,9 @@ commands:
     permission: jailworker.jw-reload
     permission-message: You don't have permission!
   jw-increase:
-    description: increase a player punishment of <nbr> blocks
+    description: increase a player punishment of <number> blocks
     aliases: jail-increase
-    usage: /jw-increase <player> <nbr> [reason]
+    usage: /jw-increase <player> <number> [reason]
     permission: jailworker.jw-increase
     permission-message: You don't have permission!
   jw-manageowners:

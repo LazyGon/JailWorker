@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -13,38 +12,19 @@ import java.util.logging.Level;
 
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
-import fr.alienationgaming.jailworker.commands.Clean;
-import fr.alienationgaming.jailworker.commands.ConfigCmd;
-import fr.alienationgaming.jailworker.commands.Create;
-import fr.alienationgaming.jailworker.commands.Delete;
-import fr.alienationgaming.jailworker.commands.Free;
-import fr.alienationgaming.jailworker.commands.Give;
-import fr.alienationgaming.jailworker.commands.Goto;
-import fr.alienationgaming.jailworker.commands.Increase;
-import fr.alienationgaming.jailworker.commands.Info;
-import fr.alienationgaming.jailworker.commands.JailPlayer;
-import fr.alienationgaming.jailworker.commands.List;
-import fr.alienationgaming.jailworker.commands.OwnerManager;
-import fr.alienationgaming.jailworker.commands.Reload;
-import fr.alienationgaming.jailworker.commands.Restart;
-import fr.alienationgaming.jailworker.commands.Save;
-import fr.alienationgaming.jailworker.commands.SetSpawn;
-import fr.alienationgaming.jailworker.commands.Start;
-import fr.alienationgaming.jailworker.commands.Stop;
-import fr.alienationgaming.jailworker.commands.WhiteCmd;
 import fr.alienationgaming.jailworker.listner.JWBlockBreakListener;
 import fr.alienationgaming.jailworker.listner.JWChatPrisonerPrevent;
 import fr.alienationgaming.jailworker.listner.JWPlayerCommandProtector;
@@ -53,27 +33,6 @@ import fr.alienationgaming.jailworker.listner.JWPutBlockListener;
 import fr.stevecohen.jailworker.configsign.OnConfigSignPlacedListener;
 
 public class JailWorker extends JavaPlugin {
-
-    /* Commands declarations */
-    private Create jailset = new Create(this);
-    private JailPlayer jailplayer = new JailPlayer(this);
-    private Start jailstart = new Start(this);
-    private SetSpawn jailsetspawn = new SetSpawn(this);
-    private Stop jailstop = new Stop(this);
-    private Clean jailclean = new Clean(this);
-    private Save jailsave = new Save(this);
-    private ConfigCmd jailconfigcmd = new ConfigCmd(this);
-    private List jaillist = new List(this);
-    private Delete jaildelete = new Delete(this);
-    private Restart jailrestart = new Restart(this);
-    private Info jailinfo = new Info(this);
-    private Free jailfree = new Free(this);
-    private Goto jailgoto = new Goto(this);
-    private Give jailgive = new Give(this);
-    private WhiteCmd jailwhitecmd = new WhiteCmd(this);
-    private Reload jailreload = new Reload(this);
-    private Increase jailincrease = new Increase(this);
-    private OwnerManager jailmanageowners = new OwnerManager(this);
 
     /* Listeners */
     public JWBlockBreakListener jwblockbreaklistener = new JWBlockBreakListener(this);
@@ -94,13 +53,12 @@ public class JailWorker extends JavaPlugin {
     private File frLanguage = null;
     public UpdateFiles uf = new UpdateFiles(this);
     private Map<String, Object> lang = new HashMap<String, Object>();
-    /* Other*/
+    /* Other */
     public Config getdefaultvalues = new Config(this);
     public JWPlayerInteract interactWithPlayer = new JWPlayerInteract(this);
-    public Utils utils = new Utils(this);
     public JWInventorySaver iv = new JWInventorySaver(this);
-    public Map<String, Integer> tasks = new HashMap<String, Integer>();
-    public int NbrBlockToBreak = 0;
+    public Map<String, BukkitRunnable> tasks = new HashMap<>();
+    public int NumberBlockToBreak = 0;
     public Location prisonerPreviousPos = null;
     private Vector<String> allowBlocks = new Vector<String>();
 
@@ -111,6 +69,9 @@ public class JailWorker extends JavaPlugin {
     private static JailWorker instance;
 
     public static JailWorker getInstance() {
+        if (instance == null) {
+            instance = (JailWorker) Bukkit.getPluginManager().getPlugin("JailWorker");
+        }
         return instance;
     }
 
@@ -121,34 +82,9 @@ public class JailWorker extends JavaPlugin {
         return true;
     }
 
-    private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        perms = rsp.getProvider();
-        return perms != null;
-    }
-
-    public boolean hasPerm(Player player, String perm) {
-        if (player instanceof Player) {
-            if (this.perms.has(player, perm))
-                return true;
-            player.sendMessage(ChatColor.RED + "You have not permission to do that. Please verify permissions in this world.");
-            return false;
-        }
-        return true;
-    }
-
-    public boolean hasPerm(Player player, String perm, boolean quiet) {
-        if (player instanceof Player) {
-            if (this.perms.has(player, perm))
-                return true;
-            return false;
-        }
-        return true;
-    }
-
     /*
      * JailConfig
-     * */
+     */
     public void reloadJailConfig() {
         if (jailConfigFile == null) {
             jailConfigFile = new File(getDataFolder(), "jails.yml");
@@ -252,11 +188,10 @@ public class JailWorker extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        instance = this;
-        setupPermissions();
         boolean worldEditFound = setupWorldEdit();
         if (worldEditFound == false)
-            getLogger().log(Level.INFO, "WorldEdit not found, you'll not be able to use WorldEdit selection to define the jails.\nBut you can use my simple selection system.");
+            getLogger().log(Level.INFO,
+                    "WorldEdit not found, you'll not be able to use WorldEdit selection to define the jails.\nBut you can use my simple selection system.");
 
         /* Init Defauts Config */
         this.saveDefaultConfig();
@@ -281,41 +216,19 @@ public class JailWorker extends JavaPlugin {
 
         /* Register tasks for jails enabled */
         if (jailConfig != null) {
-            Set<String> s = getJailConfig().getConfigurationSection("Jails").getKeys(false);
-            Iterator<String> it = s.iterator();
-
-            int nbrTaskStarted = 0;
-            while (it.hasNext()) {
-                String elem = (String) it.next();
-                if (getJailConfig().getBoolean("Jails." + elem + ".isStarted")) {
-                    Jail runjailsystem = new Jail(this, this.getServer().getWorld(this.getJailConfig().getString("Jails." + elem + ".World")), elem);
-                    this.tasks.put(elem, runjailsystem.getTaskId());
-                    nbrTaskStarted++;
+            Set<String> jails = getJailConfig().getConfigurationSection("Jails").getKeys(false);
+            int numberTaskStarted = 0;
+            for (String jail : jails) {
+                if (!getJailConfig().getBoolean("Jails." + jail + ".isStarted")) {
+                    continue;
                 }
+                Jail runjailsystem = new Jail(
+                        this.getServer().getWorld(this.getJailConfig().getString("Jails." + jail + ".World")), jail);
+                this.tasks.put(jail, runjailsystem.getTask());
+                numberTaskStarted++;
             }
-            this.getLogger().log(Level.INFO, nbrTaskStarted + " of " + s.size() + " jails started!");
+            this.getLogger().info(numberTaskStarted + " of " + jails.size() + " jails started!");
         }
-
-        /* Commands */
-        getCommand("jw-setjail").setExecutor((CommandExecutor) jailset);
-        getCommand("jw-player").setExecutor((CommandExecutor) jailplayer);
-        getCommand("jw-start").setExecutor((CommandExecutor) jailstart);
-        getCommand("jw-setspawn").setExecutor((CommandExecutor) jailsetspawn);
-        getCommand("jw-stop").setExecutor((CommandExecutor) jailstop);
-        getCommand("jw-clean").setExecutor((CommandExecutor) jailclean);
-        getCommand("jw-save").setExecutor((CommandExecutor) jailsave);
-        getCommand("jw-config").setExecutor((CommandExecutor) jailconfigcmd);
-        getCommand("jw-list").setExecutor((CommandExecutor) jaillist);
-        getCommand("jw-delete").setExecutor((CommandExecutor) jaildelete);
-        getCommand("jw-restart").setExecutor((CommandExecutor) jailrestart);
-        getCommand("jw-info").setExecutor((CommandExecutor) jailinfo);
-        getCommand("jw-free").setExecutor((CommandExecutor) jailfree);
-        getCommand("jw-goto").setExecutor((CommandExecutor) jailgoto);
-        getCommand("jw-give").setExecutor((CommandExecutor) jailgive);
-        getCommand("jw-whitecmd").setExecutor((CommandExecutor) jailwhitecmd);
-        getCommand("jw-reload").setExecutor((CommandExecutor) jailreload);
-        getCommand("jw-increase").setExecutor((CommandExecutor) jailincrease);
-        getCommand("jw-manageowners").setExecutor((CommandExecutor) jailmanageowners);
 
         allowBlocks.add("SAND");
         allowBlocks.add("DIRT");
@@ -324,30 +237,18 @@ public class JailWorker extends JavaPlugin {
     }
 
     public String colorFormat(String str) {
-        str = str.replaceAll("%black", "" + ChatColor.BLACK);
-        str = str.replaceAll("%dark_blue", "" + ChatColor.DARK_BLUE);
-        str = str.replaceAll("%dark_green", "" + ChatColor.DARK_GREEN);
-        str = str.replaceAll("%dark_aqua", "" + ChatColor.DARK_AQUA);
-        str = str.replaceAll("%dark_red", "" + ChatColor.DARK_RED);
-        str = str.replaceAll("%dark_purple", "" + ChatColor.DARK_PURPLE);
-        str = str.replaceAll("%gold", "" + ChatColor.GOLD);
-        str = str.replaceAll("%gray", "" + ChatColor.GRAY);
-        str = str.replaceAll("%dark_gray", "" + ChatColor.DARK_GRAY);
-        str = str.replaceAll("%blue", "" + ChatColor.BLUE);
-        str = str.replaceAll("%green", "" + ChatColor.GREEN);
-        str = str.replaceAll("%aqua", "" + ChatColor.AQUA);
-        str = str.replaceAll("%red", "" + ChatColor.RED);
-        str = str.replaceAll("%light_purple", "" + ChatColor.LIGHT_PURPLE);
-        str = str.replaceAll("%yellow", "" + ChatColor.YELLOW);
-        str = str.replaceAll("%white", "" + ChatColor.WHITE);
-        str = str.replaceAll("%magic", "" + ChatColor.MAGIC);
-        str = str.replaceAll("%bold", "" + ChatColor.BOLD);
-        str = str.replaceAll("%strikethrough", "" + ChatColor.STRIKETHROUGH);
-        str = str.replaceAll("%underline", "" + ChatColor.UNDERLINE);
-        str = str.replaceAll("%italic", "" + ChatColor.ITALIC);
-        str = str.replaceAll("%reset", "" + ChatColor.RESET);
-
-        return str;
+        return str.replaceAll("%black", "" + ChatColor.BLACK).replaceAll("%dark_blue", "" + ChatColor.DARK_BLUE)
+                .replaceAll("%dark_green", "" + ChatColor.DARK_GREEN).replaceAll("%dark_aqua", "" + ChatColor.DARK_AQUA)
+                .replaceAll("%dark_red", "" + ChatColor.DARK_RED).replaceAll("%dark_purple", "" + ChatColor.DARK_PURPLE)
+                .replaceAll("%gold", "" + ChatColor.GOLD).replaceAll("%gray", "" + ChatColor.GRAY)
+                .replaceAll("%dark_gray", "" + ChatColor.DARK_GRAY).replaceAll("%blue", "" + ChatColor.BLUE)
+                .replaceAll("%green", "" + ChatColor.GREEN).replaceAll("%aqua", "" + ChatColor.AQUA)
+                .replaceAll("%red", "" + ChatColor.RED).replaceAll("%light_purple", "" + ChatColor.LIGHT_PURPLE)
+                .replaceAll("%yellow", "" + ChatColor.YELLOW).replaceAll("%white", "" + ChatColor.WHITE)
+                .replaceAll("%magic", "" + ChatColor.MAGIC).replaceAll("%bold", "" + ChatColor.BOLD)
+                .replaceAll("%strikethrough", "" + ChatColor.STRIKETHROUGH)
+                .replaceAll("%underline", "" + ChatColor.UNDERLINE).replaceAll("%italic", "" + ChatColor.ITALIC)
+                .replaceAll("%reset", "" + ChatColor.RESET);
     }
 
     public void initLang() {
@@ -359,10 +260,10 @@ public class JailWorker extends JavaPlugin {
         if (!lang.containsKey(str))
             return "";
         String mystr = lang.get(str).toString();
-//		/* Add accent */
-//		mystr = mystr.replaceAll("é", "�");
-//		mystr = mystr.replaceAll("ê", "�");
-//		mystr = mystr.replaceAll("�.", "�");
+        // /* Add accent */
+        // mystr = mystr.replaceAll("é", "�");
+        // mystr = mystr.replaceAll("ê", "�");
+        // mystr = mystr.replaceAll("�.", "�");
 
         String colored = colorFormat(mystr.replaceAll("\\$", "%"));
         String val = String.format(colored, objects);
@@ -372,10 +273,9 @@ public class JailWorker extends JavaPlugin {
         return (val);
     }
 
-
     @Override
     public void onDisable() {
-
+        super.onDisable();
     }
 
     public Vector<String> getAllowBlocks() {
