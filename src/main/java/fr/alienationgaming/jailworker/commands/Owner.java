@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.util.StringUtil;
 
 import fr.alienationgaming.jailworker.Jail;
 
@@ -31,6 +32,7 @@ public class Owner extends JWSubCommand {
         }
 
         if (!isAdminOrOwner(sender, jail)) {
+            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
             return false;
         }
 
@@ -91,8 +93,47 @@ public class Owner extends JWSubCommand {
 
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
-        // TODO Auto-generated method stub
-        return null;
+        List<String> result = new ArrayList<>();
+        List<String> operations = List.of("add", "remove", "list");
+
+        if (args.length == 2) {
+            return StringUtil.copyPartialMatches(args[1], operations, result);
+        }
+
+        String operation = args[1].toLowerCase();
+        if (!operations.contains(operation)) {
+            return result;
+        }
+
+        List<String> jails = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false));
+        jails.removeIf(jail -> !isAdminOrOwner(sender, jail));
+        if (args.length == 3) {
+            return StringUtil.copyPartialMatches(args[2], jails, result);
+        }
+
+        String jail = args[2];
+
+        if (operation.equals("list") || !jails.contains(jail)) {
+            return result;
+        }
+
+        if (args.length >= 4) {
+            if (operation.equals("add")) {
+                return StringUtil.copyPartialMatches(args[args.length - 1], List.of("§r<new-prisoner>"), result);
+            } else {
+                List<String> owners = plugin.getJailConfig().getStringList("Jails." + jail + ".Owners");
+                if (args.length > 4) {
+                    List<String> deletion = new ArrayList<>();
+                    for (int i = 3; i < args.length; i++) {
+                        deletion.add(args[i]);
+                    }
+                    owners.removeAll(deletion);
+                }
+                return StringUtil.copyPartialMatches(args[args.length - 1], owners, result);
+            }
+        }
+
+        return result;
     }
 
     @Override

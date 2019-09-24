@@ -1,5 +1,6 @@
 package fr.alienationgaming.jailworker.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -7,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.util.StringUtil;
 import org.bukkit.util.Vector;
 
 import fr.alienationgaming.jailworker.Jail;
@@ -31,6 +33,7 @@ public class Clean extends JWSubCommand {
         }
 
         if (!isAdminOrOwner(sender, jailName)) {
+            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
             return false;
         }
 
@@ -50,7 +53,15 @@ public class Clean extends JWSubCommand {
 
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
-        return null;
+        List<String> result = new ArrayList<>();
+        List<String> jails = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false));
+        jails.removeIf(jail -> !isAdminOrOwner(sender, jail));
+        
+        if (args.length == 2) {
+            return StringUtil.copyPartialMatches(args[1], jails, result);
+        }
+
+        return result;
     }
 
     @Override

@@ -1,9 +1,11 @@
 package fr.alienationgaming.jailworker.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.util.StringUtil;
 
 import fr.alienationgaming.jailworker.Jail;
 
@@ -25,10 +27,6 @@ public class Info extends JWSubCommand {
         if (!Jail.exist(jailName)) {
             sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
             return true;
-        }
-
-        if (!isAdminOrOwner(sender, jailName)) {
-            return false;
         }
 
         /* getValues */
@@ -63,8 +61,13 @@ public class Info extends JWSubCommand {
 
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
-        // TODO Auto-generated method stub
-        return null;
+        List<String> result = new ArrayList<>();
+        List<String> jails = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false));
+        if (args.length == 2) {
+            return StringUtil.copyPartialMatches(args[1], jails, result);
+        }
+
+        return result;
     }
 
     @Override

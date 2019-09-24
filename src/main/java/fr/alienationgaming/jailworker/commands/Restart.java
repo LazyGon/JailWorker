@@ -1,5 +1,6 @@
 package fr.alienationgaming.jailworker.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -7,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.StringUtil;
 
 import fr.alienationgaming.jailworker.Jail;
 
@@ -29,6 +31,7 @@ public class Restart extends JWSubCommand {
         }
 
         if (!isAdminOrOwner(sender, jailName)) {
+            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
             return false;
         }
 
@@ -59,8 +62,14 @@ public class Restart extends JWSubCommand {
 
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
-        // TODO Auto-generated method stub
-        return null;
+        List<String> result = new ArrayList<>();
+        List<String> jails = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false));
+        jails.removeIf(jail -> !isAdminOrOwner(sender, jail));
+        if (args.length == 2) {
+            return StringUtil.copyPartialMatches(args[1], jails, result);
+        }
+
+        return result;
     }
 
     @Override

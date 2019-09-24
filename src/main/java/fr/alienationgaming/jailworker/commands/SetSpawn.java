@@ -30,8 +30,7 @@ public class SetSpawn extends JWSubCommand {
 
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
-        // TODO Auto-generated method stub
-        return null;
+        return List.of();
     }
 
     @Override

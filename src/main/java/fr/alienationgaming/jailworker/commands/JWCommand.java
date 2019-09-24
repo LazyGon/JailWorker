@@ -1,13 +1,17 @@
 package fr.alienationgaming.jailworker.commands;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.util.StringUtil;
 
 import fr.alienationgaming.jailworker.JailWorker;
 
@@ -31,13 +35,14 @@ public class JWCommand implements CommandExecutor, TabCompleter {
         FREE(new Free()),
         GOTO(new Goto()),
         GIVE(new Give()),
-        ALLOWED_COMMAND(new WhiteCmd()),
+        ALLOWED_COMMAND(new AllowedCommand()),
         RELOAD(new Reload()),
         INCREASE(new Increase()),
-        MANAGE_OWNER(new Owner()),
+        OWNER(new Owner()),
         ;
 
         private JWSubCommand subCommand;
+        private static final List<String> subCommandInputs = List.of("create", "put", "start", "setSpawn", "stop", "clean", "save", "edit", "list", "delete", "restart", "info", "free", "goto", "give", "allowedcommand", "reload", "increase", "owner");
 
         private SubCommands(JWSubCommand subCommand) {
             this.subCommand = subCommand;
@@ -80,17 +85,27 @@ public class JWCommand implements CommandExecutor, TabCompleter {
                 return SubCommands.GOTO.getInstance();
                 case "give":
                 return SubCommands.GIVE.getInstance();
-                case "whiteCmd":
+                case "allowedcommand":
                 return SubCommands.ALLOWED_COMMAND.getInstance();
                 case "reload":
                 return SubCommands.RELOAD.getInstance();
                 case "increase":
                 return SubCommands.INCREASE.getInstance();
                 case "owner":
-                return SubCommands.MANAGE_OWNER.getInstance();
+                return SubCommands.OWNER.getInstance();
                 default:
                 return null;
             }
+        }
+
+        public static List<String> getSubCommandsComplete(CommandSender sender) {
+            List<String> completion = new ArrayList<>(subCommandInputs);
+            completion.removeIf(subCommand -> !getSubCommand(subCommand).hasPermission(sender));
+            return completion;
+        }
+
+        public static List<String> getSubCommandsInputs() {
+            return Collections.unmodifiableList(subCommandInputs);
         }
     }
 
@@ -113,7 +128,9 @@ public class JWCommand implements CommandExecutor, TabCompleter {
             // TODO: invalid arg message
             return false;
         }
-        if (!subCommand.hasPermissionWithMessage(sender)) {
+
+        if (!subCommand.hasPermission(sender)) {
+            sender.sendMessage(ChatColor.RED + "You do not have permission to do that. Please verify permissions in this world.");
             return false;
         }
 
@@ -122,6 +139,15 @@ public class JWCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return null;
+        if (args.length == 1) {
+            return StringUtil.copyPartialMatches(args[0], SubCommands.getSubCommandsComplete(sender), new ArrayList<>());
+        }
+
+        JWSubCommand subCommand = SubCommands.getSubCommand(args[0]);
+        if (subCommand == null || !subCommand.hasPermission(sender)) {
+            return List.of();
+        }
+
+        return subCommand.runTabComplete(sender, args);
     }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.util.StringUtil;
 
 import fr.alienationgaming.jailworker.Jail;
 
@@ -29,6 +30,7 @@ public class AllowedCommand extends JWSubCommand {
         }
 
         if (isAdminOrOwner(sender, jail)) {
+            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
             return false;
         }
 
@@ -50,9 +52,6 @@ public class AllowedCommand extends JWSubCommand {
         case "add":
             return addAllowedCommands(sender, commands);
         case "remove":
-        case "rem":
-        case "delete":
-        case "del":
             return removeAllowedCommands(sender, commands);
         default:
             return false;
@@ -94,8 +93,45 @@ public class AllowedCommand extends JWSubCommand {
 
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
-        // TODO Auto-generated method stub
-        return null;
+        List<String> result = new ArrayList<>();
+        List<String> operations = List.of("add", "remove", "list");
+
+        if (args.length == 2) {
+            return StringUtil.copyPartialMatches(args[1], operations, result);
+        }
+
+        String operation = args[1].toLowerCase();
+        if (!operations.contains(operation)) {
+            return result;
+        }
+
+        List<String> jails = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false));
+        jails.removeIf(jail -> !isAdminOrOwner(sender, jail));
+        if (args.length == 3) {
+            return StringUtil.copyPartialMatches(args[2], jails, result);
+        }
+
+        if (operation.equals("list") || !jails.contains(args[2])) {
+            return result;
+        }
+
+        if (args.length >= 4) {
+            if (operation.equals("add")) {
+                return StringUtil.copyPartialMatches(args[args.length - 1], List.of("§r<new-allowed-command-with-\"/\">"), result);
+            } else {
+                List<String> allowedCommands = plugin.getConfig().getStringList("Plugin.Whitelisted-Commands");
+                if (args.length > 4) {
+                    List<String> inputCommands = new ArrayList<>();
+                    for (int i = 3; i < args.length; i++) {
+                        inputCommands.add(args[i]);
+                    }
+                    allowedCommands.removeAll(inputCommands);
+                }
+                return StringUtil.copyPartialMatches(args[args.length - 1], allowedCommands, result);
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -110,7 +146,6 @@ public class AllowedCommand extends JWSubCommand {
 
     @Override
     String getUsage() {
-        // TODO Auto-generated method stub
         return "/jailworker allowedcommand <add|remove|list> <jail-name> [command1] [command2]";
     }
 }

@@ -35,8 +35,7 @@ public class List extends JWSubCommand {
 
     @Override
     java.util.List<String> runTabComplete(CommandSender sender, String[] args) {
-        // TODO Auto-generated method stub
-        return null;
+        return java.util.List.of();
     }
 
     @Override

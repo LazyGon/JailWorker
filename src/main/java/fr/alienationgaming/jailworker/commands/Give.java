@@ -1,12 +1,16 @@
 package fr.alienationgaming.jailworker.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.StringUtil;
 
 import fr.alienationgaming.jailworker.Jail;
 
@@ -38,6 +42,7 @@ public class Give extends JWSubCommand {
 
         String jailName = plugin.getJailConfig().getString("Prisoners." + target.getName() + ".Prison");
         if (!isAdminOrOwner(sender, jailName)) {
+            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
             return false;
         }
 
@@ -68,8 +73,32 @@ public class Give extends JWSubCommand {
 
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
-        // TODO Auto-generated method stub
-        return null;
+        List<String> result = new ArrayList<>();
+        if (!plugin.getJailConfig().isConfigurationSection("Prisoners")) {
+            return List.of();
+        }
+
+        List<String> prisoners = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Prisoners").getKeys(false));
+        
+        if (args.length == 2) {
+            return StringUtil.copyPartialMatches(args[1], prisoners, result);
+        }
+
+        List<String> materials = Arrays.stream(Material.values()).parallel().map(Enum::name).collect(Collectors.toList());
+
+        if (args.length == 3) {
+            return StringUtil.copyPartialMatches(args[2], materials, result);
+        }
+
+        if (!materials.contains(args[2].toUpperCase())) {
+            return result;
+        }
+
+        if (args.length == 4) {
+            return StringUtil.copyPartialMatches(args[3], List.of("1", "10", "100", "1000"), result);
+        }
+        
+        return result;
     }
 
     @Override

@@ -2,7 +2,6 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import fr.alienationgaming.jailworker.JailWorker;
@@ -61,15 +60,6 @@ public abstract class JWSubCommand {
         return sender.hasPermission(getPermissionNode()) || sender.hasPermission("jailworker.admin");
     }
 
-    protected boolean hasPermissionWithMessage(CommandSender sender) {
-        if (!hasPermission(sender)) {
-            sender.sendMessage(ChatColor.RED + "You do not have permission to do that. Please verify permissions in this world.");
-            return false;
-        }
-
-        return true;
-    }
-
     /**
      * Check if sender has permission to use command for {@code jailName}.
      * Otherwise sender is admin, sender should have permission and be owner.
@@ -85,11 +75,10 @@ public abstract class JWSubCommand {
         }
 
         // Owner check.
-        if (!plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(sender.getName())) {
-            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
-            return false;
+        if (plugin.getJailConfig().getStringList("Jails." + jailName + ".Owners").contains(sender.getName())) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 }
