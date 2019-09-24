@@ -46,7 +46,7 @@ public class UpdateFiles {
             if (oldversion.equals("1.0.0")) {
                 if (!plugin.getConfig().contains("Plugin.Whitelisted-Commands./jw-free")) {
                     List<String> listOfCmds = plugin.getConfig().getStringList("Plugin.Whitelisted-Commands");
-                    listOfCmds.add("/jw-free");
+                    listOfCmds.add("/jw free");
                     plugin.getConfig().set("Plugin.Whitelisted-Commands", listOfCmds);
                 }
                 plugin.getJailConfig().set("Version", "1.1.0");

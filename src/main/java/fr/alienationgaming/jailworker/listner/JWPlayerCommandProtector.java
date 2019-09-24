@@ -43,7 +43,7 @@ public class JWPlayerCommandProtector implements Listener {
         }
         Set<String> s = plugin.getJailConfig().getConfigurationSection("Prisoners").getKeys(false);
         Iterator<String> it = s.iterator();
-        List<String> list = Arrays.asList(new String[]{"/jw-give", "/jw-free", "/jw-increase"});
+        List<String> list = Arrays.asList(new String[]{"/jw give", "/jw free", "/jw increase"});
         while (it.hasNext()) {
             String elem = (String) it.next();
             if (cmd.contains(elem) && !list.contains(cmd.split(" ")[0])) {
