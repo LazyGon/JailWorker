@@ -26,7 +26,7 @@ permissions:
       jailworker.info: true
       jailworker.goto: true
       jailworker.give: true
-      jailworker.whitecmd: true
+      jailworker.allowedcommand: true
       jailworker.reload: true
       jailworker.increase: true
       jailworker.manageowners: true

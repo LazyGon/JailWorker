@@ -29,10 +29,10 @@ public class JWPlayerCommandProtector implements Listener {
         String cmd = event.getMessage();
 
         if (Jail.isJailed(player)) {
-            List<String> whitecmds = plugin.getConfig().getStringList("Plugin.Whitelisted-Commands");
+            List<String> allowedcommands = plugin.getConfig().getStringList("Plugin.Whitelisted-Commands");
             boolean allowed = false;
-            for (int i = 0; i < whitecmds.size(); i++) {
-                if (cmd.split(" ")[0].equals(whitecmds.get(i).split(" ")[0])) {
+            for (int i = 0; i < allowedcommands.size(); i++) {
+                if (cmd.split(" ")[0].equals(allowedcommands.get(i).split(" ")[0])) {
                     allowed = true;
                 }
             }
