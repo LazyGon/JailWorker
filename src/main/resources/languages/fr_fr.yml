@@ -123,3 +123,4 @@ in-jail:
   forbidden-command: "&cVous ne pouvez pas utiliser %command% en prison."
   command-not-allowed: "&cVous ne pouvez pas utiliser %command% dans %jail-name%."
   broadcast-finish-works: "&a%player% a été libéré de prison parce que j'ai fini de travailler."
+  punishment-blocks-notice: "&a%amount% autres %material% restants!"
