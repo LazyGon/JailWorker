@@ -1,0 +1,23 @@
+00000000-0000-0000-0000-000000000000:
+  punisher: 11111111-1111-1111-1111-111111111111
+  inventory:
+    '0':
+      ==: org.bukkit.inventory.ItemStack
+      v: 1976
+      type: STONE
+      amount: 1
+  previous-location:
+    world: "world"
+    position:
+      ==: Vector
+      x: 100.0
+      y: 10.0
+      z: 100.0
+  remaining-blocks:
+    SAND: 1
+  cause: "No reason."
+  previous-gamemode: SURVIVAL
+  punished-date: 0 # current time in millisecond
+  prison: "example"
+
+  

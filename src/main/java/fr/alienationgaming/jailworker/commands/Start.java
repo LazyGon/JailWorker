@@ -2,16 +2,17 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.StringUtil;
 
-import fr.alienationgaming.jailworker.Jail;
+import fr.alienationgaming.jailworker.JailSystem;
+import fr.alienationgaming.jailworker.config.JailConfig;
+import fr.alienationgaming.jailworker.config.Messages;
 
-public class Start extends JWSubCommand {
+
+public class Start extends SubCommand {
 
     Start() {
     }
@@ -19,44 +20,36 @@ public class Start extends JWSubCommand {
     @Override
     boolean runCommand(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            // TODO: send not enough argument message
+            Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
             return false;
         }
         String jailName = args[1];
-
-        if (!Jail.exist(jailName)) {
-            sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
-            return true;
-        }
-
-        if (isAdminOrOwner(sender, jailName)) {
-            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
+        if (!hasPermission(sender, jailName)) {
+            Messages.sendMessage(sender, "command.general.error.no-permission");
             return false;
         }
 
-        if (plugin.getJailConfig().getBoolean("Jails." + jailName + ".isStarted")) {
-            sender.sendMessage(plugin.toLanguage("error-command-alreadystarted"));
+        if (JailSystem.isRunning(jailName)) {
+            Messages.sendMessage(sender, "command.start.error.jail-is-already-running", Map.of("%jail-name%", jailName));
             return true;
         }
 
-        World world = Bukkit.getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
-        Jail runjailsystem = new Jail(world, jailName);
-        BukkitRunnable task = runjailsystem.getTask();
-        plugin.tasks.put(jailName, task);
-        Bukkit.getPluginManager().registerEvents(plugin.jwblockbreaklistener, plugin);
-        plugin.getJailConfig().set("Jails." + jailName + ".isStarted", true);
-        plugin.saveJailConfig();
-        plugin.reloadJailConfig();
-        sender.sendMessage(plugin.toLanguage("info-command-jailstarted"));
-
+        JailSystem task = JailSystem.getTask(jailName);
+        if (task != null) {
+            task.start();
+            Messages.sendMessage(sender, "command.start.info.success", Map.of("%jail-name%", jailName));
+        }
+        Messages.sendMessage(sender, "command.start.error.faulure", Map.of("%jail-name%", jailName));
+        
         return true;
     }
 
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
-        List<String> jails = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false));
-        jails.removeIf(jail -> !isAdminOrOwner(sender, jail));
+        List<String> jails = JailConfig.getJails();
+        jails.removeIf(jail -> !JailSystem.isRunning(jail));
+        jails.removeIf(jail -> !hasPermission(sender, jail));
         if (args.length == 2) {
             return StringUtil.copyPartialMatches(args[1], jails, result);
         }
@@ -66,7 +59,7 @@ public class Start extends JWSubCommand {
 
     @Override
     String getPermissionNode() {
-        return "jailworker.start";
+        return "jailworker.command.start.<jail-name>";
     }
 
     @Override

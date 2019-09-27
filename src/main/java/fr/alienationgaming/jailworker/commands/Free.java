@@ -2,16 +2,20 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
-import fr.alienationgaming.jailworker.Jail;
+import fr.alienationgaming.jailworker.config.Messages;
+import fr.alienationgaming.jailworker.config.Prisoners;
 
-public class Free extends JWSubCommand {
+public class Free extends SubCommand {
 
     Free() {
     }
@@ -19,35 +23,32 @@ public class Free extends JWSubCommand {
     @Override
     boolean runCommand(CommandSender sender, String[] args) {
 
+        if (!hasPermission(sender)) {
+            Messages.sendMessage(sender, "command.general.error.no-permission");
+            return false;
+        }
+
         if (args.length == 1) {
-            // TODO: not enough arg message.
-            // sender.sendMessage(plugin.toLanguage("error-command-notenougharguments"));
+            Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
             return false;
         }
 
         @SuppressWarnings("deprecation")
         Player target = Bukkit.getPlayer(args[1]);
-
-        // Player offline
         if (target == null) {
-            sender.sendMessage(plugin.toLanguage("error-command-playeroffline", args[1]));
+            Messages.sendMessage(sender, "command.general.error.player-is-offline", Map.of("%player%", args[1]));
             return false;
         }
 
-        // player not on jail
-        if (!Jail.isJailed(target)) {
-            sender.sendMessage(plugin.toLanguage("error-command-missingonjail", args[1]));
+        if (!Prisoners.isJailed(target)) {
+            Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Map.of("%player%", args[1]));
             return false;
         }
 
-        String jailName = plugin.getJailConfig().getString("Prisoners." + target.getName() + ".Prison");
-        if (!isAdminOrOwner(sender, jailName)) {
-            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
-            return false;
-        }
-
-        plugin.interactWithPlayer.freePlayer(target);
-        target.sendMessage(plugin.toLanguage("info-command-playerfree", sender.getName()));
+        String jailName = Prisoners.getJailPlayerIsIn(target);
+        Messages.sendMessage(sender, "command.free.info.free-player", Map.of("%player%", target.getName(), "%jail-name%", jailName));
+        Messages.sendMessage(target, "command.free.info.you-are-now-free", Map.of("%sender%", sender.getName(), "%jail-name%", jailName));
+        Prisoners.freePlayer(target);
 
         if (args.length > 2) {
             StringBuilder reasonBuilder = new StringBuilder();
@@ -55,7 +56,7 @@ public class Free extends JWSubCommand {
                 reasonBuilder.append(args[i]).append(" ");
             }
             String reason = ChatColor.translateAlternateColorCodes('&', reasonBuilder.toString());
-            target.sendMessage(plugin.toLanguage("info-command-displayreason", reason));
+            Messages.sendMessage(target, "command.free.info.display-reason", Map.of("%reason%", reason));
         }
 
         return true;
@@ -64,18 +65,15 @@ public class Free extends JWSubCommand {
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
-        if (!plugin.getJailConfig().isConfigurationSection("Prisoners")) {
-            return result;
-        }
-
-        List<String> prisoners = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Prisoners").getKeys(false));
+        List<String> prisoners = Prisoners.getPrisoners().stream()
+                .map(OfflinePlayer::getName).collect(Collectors.toList());
         
         if (args.length == 2) {
             return StringUtil.copyPartialMatches(args[1], prisoners, result);
         }
 
         if (args.length == 3) {
-            return StringUtil.copyPartialMatches(args[2], List.of("§r[reason]"), result);
+            return StringUtil.copyPartialMatches(args[2], List.of("[reason]"), result);
         }
         
         return result;
@@ -83,7 +81,7 @@ public class Free extends JWSubCommand {
 
     @Override
     String getPermissionNode() {
-        return "jailworker.free";
+        return "jailworker.command.free";
     }
 
     @Override

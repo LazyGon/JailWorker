@@ -1,0 +1,125 @@
+# システムメッセージ = &9
+# 成功 = &a 失敗 = &c
+# 稼働中 = &a 停止中 = &c
+
+# ここでメッセージを自由に編集できます。
+# 他の言語に設定しているプレイヤーのために、言語を追加するには <locale>_<country>.yml という形式のファイルを追加します。
+# ファイル名に使える言語コードと国コードはここを参照してください: https://minecraft.gamepedia.com/Language
+# 言語を追加したあとにGithubなどでファイルを渡してくれると、デフォルトのサポート言語に追加します。
+command:
+  general:
+    info:
+      plugin-prefix: "&8[&cJail&aWorker&8]&r"
+      line: "--------------------"
+    error:
+      not-enough-arguments: "&c引数が足りません。"
+      no-permission: "&c権限がありません。"
+      jail-does-not-exist: "&c%jail-name% という牢獄は存在しません。"
+      missing-argument: "&c%missing-argument% という引数は存在しません。"
+      jail-is-not-running: "&c%jail-name% は稼働していません。"
+      only-player: "&cこのコマンドはプレイヤーにしか使えません。"
+      player-is-offline: "&c%player% はオフラインです。"
+      player-has-never-played: "&c%player% はこのサーバーに参加したことがありません。"
+      player-is-not-jailed: "&c%player% は牢獄に入っていません。"
+      invalid-number: "指定した数字が不正です。"
+      material-does-not-exist: "&c%material% は存在しないアイテムです。参照: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html"
+      invalid-material: "&c%material% は不正なアイテムです。"
+  allowed-command:
+    info:
+      add-success: "&a%jail-name% に指定した許可コマンドを追加しました。"
+      remove-success: "&a%jail-name% から指定した許可コマンドを削除しました。"
+      list-header: "&9%jail-name% 許可コマンドリスト"
+      list-command-line: "  &f- &9%command%"
+  clean:
+    info:
+      blocks-deleted: "&9%jail-name% の設置された未破壊ブロックを合計 %deleted-count% つ消去しました"
+  create:
+    info:
+      define-tips: "&9対角線上を2回右クリックして牢獄の領域を指定します。"
+      waiting-for-first: "&9最初の一点を指定してください。"
+      waiting-for-second: "&9次の一点を指定してください。"
+      retrieve-worldedit: "&9WorldEdit から牢獄の領域を取得しました。"
+      waiting-for-spawn: "&9この牢獄のスポーン地点を右クリックしてください。"
+      finish: "&a%jail-name% が作成されました！"
+    error:
+      you-are-already-in-creation: "&c現在 %jail-name% を作成中です"
+      jail-already-exists: "&c%jail-name% はすでに存在します。"
+  delete:
+    info:
+      success: "&a%jail-name% が削除されました！"
+    error:
+      failure: "&c%jail-name% を削除できませんでした。管理者に報告してください。"
+  edit:
+    info:
+      define-tips: "&9右クリックして地点を指定してください。"
+    error:
+  free:
+    info:
+      free-player: "&a%player% を %jail-name% から開放しました。"
+      you-are-now-free: "&9%sender% が あなたを %jail-name% から開放しました。"
+      display-reason: "&9理由: %reason%"
+
+  give:
+    info:
+      give-item: "&a%player% に %material% を %amount% 個与えました。"
+      given-item: "&a%sender% に %material% を %amount% 個与えられました。"
+  goto:
+    info:
+      to-leave-jail-tips: "&9ここからでる時は何らかの手段でテレポートしましょう。"
+      welcome: "&9%jail-name% へようこそ！"
+  increase:
+    info:
+      notice-target: "&9%sender% があなたの %material% の必要破壊数を %amount% 個増やしました。（現在 %new-value% 個）"
+      notice-sender: "&9%player% の %material% の必要破壊数を %amount% 個増やしました。（現在 %new-value% 個）"
+  info:
+    info:
+      jail-name: "&9%jail-name% の情報"
+      jail-is-running: "&a稼働中"
+      jail-is-not-running: "&c停止中"
+      jail-max-punishment-blocks: "&9最大出現ブロック数: %max-punishment-blocks%"
+      jail-block-appear-speed: "&9ブロック出現速度: %punishment-block-speed%"
+      jail-world-name: "&9ワールド: %world-name%"
+      prisoner-header: "&9%player% の情報"
+      prisoner-jail-name: "&9牢獄名: %jail-name%"
+      prisoner-punisher-name: "&9処罰者: %punisher%"
+      prisoner-cause: "&9処罰理由: %reason%"
+      prisoner-punishment-time: "&9処罰日時: %time%"
+      prisoner-punishment-blocks: "&9破壊すべきブロック:"
+      prisoner-punishment-blocks-format: "&9%material%: %amount%"
+  list:
+    info:
+      list-header: "&9牢獄リスト（&a緑 = 稼働中&9、&c赤 = 停止中&9）"
+  put:
+    info:
+      broadcast-jailed: "&9%player% が %jail-name% に収監されました！"
+      broadcast-prisoners-cannot-speak: "&9%player% は喋れません！"
+      broadcast-prisoners-cannot-hear: "&9%player% はチャットが見えません！"
+      jailed: "&9あなたは %sender% によって %jail-name% に収監されました！"
+      display-reason: "&9理由: %reason%"
+      punishment-block-header: "&9牢獄を出るのに壊すべきブロックは:"
+      punishment-block-format: "&9%material%: %amount%個"
+    error:
+      player-is-already-jailed: "&c%player% はすでに牢獄に居ます。"
+  reload:
+    info:
+      success: "&a設定を再読込しました！"
+  restart:
+    info:
+      success: "&a%jail-name% を再起動しました！"
+    error:
+      failure: "&c%jail-name% の再起動に失敗しました。"
+  start:
+    info:
+      success: "&a%jail-name% を起動しました！"
+    error:
+      faulure: "&c%jail-name% の起動に失敗しました。"
+      jail-is-already-running: "&c%jail-name% はすでに稼働しています。"
+  stop:
+    info:
+      success: "&a%jail-name% を停止しました！"
+in-jail:
+  cannot-speak: "&cくっちゃべってないで働きなさい！"
+  forbidden-command: "&c牢獄では %command% は許可されていても使えません。"
+  command-not-allowed: "&c%jail-name% では %command% は使えません。"
+  broadcast-finish-work: "&a%player% が労役を終えたので、牢獄から開放されました！"
+  punishment-blocks-notice: "&a%material% が残り %amount% 個で完了です！"

@@ -2,17 +2,16 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
-import org.bukkit.util.Vector;
 
-import fr.alienationgaming.jailworker.Jail;
+import fr.alienationgaming.jailworker.config.JailConfig;
+import fr.alienationgaming.jailworker.config.Messages;
 
-public class Goto extends JWSubCommand {
+public class Goto extends SubCommand {
 
     Goto() {
     }
@@ -20,37 +19,29 @@ public class Goto extends JWSubCommand {
     @Override
     boolean runCommand(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(plugin.toLanguage("error-command-notconsole"));
+            Messages.sendMessage(sender, "command.general.error.only-player");
             return false;
         }
 
         if (args.length == 1) {
-            // TODO: not enough arg message
+            Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
             return false;
         }
 
         String jailName = args[1];
-
-        if (!Jail.exist(jailName)) {
-            sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
-            return true;
-        }
-
-        if (!isAdminOrOwner(sender, jailName)) {
-            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
+        if (!hasPermission(sender, jailName)) {
+            Messages.sendMessage(sender, "command.general.error.no-permission");
             return false;
         }
 
-        Vector dest = plugin.getJailConfig().getVector("Jails." + jailName + ".Location.PrisonerSpawn");
-        World world = Bukkit.getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
-        
-        if (((Player) sender).teleport(dest.toLocation(world))) {
-            sender.sendMessage(plugin.toLanguage("info-command-gotowelcome", jailName));
-            sender.sendMessage(plugin.toLanguage("help-command-gotoback"));
-        } else {
-            sender.sendMessage(plugin.toLanguage("error-command-wronglocation"));
+        if (!JailConfig.exist(jailName)) {
+            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Map.of("%jail-name%", jailName));
             return false;
         }
+
+        ((Player) sender).teleport(JailConfig.getSpawnLocation(jailName));
+        Messages.sendMessage(sender, "command.goto.info.welcome", Map.of("%jail-name%", jailName));
+        Messages.sendMessage(sender, "command.goto.info.to-leave-jail-tips");
 
         return true;
     }
@@ -58,8 +49,9 @@ public class Goto extends JWSubCommand {
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
-        List<String> jails = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false));
-        jails.removeIf(jail -> !isAdminOrOwner(sender, jail));
+        List<String> jails = JailConfig.getJails();
+        jails.removeIf(jail -> !JailConfig.exist(jail));
+        jails.removeIf(jail -> !hasPermission(sender, jail));
         if (args.length == 2) {
             return StringUtil.copyPartialMatches(args[1], jails, result);
         }
@@ -69,7 +61,7 @@ public class Goto extends JWSubCommand {
 
     @Override
     String getPermissionNode() {
-        return "jailworker.goto";
+        return "jailworker.command.goto.<jail-name>";
     }
 
     @Override

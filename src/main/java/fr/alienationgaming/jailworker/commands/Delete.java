@@ -2,19 +2,15 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.StringUtil;
-import org.bukkit.util.Vector;
 
-import fr.alienationgaming.jailworker.Jail;
+import fr.alienationgaming.jailworker.config.JailConfig;
+import fr.alienationgaming.jailworker.config.Messages;
 
-public class Delete extends JWSubCommand {
+public class Delete extends SubCommand {
 
     Delete() {
     }
@@ -22,47 +18,28 @@ public class Delete extends JWSubCommand {
     @Override
     boolean runCommand(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            // TODO: not enough argument message.
+            Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
             return false;
         }
 
         String jailName = args[1];
-
-        if (!Jail.exist(jailName)) {
-            sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
+        if (!hasPermission(sender, jailName)) {
+            Messages.sendMessage(sender, "command.general.error.no-permission");
             return false;
         }
 
-        if (!isAdminOrOwner(sender, jailName)) {
-            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
+        if (!JailConfig.exist(jailName)) {
+            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Map.of("%jail-name%", jailName));
             return false;
         }
 
-        if (plugin.getJailConfig().getBoolean("Jails." + jailName + ".isStarted")) {
-            BukkitRunnable task = plugin.tasks.get(jailName);
-            if (!task.isCancelled()) {
-                task.cancel();
-            }
-            PlayerInteractEvent.getHandlerList().unregister(plugin.jwblockbreaklistener);
-        }
-        /* Delete task */
-        plugin.tasks.remove(jailName);
-        Vector spawn = plugin.getJailConfig().getVector("Jails." + jailName + ".Location.PrisonerSpawn");
-        World world = Bukkit.getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
+        // JailConfig#removeJail will also remove running task.
+        JailConfig.removeJail(jailName);
 
-        /* Delete red block for prisoner spawn */
-        Location locSp = new Location(world, spawn.getBlockX(), spawn.getBlockY() - 1, spawn.getBlockZ());
-        Location locSpNei = new Location(world, spawn.getBlockX() - 1, spawn.getBlockY() - 1, spawn.getBlockZ());
-        locSp.getBlock().setType(locSpNei.getBlock().getType());
-
-        /* Delete "jailName" section */
-        plugin.getJailConfig().set("Jails." + jailName, null);
-        plugin.saveJailConfig();
-        plugin.reloadJailConfig();
-        if (!Jail.exist(jailName)) {
-            sender.sendMessage(plugin.toLanguage("info-command-jailremovesuccess", jailName));
+        if (!JailConfig.exist(jailName)) {
+            Messages.sendMessage(sender, "command.delete.info.success", Map.of("%jail-name%", jailName));
         } else {
-            sender.sendMessage(plugin.toLanguage("error-command-jailremoveechec"));
+            Messages.sendMessage(sender, "command.delete.error.failure", Map.of("%jail-name%", jailName));
             return false;
         }
 
@@ -72,8 +49,9 @@ public class Delete extends JWSubCommand {
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
-        List<String> jails = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false));
-        jails.removeIf(jail -> !isAdminOrOwner(sender, jail));
+        List<String> jails = JailConfig.getJails();
+        jails.removeIf(jail -> !JailConfig.exist(jail));
+        jails.removeIf(jail -> !hasPermission(sender, jail));
         if (args.length == 2) {
             return StringUtil.copyPartialMatches(args[1], jails, result);
         }
@@ -83,7 +61,7 @@ public class Delete extends JWSubCommand {
 
     @Override
     String getPermissionNode() {
-        return "jailworker.delete";
+        return "jailworker.command.delete.<jail-name>";
     }
 
     @Override

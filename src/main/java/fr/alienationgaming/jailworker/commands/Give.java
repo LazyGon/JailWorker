@@ -3,18 +3,22 @@ package fr.alienationgaming.jailworker.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 
-import fr.alienationgaming.jailworker.Jail;
+import fr.alienationgaming.jailworker.config.Messages;
+import fr.alienationgaming.jailworker.config.Prisoners;
 
-public class Give extends JWSubCommand {
+public class Give extends SubCommand {
 
     Give() {
     }
@@ -23,26 +27,24 @@ public class Give extends JWSubCommand {
     boolean runCommand(CommandSender sender, String[] args) {
 
         if (args.length < 3) {
+            Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
+            return false;
+        }
+
+        if (!hasPermission(sender)) {
+            Messages.sendMessage(sender, "command.general.error.no-permission");
             return false;
         }
 
         @SuppressWarnings("deprecation")
         Player target = Bukkit.getPlayer(args[1]);
-        // Player offline
         if (target == null) {
-            sender.sendMessage(plugin.toLanguage("error-command-playeroffline", args[1]));
+            Messages.sendMessage(sender, "command.general.error.player-is-offline", Map.of("%player%", args[1]));
             return false;
         }
 
-        // player not on jail
-        if (!Jail.isJailed(target)) {
-            sender.sendMessage(plugin.toLanguage("error-command-missingonjail", args[1]));
-            return false;
-        }
-
-        String jailName = plugin.getJailConfig().getString("Prisoners." + target.getName() + ".Prison");
-        if (!isAdminOrOwner(sender, jailName)) {
-            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
+        if (!Prisoners.isJailed(target)) {
+            Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Map.of("%player%", args[1]));
             return false;
         }
 
@@ -50,7 +52,7 @@ public class Give extends JWSubCommand {
         try {
             item = Material.valueOf(args[2].toUpperCase());
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(plugin.toLanguage("info-command-materialidlink"));
+            Messages.sendMessage(sender, "command.general.error.material-does-not-exist", Map.of("%material%", args[2].toUpperCase(Locale.ROOT)));
             return false;
         }
 
@@ -62,11 +64,9 @@ public class Give extends JWSubCommand {
             }
         }
 
-        // TODO: remove "error-command-invalidmaterial"
-
         target.getInventory().addItem(new ItemStack(item, amount));
-        target.sendMessage(plugin.toLanguage("info-command-giveitem", sender.getName(), item.toString()));
-        sender.sendMessage(plugin.toLanguage("info-command-itemgiven", item.toString()));
+        Messages.sendMessage(target, "command.give.info.given-item", Map.of("%sender%", sender.getName(), "%item%", item.toString(), "%amount%", String.valueOf(amount)));
+        Messages.sendMessage(sender, "command.give.info.give-item", Map.of("%target%", target.getName(), "%item%", item.toString(), "%amount%", String.valueOf(amount)));
 
         return true;
     }
@@ -74,17 +74,15 @@ public class Give extends JWSubCommand {
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
-        if (!plugin.getJailConfig().isConfigurationSection("Prisoners")) {
-            return List.of();
-        }
+        List<String> prisoners = Prisoners.getPrisoners().stream().map(OfflinePlayer::getName)
+                .collect(Collectors.toList());
 
-        List<String> prisoners = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Prisoners").getKeys(false));
-        
         if (args.length == 2) {
             return StringUtil.copyPartialMatches(args[1], prisoners, result);
         }
 
-        List<String> materials = Arrays.stream(Material.values()).parallel().map(Enum::name).collect(Collectors.toList());
+        List<String> materials = Arrays.stream(Material.values()).parallel().map(Enum::name)
+                .collect(Collectors.toList());
 
         if (args.length == 3) {
             return StringUtil.copyPartialMatches(args[2], materials, result);
@@ -97,13 +95,13 @@ public class Give extends JWSubCommand {
         if (args.length == 4) {
             return StringUtil.copyPartialMatches(args[3], List.of("1", "10", "100", "1000"), result);
         }
-        
+
         return result;
     }
 
     @Override
     String getPermissionNode() {
-        return "jailworker.give";
+        return "jailworker.command.give";
     }
 
     @Override
@@ -113,7 +111,6 @@ public class Give extends JWSubCommand {
 
     @Override
     String getUsage() {
-        // TODO Auto-generated method stub
         return "/jailworker give <player> <material-name> [amount]";
     }
 }

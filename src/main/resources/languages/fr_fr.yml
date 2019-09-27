@@ -1,0 +1,125 @@
+# Message système = &9
+# Succès = &a échec = &c
+# Running = &a Stop = &c
+
+# Vous pouvez modifier les messages comme vous le souhaitez.
+# Pour ajouter une autre langue pour les joueurs qui définissent une langue différente, ajoutez le fichier nommé <locale> _ <pays> .yml
+# Le format de nom de fichier que vous pouvez utiliser est répertorié ici:
+# Si vous ajoutez un fichier de langue et souhaitez ajouter une langue de fichier prise en charge par défaut, veuillez me le transmettre sur github.
+
+# THIS FILE IS CREATED BY GOOGLE TRANSLATION. PLEASE REWRITE.
+command:
+  general:
+    info:
+      plugin-prefix: "&8[&cJail&aWorker&8]&r"
+      line: "--------------------"
+    error:
+      not-enough-arguments: "&cPas assez d'arguments."
+      no-permission: "&cVous n'avez pas la permission."
+      jail-does-not-exist: "&cJail nommé %jail-name% n'existe pas."
+      missing-argument: "&cIl n'y a pas d'argument %missing-argument%."
+      jail-is-not-running: "&c%jail-name% n'est pas en cours d'exécution."
+      only-player: "&cCette commande est réservée à un joueur."
+      player-is-offline: "&c%player% est déconnecté."
+      player-has-never-played: "&c%player% n'a jamais joué auparavant."
+      player-is-not-jailed: "&c%player% n'est pas emprisonné."
+      invalid-number: "Nombre invalide."
+      material-does-not-exist: "&c%material% n'existe pas. Voir&f: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html"
+      invalid-material: "&c%material% est un matériau invalide. Voir&f: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html"
+  allowed-command:
+    info:
+      add-success: "&aAdded a spécifié les commandes autorisées à %jail-name%."
+      remove-success: "&aRemoved a autorisé les commandes autorisées à partir de %jail-name%"
+      list-header: "Liste de commandes &9Allowd pour %jail-name%."
+      list-command-line: "&f- &9%command%"
+  clean:
+    info:
+      blocks-deleted: "&9%delete-count%Les blocs de punition ininterrompus ont été supprimés dans %jail-name%."
+  create:
+    info:
+      define-tips: "&9Faites une sélection cuboïde pour votre prison &c(clic droit)"
+      Waiting for First: "&9Veuillez cliquer avec le bouton droit de la souris sur la première position."
+      wait-for-second: "&9Veuillez cliquer avec le bouton droit sur la seconde position."
+      retrieve-worldedit: "&9Récupérer la sélection de cuboïdes dans WorldEdit."
+      waiting-for-spawn: "&9pVeuillez cliquer avec le bouton droit de la souris sur la position d'apparition de spawn pour cette prison."
+      finish: "&a%jail-name% est défini!"
+    error:
+      you-are-already-in-creation: "&cVous créez %jail-name% maintenant."
+      jail-already-exist: "&c%jail-name% existe déjà."
+  delete:
+    info:
+      success: "&a%jail-name% est supprimé!"
+    error:
+      failure: "&c%jail-name% ne peut pas être supprimé. Signalez-le à l'administrateur."
+  edit:
+    info:
+      define-tips: "&9Veuillez cliquer avec le bouton droit de la souris pour spécifier la position."
+    error:
+  free:
+    info:
+      free-player: "&a%player% est maintenant libéré de %jail-name%."
+      you-are-now-free: "&9%sender% vous a libéré de %jail-name%."
+      display-reason: "&9Raison: %reason%"
+  give:
+    info:
+      give-item: "&aVous avez donné %amount% %material%s à %player%."
+      given-item: "&aVous avez reçu %amount% %material%s de %sender%"
+  goto:
+    info:
+      to-leave-jail-tips: "&9Pour partir, téléportez-vous hors de prison par un moyen quelconque..."
+      welcome: "&9Bienvenue à %jail-name%!"
+  increase:
+    info:
+      notice-target: "&9%sender% ajouté %amount% blocs de punition (%material%). Il y a actuellement %new-amount% blocs."
+      notice-sender: "&9Vous avez ajouté %amount% blocs de punition (%material%) pour %player%. Il y a actuellement %new-amount% blocs."
+  info:
+    info:
+      jail-name: "&9Information de %jail-name%"
+      jail-is-running: "&aRunning"
+      jail-is-not-running: "&cStop"
+      jail-max-punishment-blocks: "&9Les blocs de punition de max pour cette prison sont: %max-punishment-blocks%"
+      jail-block-appear-speed: "&9Les blocs de punition speed ??apparaissent: %punishment-block-speed%"
+      jail-world-name: "&9World: %world%"
+      prisoner-header: "&9Information de %player%"
+      prisoner-jail-name: "&9Nom de la prison: %jail-name%"
+      prisoner-punisher-name: "&9Punisher: %punisher%"
+      prisoner-cause: "&9Pause motif: %reason%"
+      prisoner-punishment-time: "&9Date punie:%time%"
+      prisoner-punishment-blocks: "&9Bloque tu dois casser"
+      prisoner-punishment-blocks-format: "&9%material%: %amount%"
+  list:
+    info:
+      list-header: "&9Jail List (&aGreen = Running&9, &cRed = Stop&9)"
+  put:
+    info:
+      broadcast-jailed: "&9%player% est emprisonné! Le nom de la prison est: %jail-name%."
+      broadcast-prisoners-cannot-speak: "&9%player% ne peuvent pas parler maintenant!"
+      broadcast-prisoners-cannot-hear: "&9%player% ne peuvent pas voir le chat maintenant!"
+      jailed: "&9Vous êtes emprisonné par %sender%. Le nom de la prison est: %jail-name%."
+      display-reason: "&9Raison: %reason%"
+      punishment-block-header: "&9Les blocs que vous devez rompre pour sortir de prison sont&f:"
+      punishment-block-format: "&9%material%: %amount%"
+    error:
+      player-is-already-jailed: "&c%player% est déjà emprisonné."
+  reload:
+    info:
+      success: "&aune configuration rechargée!"
+  restart:
+    info:
+      success: "&a%jail-name% est redémarré!"
+    error:
+      failure: "&cN'a pas réussi à redémarrer %jail-name%."
+  start:
+    info:
+      success: "&a%jail-name% est commencé!"
+    error:
+      failure: "&cN'a pas réussi à démarrer %jail-name%."
+      jail-is-already-running: "&c%jail-name% est déjà en cours d'exécution."
+  stop:
+    info:
+      success: "&a%jail-name% arrêté!"
+in-jail:
+  cannot-speak: "&cNe parlez pas, juste du travail."
+  forbidden-command: "&cVous ne pouvez pas utiliser %command% en prison."
+  command-not-allowed: "&cVous ne pouvez pas utiliser %command% dans %jail-name%."
+  broadcast-finish-works: "&a%player% a été libéré de prison parce que j'ai fini de travailler."

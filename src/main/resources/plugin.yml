@@ -1,45 +1,70 @@
 name: ${project.artifactId}
 version: ${project.version}
 main: fr.alienationgaming.jailworker.JailWorker
-softdepends: [LunaChat, Vault]
+softdepends: [LunaChat, Vault, WorldEdit]
 api-version: "1.14"
 commands:
   jailworker:
     description: Base command of this plugin.
     aliases: ["jail", "jw"]
-    usage: /jailworker <subcommand> [arg1] [arg2] ...
 
 permissions:
   jailworker.*:
-    description: Gives access to all jailworker commands
+    description: Gives access to everything.
     children:
-      jailworker.put: true
-      jailworker.free: true
-      jailworker.create: true
-      jailworker.start: true
-      jailworker.stop: true
-      jailworker.clean: true
-      jailworker.config: true
-      jailworker.list: true
-      jailworker.delete: true
-      jailworker.restart: true
-      jailworker.info: true
-      jailworker.goto: true
-      jailworker.give: true
-      jailworker.allowedcommand: true
-      jailworker.reload: true
-      jailworker.increase: true
-      jailworker.manageowners: true
-      jailworker.admin: true
+      jailworker.command.*: true
+      jailworker.bypass.*: true
+    default: op
+  jailworker.command.*:
+    description: Give access to all commands.
+    children:
+      jailworker.command.create: true
+      jailworker.command.start.*: true
+      jailworker.command.stop.*: true
+      jailworker.command.edit.*: true
+      jailworker.command.delete.*: true
+      jailworker.command.restart.*: true
+      jailworker.command.allowed-command.*: true
+      jailworker.command.put.*: true
+      jailworker.command.free: true
+      jailworker.command.clean.*: true
+      jailworker.command.list: true
+      jailworker.command.info.*: true
+      jailworler.command.goto.*: true
+      jailworker.command.give.*: true
+      jailworker.command.increase: true
+    default: op
+  jailworker.bypass.*:
+    description: Give ability to bypass all limits.
+    children:
+      jailworker.bypass.blockedit.*: true
+      jailworker.bypass.allowedcommand.*: true
+    default: op
+
+# group recommended perms
+  jailworker.admin:
+    description: Give access to admin commands for administrators.
+    children:
+      jailworker.command.create: true
+      jailworker.command.start: true
+      jailworker.command.stop: true
+      jailworker.command.config: true
+      jailworker.command.delete: true
+      jailworker.command.restart: true
+      jailworker.command.allowed-command: true
+      jailworker.command.reload: true
+      jailworker.mod: true
     default: op
   jailworker.mod:
     description: Give access to utils commands for moderators
     children:
-      jailworker.put: true
-      jailworker.free: true
-      jailworker.clean: true
-      jailworker.list: true
-      jailworker.info: true
-      jailworler.goto: true
-      jailworker.give: true
-      jailworker.increase: true
+      jailworker.command.put.*: true
+      jailworker.command.free: true
+      jailworker.command.clean: true
+      jailworker.command.list: true
+      jailworker.command.info: true
+      jailworler.command.goto: true
+      jailworker.command.give: true
+      jailworker.command.increase: true
+      jailworker.bypass.blockedit: true
+      jailworker.bypass.allowed-command: true

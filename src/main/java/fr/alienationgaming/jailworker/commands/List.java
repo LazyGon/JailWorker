@@ -5,7 +5,11 @@ import java.util.Vector;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-public class List extends JWSubCommand {
+import fr.alienationgaming.jailworker.JailSystem;
+import fr.alienationgaming.jailworker.config.JailConfig;
+import fr.alienationgaming.jailworker.config.Messages;
+
+public class List extends SubCommand {
 
     List() {
     }
@@ -16,19 +20,13 @@ public class List extends JWSubCommand {
         Vector<String> vec = new Vector<String>();
         String[] tab;
 
-        sender.sendMessage(plugin.toLanguage("info-command-listjail"));
-        sender.sendMessage(plugin.toLanguage("info-command-colorstatus"));
-        sender.sendMessage("----------------------------");
-        plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false).forEach(jail -> {
-            if (plugin.getJailConfig().getBoolean("Jails." + jail + ".isStarted")) {
-                vec.add(ChatColor.GREEN + jail);
-            } else {
-                vec.add(ChatColor.RED + jail);
-            }
-        });
+        Messages.sendMessage(sender, "command.list.info.list-header");
+        Messages.sendMessage(sender, false, "command.general.info.line");
+        JailConfig.getJails()
+                .forEach(jail -> vec.add((JailSystem.isRunning(jail) ? ChatColor.GREEN : ChatColor.RED) + jail));
         tab = vec.toArray(new String[vec.size()]);
         sender.sendMessage(tab);
-        sender.sendMessage("----------------------------");
+        Messages.sendMessage(sender, false, "command.general.info.line");
 
         return true;
     }
@@ -40,7 +38,7 @@ public class List extends JWSubCommand {
 
     @Override
     String getPermissionNode() {
-        return "jailworker.list";
+        return "jailworker.command.list";
     }
 
     @Override

@@ -1,0 +1,124 @@
+# System message = &9
+# Success = &a Faulure = &c
+# Running = &a Stop = &c
+
+# You can change messages like you want.
+# To add another language for player who sets different language, add file named <locale>_<country>.yml
+# File name format you can use is listed here: https://minecraft.gamepedia.com/Language
+# If you add language file and want to add file default supported language, please pass the file to me on github.
+command:
+  general:
+    info:
+      plugin-prefix: "&8[&cJail&aWorker&8]&r"
+      line: "--------------------"
+    error:
+      not-enough-arguments: "&cNot enough arguments."
+      no-permission: "&cYou do not have permission."
+      jail-does-not-exist: "&cJail named %jail-name% does not exist."
+      missing-argument: "&cThere is no argument %missing-argument%."
+      jail-is-not-running: "&c%jail-name% is not running."
+      only-player: "&cThis command is player only."
+      player-is-offline: "&c%player% is offline."
+      player-has-never-played: "&c%player% has never played before."
+      player-is-not-jailed: "&c%player% is not jailed."
+      invalid-number: "Invalid number."
+      material-does-not-exist: "&c%material% does not exist. see: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html"
+      invalid-material: "&c%material% is invalid material."
+  allowed-command:
+    info:
+      add-success: "&aAdded specified allowed commands to %jail-name%."
+      remove-success: "&aRemoved specified allowed commands from %jail-name%"
+      list-header: "&9Allowd command list for %jail-name%."
+      list-command-line: "  &f- &9%command%"
+  clean:
+    info:
+      blocks-deleted: "&9%deleted-count% unbroken punishment blocks were removed in %jail-name%."
+  create:
+    info:
+      define-tips: "&9Make a cuboid selection for your jail &c(right-clic)"
+      waiting-for-first: "&9Please right click first position."
+      waiting-for-second: "&9Please right click second position."
+      retrieve-worldedit: "&9Retrieve cuboid selection from WorldEdit."
+      waiting-for-spawn: "&9pPlease right click spawn position for this jail."
+      finish: "&a%jail-name% is defined!"
+    error:
+      you-are-already-in-creation: "&cYou are creating %jail-name% now."
+      jail-already-exists: "&c%jail-name% is already exists."
+  delete:
+    info:
+      success: "&a%jail-name% is removed!"
+    error:
+      failure: "&c%jail-name% cannot be removed. Please report this to administrator."
+  edit:
+    info:
+      define-tips: "&9Please right click to specify position."
+    error:
+  free:
+    info:
+      free-player: "&a%player% is now freed from %jail-name%."
+      you-are-now-free: "&9%sender% has freed you from %jail-name%."
+      display-reason: "&9Reason: %reason%"
+  give:
+    info:
+      give-item: "&aYou gave %amount% %material%s to %player%."
+      given-item: "&aYou received %amount% %materials%s from %sender%"
+  goto:
+    info:
+      to-leave-jail-tips: "&9To leave, teleport out of jail by some means..."
+      welcome: "&9Welcome to %jail-name%!"
+  increase:
+    info:
+      notice-target: "&9%sender% added %amount% punishment blocks (%material%). Current amount is %new-value%."
+      notice-sender: "You added %amount% punishment blocks (%material%) for %player%. Current amount is %new-value%."
+  info:
+    info:
+      jail-name: "&9Information of %jail-name%"
+      jail-is-running: "&aRunning"
+      jail-is-not-running: "&cStop"
+      jail-max-punishment-blocks: "&9Max punishment blocks for this jail is: %max-punishment-blocks%"
+      jail-block-appear-speed: "&9Speed punishment blocks appear is: %punishment-block-speed%"
+      jail-world-name: "&9World: %world-name%"
+      prisoner-header: "&9Information of %player%"
+      prisoner-jail-name: "&9Jail name: %jail-name%"
+      prisoner-punisher-name: "&9Punisher: %punisher%"
+      prisoner-cause: "&9Punishment reason: %reason%"
+      prisoner-punishment-time: "&9Punished date: %time%"
+      prisoner-punishment-blocks: "&9Blocks to be broken:"
+      prisoner-punishment-blocks-format: "&9%material%: %amount%"
+  list:
+    info:
+      list-header: "&9Jail List (&aGreen = Running&9, &cRed = Stop&9)"
+  put:
+    info:
+      broadcast-jailed: "&9%player% is jailed! The jail name is:%jail-name%."
+      broadcast-prisoners-cannot-speak: "&9%player% cannot speak now!"
+      broadcast-prisoners-cannot-hear: "&9%player% cannot see chat now!"
+      jailed: "&9You were jailed by %sender%. The jail name is: %jail-name%."
+      display-reason: "&9Reason: %reason%"
+      punishment-block-header: "&9Punishment blocks you must break to leave jail are:"
+      punishment-block-format: "&9%material%: %amount%"
+    error:
+      player-is-already-jailed: "&c%player% is already jailed."
+  reload:
+    info:
+      success: "&aReloaded configuration!"
+  restart:
+    info:
+      success: "&a%jail-name% is restarted!"
+    error:
+      failure: "&cFailed to restart %jail-name%."
+  start:
+    info:
+      success: "&a%jail-name% is started!"
+    error:
+      failure: "&cFailed to start %jail-name%."
+      jail-is-already-running: "&c%jail-name% is already running."
+  stop:
+    info:
+      success: "&a%jail-name% stopped!"
+in-jail:
+  cannot-speak: "&cDon't speak. Just work."
+  forbidden-command: "&cYou cannot use %command% in jail."
+  command-not-allowed: "&cYou cannot use %command% in %jail-name%."
+  broadcast-finish-work: "&a%player% finished his work and were freed from jail!"
+  punishment-blocks-notice: "&a%amount% autres %material% restants!"

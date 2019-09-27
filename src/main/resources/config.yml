@@ -1,30 +1,24 @@
-Plugin:
-  # Enter here all commands prisoners are allowed to use (with '/')
-  # Otherwise all commands are disabled
-  Whitelisted-Commands:
-    - /login
-    - /logout
+plugin:
+  # Players will see their mather language if supported. Otherwise language will be default-language.
+  use-player-locale: true
+  # See this page https://minecraft.gamepedia.com/Language
+  default-language: "en_us"
 
-  # You can change this value by your favorite language (corresponding to the <lang>.yml on the plugin directory)
-  Language: en
+prisoners:
+  # Allow prisoners to speak or hear
+  can-speak: true
+  can-hear: true
 
-Prisoners:
-  # Allow prisoners to speak and ear
-  Speak: false
-  Ear: false
-
-  # Allow admin to use all commands, even if they are prisoners
-  Admin-cmds: false
-
-Jails:
-  # All default values for jails can be modified on jails.yml or with /jw-config <jail_name>
-  # Default value for number of blocks prisoner have to break (when not defined with /jw-config)
-  Blocks: 500
-
-  # Default value for number max of sand blocks can spawn on jails
-  MaxSand: 5
+jails:
+  # All default values for jails can be modified on jails.yml or with /jw config <jail_name>
+  # Default value for number of blocks prisoner have to break (when not defined with /jw config)
+  default-max-punishment-blocks: 500
 
   # Default value for speed-spawn for blocks on jails (seconds)
-  Speed: 2
+  block-spawn-speed: 2
 
-  Type: SAND
+  # Allowed commands for all jails. You can add allowed commands per jail with /jw allowedcommand jail command1 command2 ...
+  # But, this section cannot be modified with command.
+  global-allowed-commands:
+    - "/jailworker info"
+    - "/jw info"

@@ -1,40 +1,39 @@
-package fr.alienationgaming.jailworker;
+package fr.alienationgaming.jailworker.config;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
+//import fr.alienationgaming.jailworker.JailWorker;
 
-public class UpdateFiles {
-    JailWorker plugin;
+public final class ConfigUpdator {
 
-    public UpdateFiles(JailWorker jailworker) {
-        plugin = jailworker;
+    //private static JailWorker plugin = JailWorker.getInstance();
+
+    private ConfigUpdator() {
     }
 
+/*
+// Legacy versions are now not supported.
     @SuppressWarnings("serial")
     public void setUpdate() {
         String version = null, oldversion = null;
         plugin.reloadConfig();
-        if (plugin.getJailConfig().contains("Version"))
+        if (plugin.getJailConfig().contains("Version")) {
             oldversion = plugin.getJailConfig().getString("Version");
-        else if (plugin.getConfig().contains("Plugin.Version"))
+        } else if (plugin.getConfig().contains("Plugin.Version")) {
             oldversion = plugin.getConfig().getString("Plugin.Version");
-        else
+        } else {
             oldversion = "0.9";
+        }
         version = plugin.getDescription().getVersion();
-        /* Verif update */
+        // Verif update
         if (version.compareTo(oldversion) > 0) {
             plugin.getLogger().log(Level.INFO, "Updating...");
-            /* 0.9 to 1.0.0 */
+            // 0.9 to 1.0.0
             if (oldversion.equals("0.9")) {
                 plugin.restartConfigFile();
-                Set<String> s = plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false);
+                Set<String> s = JailConfig.getJails();
                 Iterator<String> it = s.iterator();
                 while (it.hasNext()) {
                     String elem = (String) it.next();
-                    plugin.getJailConfig().set("Jails." + elem + ".Type", plugin.getConfig().getString("Jails.Type"));
+                    plugin.getJailConfig().set("Jails." + elem + ".BlocksToBreak", plugin.getConfig().getString("Jails.Type"));
                 }
                 plugin.getJailConfig().set("Version", "1.0.0");
                 plugin.saveJailConfig();
@@ -42,9 +41,9 @@ public class UpdateFiles {
                 oldversion = plugin.getJailConfig().getString("Version");
                 plugin.getLogger().log(Level.INFO, "Updated to 1.0.0.");
             }
-            /* 1.0.0 to 1.1.0 */
+            // 1.0.0 to 1.1.0
             if (oldversion.equals("1.0.0")) {
-                if (!plugin.getConfig().contains("Plugin.Whitelisted-Commands./jw-free")) {
+                if (!plugin.getConfig().contains("Plugin.Whitelisted-Commands./jw free")) {
                     List<String> listOfCmds = plugin.getConfig().getStringList("Plugin.Whitelisted-Commands");
                     listOfCmds.add("/jw free");
                     plugin.getConfig().set("Plugin.Whitelisted-Commands", listOfCmds);
@@ -88,7 +87,7 @@ public class UpdateFiles {
                 plugin.getConfig().set("Plugin.Version", "2.0.0");
 //				plugin.saveLangConfig();
                 plugin.reloadLangConfig();
-                Set<String> s = plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false);
+                Set<String> s = JailConfig.getJails();
                 Iterator<String> it = s.iterator();
                 while (it.hasNext()) {
                     String jail = (String) it.next();
@@ -105,7 +104,8 @@ public class UpdateFiles {
                 plugin.getJailConfig().set("Version", null);
                 plugin.getLogger().log(Level.INFO, "Updated to 2.0.0.");
             }
-            plugin.getLogger().log(Level.INFO, "Go to http://dev.bukkit.org/bukkit-plugins/jail-worker/ for news and report bugs");
+            plugin.getLogger().info("Go to http://dev.bukkit.org/bukkit-plugins/jail-worker/ for news and report bugs");
         }
     }
+*/
 }

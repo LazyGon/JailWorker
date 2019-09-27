@@ -2,141 +2,152 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
-import org.bukkit.util.Vector;
 
-import fr.alienationgaming.jailworker.JWInventorySaver;
-import fr.alienationgaming.jailworker.Jail;
-import fr.alienationgaming.jailworker.Utils;
+import fr.alienationgaming.jailworker.JailSystem;
+import fr.alienationgaming.jailworker.config.Config;
+import fr.alienationgaming.jailworker.config.JailConfig;
+import fr.alienationgaming.jailworker.config.Messages;
+import fr.alienationgaming.jailworker.config.Prisoners;
 
-public class Put extends JWSubCommand {
+public class Put extends SubCommand {
 
     Put() {
     }
 
     @Override
     boolean runCommand(CommandSender sender, String[] args) {
-        if (args.length < 2) {
+        if (args.length < 5) {
+            Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
             return false;
         }
 
         String jailName = args[2];
-        if (!Jail.exist(jailName)) {
-            sender.sendMessage(plugin.toLanguage("error-command-jailnotexist", jailName));
+        if (!hasPermission(sender, jailName)) {
+            Messages.sendMessage(sender, "command.general.error.no-permission");
             return false;
         }
 
-        if (!isAdminOrOwner(sender, jailName)) {
-            sender.sendMessage(plugin.toLanguage("error-command-notowner"));
+        if (!JailConfig.exist(jailName)) {
+            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Map.of("%jail-name%", jailName));
             return false;
         }
 
         @SuppressWarnings("deprecation")
         Player target = Bukkit.getPlayer(args[1]);
         if (target == null) {
-            sender.sendMessage(plugin.toLanguage("error-command-playeroffline", args[1]));
-            return true;
+            Messages.sendMessage(sender, "command.general.error.player-is-offline", Map.of("%player%", args[1]));
+            return false;
         }
 
-        if (!plugin.getJailConfig().getBoolean("Jails." + jailName + ".isStarted")) {
-            sender.sendMessage(plugin.toLanguage("error-command-notstarted", jailName));
-            return true;
+        if (!JailSystem.isRunning(jailName)) {
+            Messages.sendMessage(sender, "command.general.error.jail-is-not-running", Map.of("%jail-name%", jailName));
+            return false;
         }
 
-        // Get number of blocks to break by default for the jail
-        int blocks = 0;
-        if (args.length >= 3) {
-            try {
-                blocks = Integer.parseInt(args[3]);
-            } catch (Exception e) {
-                sender.sendMessage(plugin.toLanguage("error-command-invalidumber"));
-                return false;
-            }
-        } else
-            blocks = plugin.getJailConfig().getInt("Jails." + jailName + ".Blocks");
+        if (Prisoners.isJailed(target)) {
+            Messages.sendMessage(sender, "command.put.error.player-is-already-jailed", Map.of("%player%", args[1]));
+            return false;
+        }
 
-        /* Get Cause */
+        Material punishmentBlock;
+        try {
+            punishmentBlock = Material.valueOf(args[3].toUpperCase());
+        } catch (IllegalArgumentException e) {
+            Messages.sendMessage(sender, "command.general.error.material-does-not-exist",
+                    Map.of("%material%", args[3].toUpperCase(Locale.ROOT)));
+            return false;
+        }
+
+        if (!JailConfig.getValidBlocks().contains(punishmentBlock.name())) {
+            Messages.sendMessage(sender, "command.general.error.invalid-material",
+                    Map.of("%material%", punishmentBlock.name()));
+            return false;
+        }
+
+        int amount = 500;
+        try {
+            amount = Integer.parseInt(args[4]);
+        } catch (IllegalArgumentException ignore) {
+        }
+
+        if (amount <= 0) {
+            amount = 1;
+        }
+
         String reason = "No Reason.";
-        if (args.length >= 4) {
+        if (args.length > 5) {
             StringBuilder reasonBuilder = new StringBuilder();
-            for (int i = 3; i < args.length; ++i) {
+            for (int i = 5; i < args.length; ++i) {
                 reasonBuilder.append(args[i]).append(" ");
             }
             reason = ChatColor.translateAlternateColorCodes('&', reasonBuilder.toString());
         }
 
-        if (blocks < 0) {
-            sender.sendMessage(plugin.toLanguage("error-command-invalidumber"));
-            return false;
-        }
-        /* Get inventory */
-        JWInventorySaver invSaver = new JWInventorySaver(plugin);
+        OfflinePlayer punisher = (sender instanceof Player) ? (OfflinePlayer) sender : null;
+        Prisoners.punishPlayer(target, jailName, punisher, Map.of(punishmentBlock, amount), reason);
 
-        /* Create Section prisoner for target */
-        plugin.getJailConfig().set("Prisoners." + target.getName() + ".Prison", jailName);
-        plugin.getJailConfig().set("Prisoners." + target.getName() + ".Punisher", sender.getName());
-        plugin.getJailConfig().set("Prisoners." + target.getName() + ".Date", Utils.getDate());
-        plugin.getJailConfig().set("Prisoners." + target.getName() + ".PreviousPosition",
-                target.getLocation().toVector());
-        plugin.getJailConfig().set("Prisoners." + target.getName() + ".PreviousWorld", target.getWorld().getName());
-        plugin.getJailConfig().set("Prisoners." + target.getName() + ".PunishToBreak", blocks);
-        plugin.getJailConfig().set("Prisoners." + target.getName() + ".RemainingBlocks", blocks);
-        plugin.getJailConfig().set("Prisoners." + target.getName() + ".Cause", reason);
-        plugin.getJailConfig().set("Prisoners." + target.getName() + ".Gamemode", target.getGameMode().name());
-        if (target.getGameMode() == GameMode.CREATIVE) {
-            target.setGameMode(GameMode.SURVIVAL);
-        }
-        invSaver.save(target);
-        invSaver.clear(target);
-        plugin.saveJailConfig();
-        plugin.reloadJailConfig();
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            if (player.equals(target)) {
+                return;
+            }
+            Messages.sendMessage(player, "command.put.info.broadcast-jailed",
+                    Map.of("%player%", target.getName(), "%jail-name%", jailName));
+            if (!Config.canPrisonerSpeak()) {
+                Messages.sendMessage(player, "command.put.info.broadcast-prisoners-cannot-speak",
+                        Map.of("%player%", target.getName()));
+            }
+            if (!Config.canPrisonersHear()) {
+                Messages.sendMessage(player, "command.put.info.broadcast-prisoners-cannot-hear",
+                        Map.of("%player%", target.getName()));
+            }
+        });
 
-        /* Send Player to jail */
-        target.getInventory().clear();
-        target.getEquipment().clear();
-        Vector spawn = plugin.getJailConfig().getVector("Jails." + jailName + ".Location.PrisonerSpawn");
-        World world = Bukkit.getWorld(plugin.getJailConfig().getString("Jails." + jailName + ".World"));
-        target.teleport(new Location(world, spawn.getX(), spawn.getY(), spawn.getZ()));
-        Bukkit.broadcastMessage(
-                plugin.toLanguage("info-command-broadcastpunish", target.getName(), jailName, sender.getName()));
-        Bukkit.broadcastMessage(plugin.toLanguage("info-command-broadcastcantear"));
-        target.sendMessage(plugin.toLanguage("info-command-sendtojail", sender.getName()));
+        Messages.sendMessage(target, "command.put.info.jailed",
+                Map.of("%sender%", sender.getName(), "%jail-name%", jailName));
         if (!reason.equals("No Reason.")) {
-            target.sendMessage(plugin.toLanguage("info-command-displayreason", reason));
+            Messages.sendMessage(target, "command.put.info.display-reason", Map.of("%reason%", reason));
         }
-        target.sendMessage(plugin.toLanguage("info-command-prisonerorder", blocks,
-                plugin.getJailConfig().getString("Jails." + jailName + ".Type")));
-        return true;
 
+        Messages.sendMessage(target, "command.put.info.punishment-block-header");
+        Messages.sendMessage(target, "command.put.info.punishment-block-format",
+                Map.of("%material%", punishmentBlock.name(), "%amount%", amount));
+        return true;
     }
 
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
-        if (!plugin.getJailConfig().isConfigurationSection("Prisoners")) {
-            return result;
-        }
 
-        List<String> prisoners = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Prisoners").getKeys(false));
-        
+        List<String> onlinePlayers = Bukkit.getOnlinePlayers().stream().map(Player::getName)
+                .collect(Collectors.toList());
         if (args.length == 2) {
-            return StringUtil.copyPartialMatches(args[1], prisoners, result);
+            return StringUtil.copyPartialMatches(args[1], onlinePlayers, result);
         }
 
-        if (prisoners.contains(args[1])) {
+        if (!onlinePlayers.contains(args[1])) {
             return result;
         }
 
-        List<String> jails = new ArrayList<>(plugin.getJailConfig().getConfigurationSection("Jails").getKeys(false));
-        jails.removeIf(jail -> !isAdminOrOwner(sender, jail));
+        @SuppressWarnings("deprecation")
+        OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+        if (Prisoners.isJailed(target)) {
+            return result;
+        }
+
+        List<String> jails = JailConfig.getJails();
+        jails.removeIf(jail -> !JailSystem.isRunning(jail));
+        jails.removeIf(jail -> !hasPermission(sender, jail));
         if (args.length == 3) {
             return StringUtil.copyPartialMatches(args[2], jails, result);
         }
@@ -146,17 +157,25 @@ public class Put extends JWSubCommand {
         }
 
         if (args.length == 4) {
-            return StringUtil.copyPartialMatches(args[3], List.of("1", "10", "100", "1000"), result);
+            return StringUtil.copyPartialMatches(args[3], JailConfig.getValidBlocks(), result);
+        }
+
+        if (!JailConfig.getValidBlocks().contains(args[3].toUpperCase(Locale.ROOT))) {
+            return result;
+        }
+
+        if (args.length == 5) {
+            return StringUtil.copyPartialMatches(args[4], List.of("1", "10", "100", "1000"), result);
         }
 
         try {
-            Integer.parseInt(args[3]);
+            Integer.parseInt(args[4]);
         } catch (NumberFormatException e) {
             return result;
         }
 
-        if (args.length == 4) {
-            return StringUtil.copyPartialMatches(args[3], List.of("§r[reason]"), result);
+        if (args.length == 6) {
+            return StringUtil.copyPartialMatches(args[5], List.of("[reason]"), result);
         }
 
         return result;
@@ -164,7 +183,7 @@ public class Put extends JWSubCommand {
 
     @Override
     String getPermissionNode() {
-        return "jailworker.put";
+        return "jailworker.command.put.<jail-name>";
     }
 
     @Override
@@ -174,6 +193,6 @@ public class Put extends JWSubCommand {
 
     @Override
     String getUsage() {
-        return "/jailworker put <player> <jail-name> <block-amount-to-get-out> [reason]";
+        return "/jailworker put <player> <jail-name> <punishment-block-type> <punishment-block-amount> [reason]";
     }
 }
