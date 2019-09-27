@@ -121,4 +121,4 @@ in-jail:
   forbidden-command: "&cYou cannot use %command% in jail."
   command-not-allowed: "&cYou cannot use %command% in %jail-name%."
   broadcast-finish-work: "&a%player% finished his work and were freed from jail!"
-  punishment-blocks-notice: "&a%amount% %material%s is left!"
+  punishment-blocks-notice: "&a%amount% %material%s are left!"
