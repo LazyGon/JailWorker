@@ -2,13 +2,11 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -60,42 +58,27 @@ public class Put extends SubCommand {
             return false;
         }
 
-        Material punishmentBlock;
+        int point = 500;
         try {
-            punishmentBlock = Material.valueOf(args[3].toUpperCase());
-        } catch (IllegalArgumentException e) {
-            Messages.sendMessage(sender, "command.general.error.material-does-not-exist",
-                    Map.of("%material%", args[3].toUpperCase(Locale.ROOT)));
-            return false;
-        }
-
-        if (!JailConfig.getValidBlocks().contains(punishmentBlock.name())) {
-            Messages.sendMessage(sender, "command.general.error.invalid-material",
-                    Map.of("%material%", punishmentBlock.name()));
-            return false;
-        }
-
-        int amount = 500;
-        try {
-            amount = Integer.parseInt(args[4]);
+            point = Integer.parseInt(args[3]);
         } catch (IllegalArgumentException ignore) {
         }
 
-        if (amount <= 0) {
-            amount = 1;
+        if (point <= 0) {
+            point = 1;
         }
 
         String reason = "No Reason.";
-        if (args.length > 5) {
+        if (args.length > 4) {
             StringBuilder reasonBuilder = new StringBuilder();
-            for (int i = 5; i < args.length; ++i) {
+            for (int i = 4; i < args.length; ++i) {
                 reasonBuilder.append(args[i]).append(" ");
             }
             reason = ChatColor.translateAlternateColorCodes('&', reasonBuilder.toString());
         }
 
         OfflinePlayer punisher = (sender instanceof Player) ? (OfflinePlayer) sender : null;
-        Prisoners.punishPlayer(target, jailName, punisher, Map.of(punishmentBlock, amount), reason);
+        Prisoners.punishPlayer(target, jailName, punisher, point, reason);
 
         Bukkit.getOnlinePlayers().forEach(player -> {
             if (player.equals(target)) {
@@ -119,9 +102,8 @@ public class Put extends SubCommand {
             Messages.sendMessage(target, "command.put.info.display-reason", Map.of("%reason%", reason));
         }
 
-        Messages.sendMessage(target, "command.put.info.punishment-block-header");
-        Messages.sendMessage(target, "command.put.info.punishment-block-format",
-                Map.of("%material%", punishmentBlock.name(), "%amount%", amount));
+        Messages.sendMessage(target, "command.put.info.punishment-point", Map.of("%point%", point));
+        Messages.sendMessage(target, "command.put.info.punishment-tips");
         return true;
     }
 
@@ -157,25 +139,17 @@ public class Put extends SubCommand {
         }
 
         if (args.length == 4) {
-            return StringUtil.copyPartialMatches(args[3], JailConfig.getValidBlocks(), result);
-        }
-
-        if (!JailConfig.getValidBlocks().contains(args[3].toUpperCase(Locale.ROOT))) {
-            return result;
-        }
-
-        if (args.length == 5) {
-            return StringUtil.copyPartialMatches(args[4], List.of("1", "10", "100", "1000"), result);
+            return StringUtil.copyPartialMatches(args[3], List.of("1", "10", "100", "1000"), result);
         }
 
         try {
-            Integer.parseInt(args[4]);
+            Integer.parseInt(args[3]);
         } catch (NumberFormatException e) {
             return result;
         }
 
-        if (args.length == 6) {
-            return StringUtil.copyPartialMatches(args[5], List.of("[reason]"), result);
+        if (args.length == 5) {
+            return StringUtil.copyPartialMatches(args[4], List.of("[reason]"), result);
         }
 
         return result;
@@ -193,6 +167,6 @@ public class Put extends SubCommand {
 
     @Override
     String getUsage() {
-        return "/jailworker put <player> <jail-name> <punishment-block-type> <punishment-block-amount> [reason]";
+        return "/jailworker put <player> <jail-name> <punishment-point> [reason]";
     }
 }

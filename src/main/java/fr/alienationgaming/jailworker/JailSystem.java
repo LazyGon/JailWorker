@@ -198,15 +198,15 @@ public class JailSystem extends BukkitRunnable implements Listener {
         if (Prisoners.isJailed(player) && Prisoners.getJailPlayerIsIn(player).equals(jailName)
                 && punishmentBlocks.contains(broken)) {
 
-            Map<Material, Integer> remainingBlocks = Prisoners.getRemainingBlocks(player);
-            if (remainingBlocks.containsKey(broken.getType())) {
-                int remaining = remainingBlocks.get(broken.getType()) - 1;
-                Prisoners.setRemainingBlock(player, broken.getType(), remaining);
-                if (remaining != 0 && remaining % 20 == 0) {
-                    Messages.sendMessage(player, "in-jail.punishment-blocks-notice",
-                            Map.of("%material%", broken.getType().name(), "%amount%", remaining));
+            Set<Material> jailPunishmentBlocks = JailConfig.getPunishmentBlocks(jailName);
+            if (jailPunishmentBlocks.contains(broken.getType())) {
+                int point = Prisoners.getPunishmentPoint(player) - 1;
+                Prisoners.setPunishmentPoint(player, point);
+                if (point != 0 && point % 20 == 0) {
+                    Messages.sendMessage(player, "in-jail.punishment-point-notice",
+                            Map.of("%point%", point));
                 }
-                if (remaining <= 0) {
+                if (point <= 0) {
                     Bukkit.getOnlinePlayers().forEach(onlinePlayer -> Messages.sendMessage(onlinePlayer,
                             "in-jail.broadcast-finish-work", Map.of("%player%", player.getName())));
                     Prisoners.freePlayer(player);
@@ -234,7 +234,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
         }
 
         if (Prisoners.isJailed(player) && Prisoners.getJailPlayerIsIn(player).equals(jailName)
-                && Prisoners.getRemainingBlocks(player).containsKey(broken.getType())) {
+                && JailConfig.getPunishmentBlocks(jailName).contains(broken.getType())) {
             punishmentBlocks.add(broken);
             return;
         }
@@ -279,7 +279,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
         }
 
         String command = event.getMessage();
-        if (command.startsWith("/jw give") || command.startsWith("/jw free") || command.startsWith("/jw increase")) {
+        if (command.startsWith("/jw give") || command.startsWith("/jw free") || command.startsWith("/jw changepoint")) {
             event.setCancelled(true);
             Messages.sendMessage(player, "in-jail.forbidden-command", Map.of("%command%", command));
             return;
@@ -329,7 +329,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
         int minZ = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
         int maxZ = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
 
-        for (OfflinePlayer prisoner : prisoners) {
+        for (int i = 0; i < prisoners.size(); i++) {
             Random random = new Random();
             Block punishmentBlock = null;
             Map<Integer, Integer> checked = new HashMap<>();
@@ -363,9 +363,11 @@ public class JailSystem extends BukkitRunnable implements Listener {
             }
 
             punishmentBlocks.add(punishmentBlock);
-            List<Material> remaining = new ArrayList<>(Prisoners.getRemainingBlocks(prisoner).keySet());
-            Material chosen = remaining.get(random.nextInt(remaining.size()));
-            punishmentBlock.setType(chosen);
+            List<Material> blocks = new ArrayList<>(JailConfig.getPunishmentBlocks(jailName));
+            if (blocks.size() > 0) {
+                Material chosen = blocks.get(random.nextInt(blocks.size()));
+                punishmentBlock.setType(chosen);
+            }
         }
     }
 

@@ -27,12 +27,12 @@ public final class Config {
         return config.getString("plugin.default-language", "en_us");
     }
 
-    public static int getDefaultBlocks() {
-        return config.getInt("jails.default-max-punishment-blocks");
+    public static int getDefaultMaxBlocks() {
+        return config.getInt("jails.default-max-punishment-blocks", 30);
     }
 
-    public static long getDefaultBlockSpeed() {
-        return config.getLong("jails.default-block-spawn-speed");
+    public static int getDefaultBlockSpeed() {
+        return config.getInt("jails.default-block-spawn-speed", 10);
     }
 
     public static boolean canPrisonerSpeak() {

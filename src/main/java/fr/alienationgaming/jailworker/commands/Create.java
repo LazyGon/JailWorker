@@ -2,8 +2,12 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
@@ -15,6 +19,7 @@ import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -29,6 +34,8 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.StringUtil;
 
 import fr.alienationgaming.jailworker.JailWorker;
+import fr.alienationgaming.jailworker.config.BlockPoints;
+import fr.alienationgaming.jailworker.config.Config;
 import fr.alienationgaming.jailworker.config.JailConfig;
 import fr.alienationgaming.jailworker.config.Messages;
 
@@ -41,15 +48,18 @@ public class Create extends SubCommand {
 
         private final String jailName;
         private final Player player;
-        private int maxPunishmentBlocks = 30;
-        private int punishmentBlockSpeed = 10;
+        private int maxPunishmentBlocks = Config.getDefaultMaxBlocks();
+        private int punishmentBlockSpeed = Config.getDefaultBlockSpeed();
+        private final Set<Material> punishmentBlocks;
         private Location pos1;
         private Location pos2;
         private Location spawn;
 
-        InputGetter(String jailName, Player player) {
+        InputGetter(String jailName, Player player, int maxPunishmentBlocks, int punishmentBlockSpeed,
+                Set<Material> punishmentBlocks) {
             this.jailName = jailName;
             this.player = player;
+            this.punishmentBlocks = punishmentBlocks;
             Bukkit.getPluginManager().registerEvents(this, plugin);
             Region region = getWorldEditSelection();
             if (region == null) {
@@ -63,17 +73,7 @@ public class Create extends SubCommand {
                 pos2 = new Location(world, min.getX(), min.getY(), min.getZ());
                 Messages.sendMessage(player, "command.create.info.retrieve-worldedit");
             }
-        }
 
-        InputGetter(String jailName, Player player, int maxPunishmentBlocks) {
-            this(jailName, player);
-            if (maxPunishmentBlocks >= 0) {
-                this.maxPunishmentBlocks = maxPunishmentBlocks;
-            }
-        }
-
-        InputGetter(String jailName, Player player, int maxPunishmentBlocks, int punishmentBlockSpeed) {
-            this(jailName, player);
             if (maxPunishmentBlocks >= 0) {
                 this.maxPunishmentBlocks = maxPunishmentBlocks;
             }
@@ -98,23 +98,23 @@ public class Create extends SubCommand {
             Location pos = block.getLocation();
             if (pos1 == null) {
                 pos1 = pos;
-                player.sendMessage(ChatColor.BLUE + "Position 1:");
+                player.sendMessage(ChatColor.BLUE + "pos1:");
                 printLocation(pos);
                 Messages.sendMessage(player, "command.create.info.waiting-for-second");
             } else if (pos2 == null) {
                 pos2 = pos;
-                player.sendMessage(ChatColor.BLUE + "Position 2:");
+                player.sendMessage(ChatColor.BLUE + "pos2:");
                 printLocation(pos);
                 Messages.sendMessage(player, "command.create.info.waiting-for-spawn");
             } else if (spawn == null) {
                 spawn = pos.add(0.5, 1, 0.5);
-                player.sendMessage(ChatColor.BLUE + "Spawn:");
+                player.sendMessage(ChatColor.BLUE + "spawn:");
                 printLocation(pos);
                 Messages.sendMessage(player, "command.create.info.finish", Map.of("%jail-name%", jailName));
                 HandlerList.unregisterAll(this);
                 data.remove(player);
-                JailConfig.addJail(jailName, maxPunishmentBlocks, punishmentBlockSpeed, List.of(), pos.getWorld(), pos1,
-                        pos2, spawn);
+                JailConfig.addJail(jailName, maxPunishmentBlocks, punishmentBlockSpeed, punishmentBlocks, List.of(),
+                        pos.getWorld(), pos1, pos2, spawn);
             }
         }
 
@@ -160,7 +160,7 @@ public class Create extends SubCommand {
             return false;
         }
 
-        if (args.length == 1) {
+        if (args.length < 5) {
             Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
             return false;
         }
@@ -182,29 +182,30 @@ public class Create extends SubCommand {
             return false;
         }
 
-        if (args.length == 2) {
-            new InputGetter(args[1], (Player) sender);
-            return true;
+        int maxBlocks, blockSpeed;
+
+        try {
+            maxBlocks = Integer.parseInt(args[2]);
+        } catch (NumberFormatException e) {
+            maxBlocks = Config.getDefaultMaxBlocks();
         }
 
-        if (args.length == 3) {
+        try {
+            blockSpeed = Integer.parseInt(args[3]);
+        } catch (NumberFormatException e) {
+            blockSpeed = Config.getDefaultBlockSpeed();
+        }
+
+        Set<Material> punishmentBlocks = new HashSet<>();
+
+        for (int i = 4; i < args.length; i++) {
             try {
-                new InputGetter(args[1], (Player) sender, Integer.parseInt(args[2]));
-            } catch (NumberFormatException e) {
-                new InputGetter(args[1], (Player) sender);
+                punishmentBlocks.add(Material.valueOf(args[i].toUpperCase(Locale.ROOT)));
+            } catch (IllegalArgumentException ignored) {
             }
-            return true;
         }
 
-        if (args.length >= 4) {
-            try {
-                new InputGetter(args[1], (Player) sender, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
-            } catch (NumberFormatException e) {
-                new InputGetter(args[1], (Player) sender);
-            }
-            return true;
-        }
-
+        new InputGetter(jailName, (Player) sender, maxBlocks, blockSpeed, punishmentBlocks);
         return true;
     }
 
@@ -212,7 +213,7 @@ public class Create extends SubCommand {
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
         if (args.length == 2) {
-            return StringUtil.copyPartialMatches(args[1], List.of("r<jail-name>"), result);
+            return StringUtil.copyPartialMatches(args[1], List.of("<jail-name>"), result);
         }
 
         if (args.length == 3) {
@@ -221,6 +222,19 @@ public class Create extends SubCommand {
 
         if (args.length == 4) {
             return StringUtil.copyPartialMatches(args[3], List.of("10", "15", "20"), result);
+        }
+
+        if (args.length >= 5) {
+            List<String> punishmentBlocks = BlockPoints.getAllBlocks().stream().map(Enum::name)
+                    .collect(Collectors.toList());
+            if (args.length > 5) {
+                List<String> inputBlock = new ArrayList<>();
+                for (int i = 5; i < args.length; i++) {
+                    inputBlock.add(args[i]);
+                }
+                punishmentBlocks.removeAll(inputBlock);
+            }
+            return StringUtil.copyPartialMatches(args[args.length - 1], punishmentBlocks, result);
         }
 
         return result;
@@ -238,6 +252,6 @@ public class Create extends SubCommand {
 
     @Override
     String getUsage() {
-        return "/jailworker create <jail-name>";
+        return "/jailworker create <jail-name> <max-punishment-block> <punishment-block-speed> <punishment-bock-1> [punishment-bock-2]...";
     }
 }

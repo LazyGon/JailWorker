@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,6 +25,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.StringUtil;
 
 import fr.alienationgaming.jailworker.JailWorker;
+import fr.alienationgaming.jailworker.config.BlockPoints;
 import fr.alienationgaming.jailworker.config.JailConfig;
 import fr.alienationgaming.jailworker.config.Messages;
 
@@ -61,20 +65,19 @@ public class Edit extends SubCommand {
             switch (commandName) {
             case "spawn":
                 JailConfig.setSpawnLocation(jailName, pos.add(0.5, 1, 0.5));
-                player.sendMessage(ChatColor.BLUE + "Spawn:");
                 break;
             case "pos1":
                 JailConfig.setPosition1(jailName, pos);
-                player.sendMessage(ChatColor.BLUE + "Block 1:");
                 break;
             case "pos2":
                 JailConfig.setPosition2(jailName, pos);
-                player.sendMessage(ChatColor.BLUE + "Block 2:");
                 break;
             }
+            player.sendMessage(ChatColor.BLUE + commandName + ":");
             player.sendMessage(ChatColor.BLUE + "x :" + ChatColor.RESET + pos.getX());
             player.sendMessage(ChatColor.BLUE + "y :" + ChatColor.RESET + pos.getY());
             player.sendMessage(ChatColor.BLUE + "z :" + ChatColor.RESET + pos.getZ());
+            Messages.sendMessage(player, "command.edit.info.success", Map.of("%location%", commandName));
             HandlerList.unregisterAll(this);
             data.remove(player);
         }
@@ -110,6 +113,41 @@ public class Edit extends SubCommand {
 
         String command = args[2].toLowerCase(Locale.ROOT);
         switch (command) {
+        case "punishmentblock":
+            if (args.length < 5) {
+                Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
+                return false;
+            }
+
+            Material material;
+            String materialName = args[4].toUpperCase(Locale.ROOT);
+            try {
+                material = Material.valueOf(materialName);
+                if (!BlockPoints.exist(material)) {
+                    throw new IllegalArgumentException("The material is not defined in config.");
+                }
+            } catch (IllegalArgumentException e) {
+                Messages.sendMessage(sender, "command.general.error.invalid-material",
+                        Map.of("%material%", materialName));
+                return false;
+            }
+
+            if (args[3].equals("add")) {
+                JailConfig.addPunishmentBlock(jailName, material);
+                Messages.sendMessage(sender, "command.edit.info.add-punishment-block",
+                        Map.of("%material%", materialName));
+                return true;
+            } else if (args[3].equals("remove")) {
+                JailConfig.removePunishmentBlock(jailName, material);
+                Messages.sendMessage(sender, "command.edit.info.remove-punishment-block",
+                        Map.of("%material%", materialName));
+                return true;
+            } else {
+                Messages.sendMessage(sender, "command.general.error.missing-argument",
+                        Map.of("%missing-argument%", args[3]));
+                return false;
+            }
+
         case "maxblock":
         case "blockspeed":
             int amountOrSpeed;
@@ -117,18 +155,22 @@ public class Edit extends SubCommand {
                 Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
                 return false;
             }
+
             try {
                 amountOrSpeed = Integer.parseInt(args[3]);
             } catch (NumberFormatException e) {
-                Messages.sendMessage(sender, "todo");
+                Messages.sendMessage(sender, "command.general.error.invalid-number");
                 return false;
             }
+
             if (command.equals("maxblock")) {
                 JailConfig.setMaxPunishmentBlocks(jailName, amountOrSpeed);
+                Messages.sendMessage(sender, "command.edit.info.set-max-block-amount-success");
             } else {
                 JailConfig.setBlockSpeed(jailName, amountOrSpeed);
+                Messages.sendMessage(sender, "command.edit.info.set-block-speed-success");
             }
-            Messages.sendMessage(sender, "todo");
+
             return true;
         case "spawn":
         case "pos1":
@@ -140,7 +182,8 @@ public class Edit extends SubCommand {
             new InputGetter(jailName, (Player) sender, command);
             return true;
         default:
-            Messages.sendMessage(sender, "command.general.error.missing-argument", Map.of("%missing-argument%", command));
+            Messages.sendMessage(sender, "command.general.error.missing-argument",
+                    Map.of("%missing-argument%", command));
             return false;
         }
     }
@@ -155,26 +198,53 @@ public class Edit extends SubCommand {
             return StringUtil.copyPartialMatches(args[1], jails, result);
         }
 
-        if (!jails.contains(args[1])) {
+        String jailName = args[1];
+
+        if (!jails.contains(jailName)) {
             return result;
         }
 
-        List<String> subCommands = List.of("maxblock", "blockspeed", "spawn", "pos1", "pos2");
+        List<String> subCommands = List.of("maxblock", "blockspeed", "punishmentblock", "spawn", "pos1", "pos2");
 
         if (args.length == 3) {
             return StringUtil.copyPartialMatches(args[2], subCommands, result);
         }
 
-        if (!subCommands.contains(args[2].toLowerCase())) {
+        String subCommand = args[2].toLowerCase(Locale.ROOT);
+
+        if (!subCommands.contains(subCommand)) {
             return result;
         }
-        
+
         if (args.length == 4) {
-            if (args[2].equalsIgnoreCase("maxblock")) {
-                return StringUtil.copyPartialMatches(args[3], List.of("r<max-punishment-blocks>"), result);
-            } else if (args[2].equalsIgnoreCase("blockspeed")) {
-                return StringUtil.copyPartialMatches(args[3], List.of("r<max-block-speed>"), result);
+            switch (subCommand) {
+            case "maxblock":
+                return StringUtil.copyPartialMatches(args[3], List.of("<max-punishment-blocks>"), result);
+            case "blockspeed":
+                return StringUtil.copyPartialMatches(args[3], List.of("<max-block-speed>"), result);
+            case "punishmentblock":
+                return StringUtil.copyPartialMatches(args[3], List.of("add", "remove"), result);
             }
+        }
+
+        if (!subCommand.equals("punishmentblock")) {
+            return result;
+        }
+
+        if (!args[3].equalsIgnoreCase("add") && !args[3].equalsIgnoreCase("remove")) {
+            return result;
+        }
+
+        if (args.length == 5) {
+            List<String> available;
+            Set<Material> punishmentBlocks = JailConfig.getPunishmentBlocks(jailName);
+            if (args[3].equalsIgnoreCase("add")) {
+                available = BlockPoints.getAllBlocks().stream().filter(material -> !punishmentBlocks.contains(material)).map(Enum::name)
+                        .collect(Collectors.toList());
+            } else {
+                available = punishmentBlocks.stream().map(Enum::name).collect(Collectors.toList());
+            }
+            return StringUtil.copyPartialMatches(args[4], available, result);
         }
 
         return result;

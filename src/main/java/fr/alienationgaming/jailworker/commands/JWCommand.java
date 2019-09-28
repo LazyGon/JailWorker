@@ -21,14 +21,26 @@ public class JWCommand implements CommandExecutor, TabCompleter {
     private static JailWorker jailWorker = JailWorker.getInstance();
 
     enum SubCommands {
-        CREATE(new Create()), PUT(new Put()), START(new Start()), STOP(new Stop()), CLEAN(new Clean()),
-        EDIT(new Edit()), LIST(new fr.alienationgaming.jailworker.commands.List()), DELETE(new Delete()),
-        RESTART(new Restart()), INFO(new Info()), FREE(new Free()), GOTO(new Goto()), GIVE(new Give()),
-        ALLOWED_COMMAND(new AllowedCommand()), RELOAD(new Reload()), INCREASE(new Increase()),;
+        CREATE(new Create()), 
+        PUT(new Put()), 
+        START(new Start()), 
+        STOP(new Stop()), 
+        CLEAN(new Clean()),
+        EDIT(new Edit()), 
+        LIST(new fr.alienationgaming.jailworker.commands.List()), 
+        DELETE(new Delete()),
+        RESTART(new Restart()), 
+        INFO(new Info()), 
+        FREE(new Free()), 
+        GOTO(new Goto()), 
+        GIVE(new Give()),
+        ALLOWED_COMMAND(new AllowedCommand()), 
+        RELOAD(new Reload()), 
+        CHANGE_POINT(new ChangePoint()),;
 
         private SubCommand subCommand;
         private static final List<String> subCommandInputs = List.of("create", "put", "start", "stop", "clean", "edit",
-                "list", "delete", "restart", "info", "free", "goto", "give", "allowedcommand", "reload", "increase");
+                "list", "delete", "restart", "info", "free", "goto", "give", "allowedcommand", "reload", "changepoint");
 
         private SubCommands(SubCommand subCommand) {
             this.subCommand = subCommand;
@@ -70,8 +82,8 @@ public class JWCommand implements CommandExecutor, TabCompleter {
                 return SubCommands.ALLOWED_COMMAND.getInstance();
             case "reload":
                 return SubCommands.RELOAD.getInstance();
-            case "increase":
-                return SubCommands.INCREASE.getInstance();
+            case "changepoint":
+                return SubCommands.CHANGE_POINT.getInstance();
             default:
                 return null;
             }

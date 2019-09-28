@@ -1,9 +1,6 @@
 package fr.alienationgaming.jailworker.config;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -172,57 +169,44 @@ public final class Prisoners {
         setPreviousPosition(player, player.getLocation());
     }
 
-    public static void setRemainingBlock(OfflinePlayer player, Material material, int amount) {
-        if (!isValidPrisoner(player)) {
-            throw new IllegalArgumentException("The player is null or not jailed");
+    /**
+     * Gets punishment point for this player.
+     * 
+     * @param player
+     * @return punishment point. If player is not prisoner, returns always 0.
+     */
+    public static int getPunishmentPoint(OfflinePlayer player) {
+        return get().getInt(player.getUniqueId().toString() + ".PunishmentPoint");
+    }
+    
+    /**
+     * Sets punishment point for this player.
+     * 
+     * @param player
+     * @param punishmentPoint
+     */
+    public static void setPunishmentPoint(OfflinePlayer player, int punishmentPoint) {
+        if (!getPrisoners().contains(player)) {
+            return;
         }
-
-        String path = player.getUniqueId().toString() + ".remaining-blocks." + material.name();
-        if (amount > 0) {
-            get().set(path, amount);
-        } else {
-            get().set(path, null);
-        }
+        get().set(player.getUniqueId().toString() + ".PunishmentPoint", punishmentPoint);
         save();
     }
 
-    public static void setRemainingBlocks(OfflinePlayer player, Map<Material, Integer> newValue) {
-        if (!isValidPrisoner(player)) {
-            throw new IllegalArgumentException("The player is null or not jailed");
+    /**
+     * Adds punishment point for this player.
+     * 
+     * @param player
+     * @param punishmentPoint
+     * @return New value. If player is not prisoner, returns always 0.
+     */
+    public static int addPunishmentPoint(OfflinePlayer player, int punishmentPoint) {
+        if (!getPrisoners().contains(player)) {
+            return 0;
         }
-        newValue.forEach((material, amount) -> {
-            get().set(player.getUniqueId().toString() + ".remaining-blocks." + material.name(), amount);
-        });
-        save();
-    }
-
-    public static int getRemainingBlock(OfflinePlayer player, Material material) {
-        if (!isValidPrisoner(player)) {
-            throw new IllegalArgumentException("The player is null or not jailed");
-        }
-
-        return get().getInt(player.getUniqueId().toString() + ".remaining-blocks." + material.name());
-    }
-
-    public static Map<Material, Integer> getRemainingBlocks(OfflinePlayer player) {
-        Map<Material, Integer> result = new HashMap<>();
-        if (!isValidPrisoner(player)) {
-            throw new IllegalArgumentException("The player is null or not jailed");
-        }
-
-        get().getConfigurationSection(player.getUniqueId().toString() + ".remaining-blocks")
-                .getValues(false).forEach((blockName, amount) -> {
-                    try {
-                        if (!(amount instanceof Integer)) {
-                            return;
-                        }
-                        result.put(Material.valueOf(blockName.toUpperCase(Locale.ROOT)), (Integer) amount);
-                    } catch (IllegalArgumentException ignore) {
-                        return;
-                    }
-                });
-
-        return result;
+        int newPoint = getPunishmentPoint(player) + punishmentPoint;
+        setPunishmentPoint(player, newPoint);
+        return newPoint;
     }
 
     public static List<OfflinePlayer> getPrisoners() {
@@ -396,7 +380,7 @@ public final class Prisoners {
      * @param punishmentBlocks
      * @param cause
      */
-    public static void punishPlayer(Player player, String jailName, OfflinePlayer punisher, Map<Material, Integer> punishmentBlocks, String cause) {
+    public static void punishPlayer(Player player, String jailName, OfflinePlayer punisher, int punishmentPoint, String cause) {
         if (!isValidOfflinePlayer(player)) {
             throw new IllegalArgumentException("The player is null or has never played before.");
         }
@@ -418,7 +402,7 @@ public final class Prisoners {
         setJailedDate(player);
         setPreviousInventory(player);
         setPreviousPosition(player.getPlayer());
-        setRemainingBlocks(player, punishmentBlocks);
+        setPunishmentPoint(player, punishmentPoint);
         setCause(player, cause);
         setPreviousGameMode(player);
 
@@ -449,7 +433,7 @@ public final class Prisoners {
     }
 
     /**
-     * Reload jail config. If this method used before {@code JailConfig.save()}, the
+     * Reload prisoners config. If this method used before {@code JailConfig.save()}, the
      * data on memory will be lost.
      */
     public static void reload() {
@@ -471,9 +455,9 @@ public final class Prisoners {
     }
 
     /**
-     * Gets FileConfiguration of jail config.
+     * Gets FileConfiguration of prisoners config.
      * 
-     * @return jail config.
+     * @return Prisoners config.
      */
     private static FileConfiguration get() {
         return jailConfig.getConfig();

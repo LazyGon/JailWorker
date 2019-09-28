@@ -13,8 +13,7 @@
       x: 100.0
       y: 10.0
       z: 100.0
-  remaining-blocks:
-    SAND: 1
+  punishment-point: 1
   cause: "No reason."
   previous-gamemode: SURVIVAL
   punished-date: 0 # current time in millisecond

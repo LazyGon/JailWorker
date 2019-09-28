@@ -97,7 +97,7 @@ public class AllowedCommand extends SubCommand {
         if (args.length >= 4) {
             if (operation.equals("add")) {
                 return StringUtil.copyPartialMatches(args[args.length - 1],
-                        List.of("r<new-allowed-command-with-\"/\">"), result);
+                        List.of("<new-allowed-command-with-\"/\">"), result);
             } else {
                 List<String> allowedCommands = JailConfig.getAllowedCommands(args[2]);
                 if (args.length > 4) {
