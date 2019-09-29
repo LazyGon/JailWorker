@@ -89,7 +89,11 @@ public final class JailConfig {
      * @return Block place interval.
      */
     public static int getBlockInterval(String jailName) {
-        return get().getInt(jailName + ".punishment-block-interval");
+        int interval = get().getInt(jailName + ".punishment-block-interval");
+        if (interval == 0) {
+            interval = 1;
+        }
+        return interval;
     }
 
     /**
@@ -99,6 +103,9 @@ public final class JailConfig {
      * @param second
      */
     public static void setBlockInterval(String jailName, int second) {
+        if (second <= 0) {
+            second = 1;
+        }
         get().set(jailName + ".punishment-block-interval", second);
         save();
     }

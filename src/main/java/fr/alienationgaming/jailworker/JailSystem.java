@@ -96,7 +96,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
             lcListener = new LunaChatListener();
         }
         if (!isRunning()) {
-            runTaskTimer(plugin, 30L, (JailConfig.getBlockInterval(jailName) * 30));
+            runTaskTimer(plugin, 20L, (JailConfig.getBlockInterval(jailName) * 20));
         }
     }
 
