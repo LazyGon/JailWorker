@@ -31,6 +31,11 @@ public class AutoPointRemover implements Listener {
                     Player player = prisoner.getPlayer();
                     if (!isAfk(player)) {
                         Prisoners.addPunishmentPoint(prisoner, -1);
+                        if (Prisoners.getPunishmentPoint(player) == 0) {
+                            Bukkit.getOnlinePlayers().forEach(onlinePlayer -> Messages.sendMessage(onlinePlayer,
+                                    "in-jail.broadcast-finish-work", Map.of("%player%", player.getName())));
+                            Prisoners.freePlayer(player);
+                        }
                     } else if (!isAfkWarnFinished.getOrDefault(player, false)) {
                         isAfkWarnFinished.put(player, true);
                         Messages.sendMessage(player, "in-jail.you-are-now-afk");
@@ -76,7 +81,7 @@ public class AutoPointRemover implements Listener {
     }
 
     private static boolean isAfk(Player player) {
-        if (!Prisoners.isJailed(player)) {
+        if (!lastMovingTimes.containsKey(player)) {
             return false;
         }
         return lastMovingTimes.get(player) + (Config.getAfkTime() * 60 * 1000) < System.currentTimeMillis();
