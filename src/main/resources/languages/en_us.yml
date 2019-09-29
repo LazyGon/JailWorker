@@ -71,7 +71,7 @@ command:
     info:
       to-leave-jail-tips: "&9To leave jail, use /goto command without arguments!"
       welcome: "&9Welcome to %jail-name%!"
-      left-jail: "&9You left %jail-name%!"
+      left-jail: "&9You left jail!"
     error:
       already-out-of-jail: "&cYou are already out of jail."
   info:
@@ -87,6 +87,7 @@ command:
       prisoner-header: "&9Information of %player%"
       prisoner-jail-name: "&9Jail name: %jail-name%"
       prisoner-punisher-name: "&9Punisher: %punisher%"
+      prisoner-punishment-point: "&9Punishment point: %point%"
       prisoner-cause: "&9Punishment reason: %reason%"
       prisoner-punishment-time: "&9Punished date: %time%"
       punishment-blocks: "&9Point of Each punishment blocks (%page% / %max-page%)"

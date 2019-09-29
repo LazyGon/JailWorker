@@ -72,7 +72,7 @@ command:
     info:
       to-leave-jail-tips: "&9ここからでる時は /goto コマンドを引数無しで使います。"
       welcome: "&9%jail-name% へようこそ！"
-      left-jail: "&9%jail-name% から退出しました！"
+      left-jail: "&9牢獄から退出しました！"
     error:
       already-out-of-jail: "&cすでに牢獄の外に居ます。"
   info:
@@ -88,6 +88,7 @@ command:
       prisoner-header: "&9%player% の情報"
       prisoner-jail-name: "&9牢獄名: %jail-name%"
       prisoner-punisher-name: "&9処罰者: %punisher%"
+      prisoner-punishment-point: "&9処罰ポイント: %point%" #fr未追加
       prisoner-cause: "&9処罰理由: %reason%"
       prisoner-punishment-time: "&9処罰日時: %time%"
       punishment-blocks: "&9各処罰ブロック (%page% / %max-page%)"
