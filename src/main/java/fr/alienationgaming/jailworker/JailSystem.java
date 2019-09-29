@@ -33,6 +33,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import fr.alienationgaming.jailworker.config.BlockPoints;
 import fr.alienationgaming.jailworker.config.Config;
 import fr.alienationgaming.jailworker.config.JailConfig;
 import fr.alienationgaming.jailworker.config.Messages;
@@ -198,7 +199,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
 
             Set<Material> jailPunishmentBlocks = JailConfig.getPunishmentBlocks(jailName);
             if (jailPunishmentBlocks.contains(broken.getType())) {
-                int point = Prisoners.getPunishmentPoint(player) - 1;
+                int point = Prisoners.getPunishmentPoint(player) - BlockPoints.getPoint(broken.getType());
                 if (point <= 0) {
                     Bukkit.getOnlinePlayers().forEach(onlinePlayer -> Messages.sendMessage(onlinePlayer,
                             "in-jail.broadcast-finish-work", Map.of("%player%", player.getName())));
