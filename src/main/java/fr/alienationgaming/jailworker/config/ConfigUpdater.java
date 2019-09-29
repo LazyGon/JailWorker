@@ -35,15 +35,15 @@ public final class ConfigUpdater {
     public static void update() {
         Config.saveAllDefaultConfigs();
         String version = plugin.getDescription().getVersion();
-        String oldversion = Config.getConfigVersion();
+        String oldVersion = Config.getConfigVersion();
 
-        if (version.startsWith(oldversion)) {
+        if (version.equalsIgnoreCase(oldVersion)) {
             return;
         }
 
-        if (!oldversion.startsWith(String.valueOf(version.charAt(0)))) {
+        if (!oldVersion.startsWith(String.valueOf(version.charAt(0)))) {
             Path datafoler = plugin.getDataFolder().toPath();
-            Path oldDirectory = datafoler.resolve("old").resolve(oldversion);
+            Path oldDirectory = datafoler.resolve("old").resolve(oldVersion);
             try {
                 Files.createDirectories(oldDirectory);
                 for (File file : datafoler.toFile().listFiles()) {
@@ -65,10 +65,10 @@ public final class ConfigUpdater {
             return;
         }
 
-        if (version.compareTo(oldversion) > 0) {
+        if (version.compareTo(oldVersion) > 0) {
             // plugin.getLogger().info("Updating...");
 
-            // if (oldversion.equals("3.0.0")) {
+            // if (oldVersion.equals("3.0.0")) {
             // Latest.
             // }
 
