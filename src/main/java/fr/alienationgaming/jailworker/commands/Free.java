@@ -3,6 +3,7 @@ package fr.alienationgaming.jailworker.commands;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -66,7 +67,7 @@ public class Free extends SubCommand {
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
         List<String> prisoners = Prisoners.getPrisoners().stream()
-                .map(OfflinePlayer::getName).collect(Collectors.toList());
+                .map(OfflinePlayer::getName).filter(Objects::nonNull).collect(Collectors.toList());
         
         if (args.length == 2) {
             return StringUtil.copyPartialMatches(args[1], prisoners, result);

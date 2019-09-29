@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -109,7 +110,7 @@ public class PunishPoint extends SubCommand {
         }
 
         List<String> prisoners = Prisoners.getPrisoners().stream().map(OfflinePlayer::getName)
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull).collect(Collectors.toList());
 
         if (args.length == 3) {
             return StringUtil.copyPartialMatches(args[2], prisoners, result);

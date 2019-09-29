@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -171,7 +172,7 @@ public class Info extends SubCommand {
                 return StringUtil.copyPartialMatches(args[2], jails, result);
             case "prisoner":
                 List<String> prisoners = Prisoners.getPrisoners().stream().map(OfflinePlayer::getName)
-                        .collect(Collectors.toList());
+                        .filter(Objects::nonNull).collect(Collectors.toList());
                 return StringUtil.copyPartialMatches(args[2], prisoners, result);
             case "blocks":
                 int size = BlockPoints.getAllBlocks().size();
