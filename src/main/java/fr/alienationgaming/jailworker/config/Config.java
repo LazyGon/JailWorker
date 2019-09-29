@@ -90,4 +90,12 @@ public final class Config {
     static FileConfiguration get() {
         return config;
     }
+
+    public static void saveAllDefaultConfigs() {
+        reload();
+        JailConfig.reload();
+        BlockPoints.reload();
+        Prisoners.reload();
+        Messages.reload();
+    }
 }

@@ -33,6 +33,7 @@ public final class ConfigUpdater {
      * will be copied to {@code old} folder.
      */
     public static void update() {
+        Config.saveAllDefaultConfigs();
         String version = plugin.getDescription().getVersion();
         String oldversion = Config.getConfigVersion();
 

@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -172,6 +173,7 @@ public final class Messages {
      * Reload all the language config on map.
      */
     public static void reload() {
+        initLanguage(Bukkit.getConsoleSender());
         languages.values().forEach(CustomConfig::initConfig);
     }
 }
