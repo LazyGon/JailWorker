@@ -15,6 +15,24 @@ public final class Config {
     private Config() {
     }
 
+
+
+    public static int getAutoPointDecreaseInterval() {
+        int autoReducePointInterval = config.getInt("prisoners.auto-reduce-point-interval");
+        if (autoReducePointInterval < 0) {
+            autoReducePointInterval = 0;
+        }
+        return autoReducePointInterval;
+    }
+
+    public static int getAfkTime() {
+        int afkTime = config.getInt("prisoners.afk-time");
+        if (afkTime < 0) {
+            afkTime = 0;
+        }
+        return afkTime;
+    }
+
     public static List<String> getGlobalAllowedCommands() {
         return config.getStringList("jails.global-allowed-commands");
     }

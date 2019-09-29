@@ -14,11 +14,13 @@ public class JailWorker extends JavaPlugin {
     public void onEnable() {
         this.getLogger().info(JailSystem.runAllJails() + " of " + JailConfig.getJails().size() + " jails started!");
         new JWCommand();
+        AutoPointRemover.start();
     }
     
     @Override
     public void onDisable() {
         JailSystem.stopAllJails();
+        AutoPointRemover.stop();
     }
 
     public static JailWorker getInstance() {

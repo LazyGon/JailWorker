@@ -5,9 +5,14 @@ plugin:
   default-language: "en_us"
 
 prisoners:
-  # Allow prisoners to speak or hear
+  # Allow or deny prisoners to speak or hear.
   can-speak: true
   can-hear: true
+
+  # Prisoners' punishment point will decrease every specified number of seconds. To disable, set to 0.
+  auto-reduce-point-interval: 30
+  # If prisoner does not move in specified number of minutes, prisoner will be regarded as afk and not reduce its point.
+  afk-time: 20
 
 jails:
   # All default values for jails can be modified on jails.yml or with /jw config <jail_name>
@@ -16,6 +21,7 @@ jails:
 
   # Default value for speed-spawn for blocks on jails (seconds)
   block-spawn-speed: 10
+
 
   # Allowed commands for all jails. You can add allowed commands per jail with /jw allowedcommand jail command1 command2 ...
   # But, this section cannot be modified with command.
