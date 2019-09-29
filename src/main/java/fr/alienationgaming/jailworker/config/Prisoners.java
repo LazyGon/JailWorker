@@ -372,12 +372,12 @@ public final class Prisoners {
     }
 
     /**
-     * Puts player into jail, with some params.
+     * Puts player into jail, with some params. If punisher is Console, put null into {@code punisher}.
      * 
      * @param player
      * @param jailName
      * @param punisher
-     * @param punishmentBlocks
+     * @param punishmentPoint
      * @param cause
      */
     public static void punishPlayer(Player player, String jailName, OfflinePlayer punisher, int punishmentPoint, String cause) {

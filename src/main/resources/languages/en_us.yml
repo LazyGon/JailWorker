@@ -109,6 +109,7 @@ command:
       display-reason: "&9Reason: %reason%"
       punishment-point: "&9Punishment point: %point% point"
       punishment-tips: "&9To leave jail, you have to reduce your punishment points by breaking punishment blocks which is automatically placed here.\nOr, point will decrease as time proceeds."
+      player-is-now-wanted: "&9%player% is now wanted."
     error:
       player-is-already-jailed: "&c%player% is already jailed."
   reload:

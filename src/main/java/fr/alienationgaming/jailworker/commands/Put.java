@@ -1,8 +1,10 @@
 package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -17,6 +19,7 @@ import fr.alienationgaming.jailworker.config.Config;
 import fr.alienationgaming.jailworker.config.JailConfig;
 import fr.alienationgaming.jailworker.config.Messages;
 import fr.alienationgaming.jailworker.config.Prisoners;
+import fr.alienationgaming.jailworker.config.WantedPlayers;
 
 public class Put extends SubCommand {
 
@@ -42,9 +45,9 @@ public class Put extends SubCommand {
         }
 
         @SuppressWarnings("deprecation")
-        Player target = Bukkit.getPlayer(args[1]);
-        if (target == null) {
-            Messages.sendMessage(sender, "command.general.error.player-is-offline", Map.of("%player%", args[1]));
+        OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+        if (!target.hasPlayedBefore() || target.getName() == null) {
+            Messages.sendMessage(sender, "command.general.error.player-has-never-played", Map.of("%player%", args[1]));
             return false;
         }
 
@@ -53,7 +56,7 @@ public class Put extends SubCommand {
             return false;
         }
 
-        if (Prisoners.isJailed(target)) {
+        if (Prisoners.isJailed(target) || WantedPlayers.isWanted(target)) {
             Messages.sendMessage(sender, "command.put.error.player-is-already-jailed", Map.of("%player%", args[1]));
             return false;
         }
@@ -68,7 +71,7 @@ public class Put extends SubCommand {
             point = 1;
         }
 
-        String reason = "No Reason.";
+        String reason = "No reason.";
         if (args.length > 4) {
             StringBuilder reasonBuilder = new StringBuilder();
             for (int i = 4; i < args.length; ++i) {
@@ -78,32 +81,14 @@ public class Put extends SubCommand {
         }
 
         OfflinePlayer punisher = (sender instanceof Player) ? (OfflinePlayer) sender : null;
-        Prisoners.punishPlayer(target, jailName, punisher, point, reason);
-
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            if (player.equals(target)) {
-                return;
-            }
-            Messages.sendMessage(player, "command.put.info.broadcast-jailed",
-                    Map.of("%player%", target.getName(), "%jail-name%", jailName));
-            if (!Config.canPrisonerSpeak()) {
-                Messages.sendMessage(player, "command.put.info.broadcast-prisoners-cannot-speak",
-                        Map.of("%player%", target.getName()));
-            }
-            if (!Config.canPrisonersHear()) {
-                Messages.sendMessage(player, "command.put.info.broadcast-prisoners-cannot-hear",
-                        Map.of("%player%", target.getName()));
-            }
-        });
-
-        Messages.sendMessage(target, "command.put.info.jailed",
-                Map.of("%sender%", sender.getName(), "%jail-name%", jailName));
-        if (!reason.equals("No Reason.")) {
-            Messages.sendMessage(target, "command.put.info.display-reason", Map.of("%reason%", reason));
+        if (target.isOnline()) {
+            Prisoners.punishPlayer(target.getPlayer(), jailName, punisher, point, reason);
+            sendJailedMessage(target.getPlayer(), jailName, sender, point, reason);
+        } else {
+            WantedPlayers.addWantedPlayer(punisher, jailName, point, reason);
+            Messages.sendMessage(sender, "command.put.info.player-is-now-wanted", Map.of("%player%", target.getName()));
+            // TODO: Add fr language of this message.
         }
-
-        Messages.sendMessage(target, "command.put.info.punishment-point", Map.of("%point%", point));
-        Messages.sendMessage(target, "command.put.info.punishment-tips");
         return true;
     }
 
@@ -111,13 +96,13 @@ public class Put extends SubCommand {
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
 
-        List<String> onlinePlayers = Bukkit.getOnlinePlayers().stream().map(Player::getName)
-                .collect(Collectors.toList());
+        List<String> offlinePlayers = Arrays.stream(Bukkit.getOfflinePlayers()).parallel().map(OfflinePlayer::getName)
+                .filter(Objects::nonNull).collect(Collectors.toList());
         if (args.length == 2) {
-            return StringUtil.copyPartialMatches(args[1], onlinePlayers, result);
+            return StringUtil.copyPartialMatches(args[1], offlinePlayers, result);
         }
 
-        if (!onlinePlayers.contains(args[1])) {
+        if (!offlinePlayers.contains(args[1])) {
             return result;
         }
 
@@ -153,6 +138,33 @@ public class Put extends SubCommand {
         }
 
         return result;
+    }
+
+    public static void sendJailedMessage(Player player, String jailName, CommandSender punisher, int punishmentPoint, String reason) {
+        Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+            if (onlinePlayer.equals(player)) {
+                return;
+            }
+            Messages.sendMessage(onlinePlayer, "command.put.info.broadcast-jailed",
+                    Map.of("%player%", player.getName(), "%jail-name%", jailName));
+            if (!Config.canPrisonerSpeak()) {
+                Messages.sendMessage(onlinePlayer, "command.put.info.broadcast-prisoners-cannot-speak",
+                        Map.of("%player%", player.getName()));
+            }
+            if (!Config.canPrisonersHear()) {
+                Messages.sendMessage(onlinePlayer, "command.put.info.broadcast-prisoners-cannot-hear",
+                        Map.of("%player%", player.getName()));
+            }
+        });
+
+        Messages.sendMessage(player, "command.put.info.jailed",
+                Map.of("%sender%", punisher.getName(), "%jail-name%", jailName));
+        if (!reason.equals("No reason.")) {
+            Messages.sendMessage(player, "command.put.info.display-reason", Map.of("%reason%", reason));
+        }
+
+        Messages.sendMessage(player, "command.put.info.punishment-point", Map.of("%point%", punishmentPoint));
+        Messages.sendMessage(player, "command.put.info.punishment-tips");
     }
 
     @Override

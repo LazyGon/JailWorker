@@ -97,5 +97,6 @@ public final class Config {
         BlockPoints.reload();
         Prisoners.reload();
         Messages.reload();
+        WantedPlayers.reload();
     }
 }

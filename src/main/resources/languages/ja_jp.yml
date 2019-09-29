@@ -110,6 +110,7 @@ command:
       display-reason: "&9理由: %reason%"
       punishment-point: "&9処罰ポイント: %point%ポイント"
       punishment-tips: "&9牢獄を出るには牢獄内に自動で設置される処罰ブロックを壊してポイントを減らしましょう。\nまたは、牢獄内で過ごせば時間経過でもポイントを得られます。"
+      player-is-now-wanted: "&9%player% は指名手配されました。"
     error:
       player-is-already-jailed: "&c%player% はすでに牢獄に居ます。"
   reload:
