@@ -7,9 +7,9 @@ plugin:
   default-language: "en_us"
 
 prisoners:
-  # Allow or deny prisoners to speak or hear.
-  can-speak: true
-  can-hear: true
+  # Allow or deny prisoners to speak or hear. Note that true means yes, false means no.
+  can-speak: false
+  can-hear: false
 
   # Prisoners' punishment point will decrease every specified number of seconds. To disable, set to 0.
   auto-reduce-point-interval: 30

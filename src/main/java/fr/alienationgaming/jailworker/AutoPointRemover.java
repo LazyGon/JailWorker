@@ -52,13 +52,13 @@ public class AutoPointRemover implements Listener {
         
     }
 
-    static void start() {
+    public static void start() {
         Bukkit.getPluginManager().registerEvents(instance, plugin);
         long interval = Config.getAutoPointDecreaseInterval() * 20;
         autoPointRemoveTask.runTaskTimer(plugin, interval, interval);
     }
 
-    static void stop() {
+    public static void stop() {
         HandlerList.unregisterAll(instance);
         try {
             autoPointRemoveTask.cancel();

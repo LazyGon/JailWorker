@@ -35,11 +35,13 @@ public class Restart extends SubCommand {
         }
 
         JailSystem task = JailSystem.getTask(jailName);
-        if (task != null) {
-            task.start();
-            Messages.sendMessage(sender, "command.restart.info.success", Map.of("%jail-name%", jailName));
+        if (task == null) {
+            Messages.sendMessage(sender, "command.restart.error.failure", Map.of("%jail-name%", jailName));
+            return false;
         }
-        Messages.sendMessage(sender, "command.restart.error.failure", Map.of("%jail-name%", jailName));
+
+        task.start();
+        Messages.sendMessage(sender, "command.restart.info.success", Map.of("%jail-name%", jailName));
 
         return true;
     }

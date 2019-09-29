@@ -41,12 +41,15 @@ public class Free extends SubCommand {
             return false;
         }
 
-        if (!Prisoners.isJailed(target) || !WantedPlayers.isWanted(target)) {
+        if (!Prisoners.isJailed(target) && !WantedPlayers.isWanted(target)) {
             Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Map.of("%player%", args[1]));
             return false;
         }
 
         String jailName = Prisoners.getJailPlayerIsIn(target);
+        if (jailName == null) {
+            jailName = WantedPlayers.getJail(target);
+        }
         Messages.sendMessage(sender, "command.free.info.free-player",
                 Map.of("%player%", target.getName(), "%jail-name%", jailName));
 

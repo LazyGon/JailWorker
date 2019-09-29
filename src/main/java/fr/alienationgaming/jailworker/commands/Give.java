@@ -66,8 +66,8 @@ public class Give extends SubCommand {
         }
 
         target.getInventory().addItem(new ItemStack(item, amount));
-        Messages.sendMessage(target, "command.give.info.given-item", Map.of("%sender%", sender.getName(), "%item%", item.toString(), "%amount%", String.valueOf(amount)));
-        Messages.sendMessage(sender, "command.give.info.give-item", Map.of("%target%", target.getName(), "%item%", item.toString(), "%amount%", String.valueOf(amount)));
+        Messages.sendMessage(target, "command.give.info.given-item", Map.of("%sender%", sender.getName(), "%mateiral%", item.toString(), "%amount%", String.valueOf(amount)));
+        Messages.sendMessage(sender, "command.give.info.give-item", Map.of("%player%", target.getName(), "%material%", item.toString(), "%amount%", String.valueOf(amount)));
 
         return true;
     }

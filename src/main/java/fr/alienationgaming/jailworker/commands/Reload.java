@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
 
+import fr.alienationgaming.jailworker.AutoPointRemover;
 import fr.alienationgaming.jailworker.JailSystem;
 import fr.alienationgaming.jailworker.config.BlockPoints;
 import fr.alienationgaming.jailworker.config.Config;
@@ -23,14 +24,20 @@ public class Reload extends SubCommand {
     boolean runCommand(CommandSender sender, String[] args) {
         if (args.length == 1) {
             Config.reload();
+            AutoPointRemover.stop();
+            AutoPointRemover.start();
             JailConfig.reload();
             Prisoners.reload();
             Messages.reload();
             BlockPoints.reload();
+            JailSystem.stopAllJails();
+            JailSystem.runAllJails();
         } else {
             switch (args[1].toLowerCase(Locale.ROOT)) {
             case "config":
                 Config.reload();
+                AutoPointRemover.stop();
+                AutoPointRemover.start();
                 break;
             case "jailconfig":
                 JailConfig.reload();

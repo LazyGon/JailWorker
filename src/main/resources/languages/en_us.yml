@@ -69,7 +69,7 @@ command:
       given-item: "&aYou received %amount% %materials%s from %sender%"
   goto:
     info:
-      to-leave-jail-tips: "&9To leave jail, use /goto command without arguments!"
+      to-leave-jail-tips: "&9To leave jail, use /jw goto command without arguments!"
       welcome: "&9Welcome to %jail-name%!"
       left-jail: "&9You left jail!"
     error:

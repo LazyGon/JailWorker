@@ -61,7 +61,7 @@ public class WantedPlayers implements Listener {
         String reason = getReason(player);
         Prisoners.punishPlayer(player, jailName, null, punishmentPoint, reason);
         Put.sendJailedMessage(player, jailName, Bukkit.getConsoleSender(), punishmentPoint, reason);
-
+        removeWantedPlayer(player);
     }
 
     public static int getPunishmentPoint(OfflinePlayer player) throws IllegalArgumentException {

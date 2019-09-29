@@ -52,7 +52,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
             Bukkit.getPluginManager().registerEvents(this, plugin);
         }
 
-        @EventHandler(priority = EventPriority.HIGHEST)
+        @EventHandler(priority = EventPriority.LOWEST)
         public void onChat(LunaChatChannelChatEvent event) {
             ChannelPlayer player = event.getPlayer();
             if (Config.canPrisonerSpeak() || !Prisoners.isJailed(player.getPlayer())) {
@@ -62,7 +62,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
             Messages.sendMessage(player, "in-jail.cannot-speak");
         }
 
-        @EventHandler
+        @EventHandler(priority = EventPriority.LOWEST)
         public void onReceiveMessage(LunaChatChannelMessageEvent event) {
             if (Config.canPrisonersHear()) {
                 return;
@@ -201,7 +201,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
                 int point = Prisoners.getPunishmentPoint(player) - 1;
                 if (point <= 0) {
                     Bukkit.getOnlinePlayers().forEach(onlinePlayer -> Messages.sendMessage(onlinePlayer,
-                    "in-jail.broadcast-finish-work", Map.of("%player%", player.getName())));
+                            "in-jail.broadcast-finish-work", Map.of("%player%", player.getName())));
                     Prisoners.freePlayer(player);
                     punishmentBlocks.remove(broken);
                     return;
@@ -226,9 +226,15 @@ public class JailSystem extends BukkitRunnable implements Listener {
     @EventHandler
     private void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        Block broken = event.getBlock();
+        Block placed = event.getBlock();
 
-        if (!JailConfig.isInJail(jailName, broken.getLocation())) {
+        if (!JailConfig.isInJail(jailName, placed.getLocation())) {
+            return;
+        }
+
+        if (Prisoners.isJailed(player) && Prisoners.getJailPlayerIsIn(player).equals(jailName)
+                && JailConfig.getPunishmentBlocks(jailName).contains(placed.getType())) {
+            punishmentBlocks.add(placed);
             return;
         }
 
@@ -236,16 +242,10 @@ public class JailSystem extends BukkitRunnable implements Listener {
             return;
         }
 
-        if (Prisoners.isJailed(player) && Prisoners.getJailPlayerIsIn(player).equals(jailName)
-                && JailConfig.getPunishmentBlocks(jailName).contains(broken.getType())) {
-            punishmentBlocks.add(broken);
-            return;
-        }
-
         event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     private void onChat(AsyncPlayerChatEvent event) {
         if (Bukkit.getPluginManager().isPluginEnabled("LunaChat")) {
             return;

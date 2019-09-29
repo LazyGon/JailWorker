@@ -45,13 +45,13 @@ public class PunishPoint extends SubCommand {
 
         @SuppressWarnings("deprecation")
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
-        if (target.hasPlayedBefore() || target.getName() == null) {
+        if (!target.hasPlayedBefore() || target.getName() == null) {
             Messages.sendMessage(sender, "command.general.error.player-has-never-played", Map.of("%player%", args[2]));
             return false;
         }
 
         // player not on jail
-        if (!Prisoners.isJailed(target) || !WantedPlayers.isWanted(target)) {
+        if (!Prisoners.isJailed(target) && !WantedPlayers.isWanted(target)) {
             Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Map.of("%player%", args[2]));
             return false;
         }

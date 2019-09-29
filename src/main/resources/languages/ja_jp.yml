@@ -70,7 +70,7 @@ command:
       given-item: "&a%sender% に %material% を %amount% 個与えられました。"
   goto:
     info:
-      to-leave-jail-tips: "&9ここからでる時は /goto コマンドを引数無しで使います。"
+      to-leave-jail-tips: "&9ここからでる時は /jw goto コマンドを引数無しで使います。"
       welcome: "&9%jail-name% へようこそ！"
       left-jail: "&9牢獄から退出しました！"
     error:
@@ -110,7 +110,7 @@ command:
       jailed: "&9あなたは %sender% によって %jail-name% に収監されました！"
       display-reason: "&9理由: %reason%"
       punishment-point: "&9処罰ポイント: %point%ポイント"
-      punishment-tips: "&9牢獄を出るには牢獄内に自動で設置される処罰ブロックを壊してポイントを減らしましょう。\nまたは、牢獄内で過ごせば時間経過でもポイントを得られます。"
+      punishment-tips: "&9牢獄を出るには牢獄内に自動で設置される処罰ブロックを壊してポイントを減らしましょう。\nまたは、牢獄内で過ごせば時間経過でもポイントを減らせます。"
       player-is-now-wanted: "&9%player% は指名手配されました。"
     error:
       player-is-already-jailed: "&c%player% はすでに牢獄に居ます。"
@@ -132,7 +132,7 @@ command:
     info:
       success: "&a%jail-name% を停止しました！"
 in-jail:
-  cannot-speak: "&cくっちゃべってないで働きなさい！"
+  cannot-speak: "&c喋る暇があったら働きましょう。"
   forbidden-command: "&c牢獄では %command% は許可されていても使えません。"
   command-not-allowed: "&c%jail-name% では %command% は使えません。"
   broadcast-finish-work: "&a%player% が労役を終えたので、牢獄から開放されました！"
