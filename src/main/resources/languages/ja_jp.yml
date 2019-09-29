@@ -32,7 +32,7 @@ command:
       list-command-line: "  &f- &9%command%"
   clean:
     info:
-      blocks-deleted: "&9%jail-name% の設置された未破壊ブロックを合計 %deleted-count% つ消去しました"
+      blocks-deleted: "&9%jail-name% の設置された未破壊ブロックを合計 %deleted-count% 個消去しました"
   create:
     info:
       define-tips: "&9対角線上を2回右クリックして牢獄の領域を指定します。"
