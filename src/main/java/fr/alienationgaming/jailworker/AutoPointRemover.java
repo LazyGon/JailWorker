@@ -65,6 +65,7 @@ public class AutoPointRemover implements Listener {
     private void onMove(PlayerMoveEvent event) {
         if (Prisoners.isJailed(event.getPlayer())) {
             lastMovingTimes.put(event.getPlayer(), System.currentTimeMillis());
+            isAfkWarnFinished.remove(event.getPlayer());
         }
     }
 
