@@ -26,13 +26,13 @@ command:
       invalid-material: "&c%material% is invalid material."
   allowed-command:
     info:
-      add-success: "&aAdded specified allowed commands to %jail-name%."
-      remove-success: "&aRemoved specified allowed commands from %jail-name%"
-      list-header: "&9Allowd command list for %jail-name%."
+      add-success: "&aYou added specified allowed commands to %jail-name%."
+      remove-success: "&aYou removed specified allowed commands from %jail-name%"
+      list-header: "&9You allowd command list for %jail-name%."
       list-command-line: "  &f- &9%command%"
   clean:
     info:
-      blocks-deleted: "&9%deleted-count% unbroken punishment blocks were removed in %jail-name%."
+      blocks-deleted: "&9%deleted-count% unbroken punishment blocks in %jail-name% were removed."
   create:
     info:
       define-tips: "&9Make a cuboid selection for your jail &c(right-clic)"
@@ -47,9 +47,9 @@ command:
   change-point:
     info:
       notice-increase-target: "&9%sender% added %point% punishment points. (Current point is %new-point% points)"
-      notice-increase-sender: "&9Added %point% punishment points. (Current point is %new-point% points)"
+      notice-increase-sender: "&9You added %point% punishment points. (Current point is %new-point% points)"
       notice-decrease-target: "&9%sender% removed %point% punishment points. (Current point is %new-point% points)"
-      notice-decrease-sender: "&9Removed %point% punishment points. (Current point is %new-point% points)"
+      notice-decrease-sender: "&9You removed %point% punishment points. (Current point is %new-point% points)"
   delete:
     info:
       success: "&a%jail-name% is removed!"
@@ -57,10 +57,10 @@ command:
       failure: "&c%jail-name% cannot be removed. Please report this to administrator."
   edit:
     info:
-      add-punishment-block: "&aAdded %material% to this jail!"
-      remove-punishment-block: "&aRemoved %material% from this jail!"
-      set-max-block-amount-success: "&aSet max blocks placed into jail!"
-      set-block-speed-success: "&aSet how often blocks are placed in jail!！"
+      add-punishment-block: "&aYou added %material% to this jail!"
+      remove-punishment-block: "&aYou removed %material% from this jail!"
+      set-max-block-amount-success: "&aYou set max blocks placed into jail!"
+      set-block-speed-success: "&aYou set how often blocks are placed in jail!！"
       define-tips: "&9Please right click to specify position."
       success: "&aYou have successfully set the %location%!"
     error:
@@ -75,8 +75,11 @@ command:
       given-item: "&aYou received %amount% %materials%s from %sender%"
   goto:
     info:
-      to-leave-jail-tips: "&9To leave, teleport out of jail by some means..."
+      to-leave-jail-tips: "&9To leave jail, use /goto command without arguments!"
       welcome: "&9Welcome to %jail-name%!"
+      left-jail: "&9You left %jail-name%!"
+    error:
+      already-out-of-jail: "&cYou are already out of jail."
   info:
     info:
       jail-name: "&9Information of %jail-name%"
@@ -84,28 +87,28 @@ command:
       jail-is-not-running: "&cStop"
       jail-world-name: "&9World: %world-name%"
       jail-max-punishment-blocks: "&9Max punishment blocks for this jail is: %max-punishment-blocks%"
-      jail-block-appear-speed: "&9Speed punishment blocks appear is: %punishment-block-speed%"
-      jail-punishment-blocks: "&9Appearing blocks:"
+      jail-block-appear-speed: "&9Punishment blocks appear speed is: %punishment-block-speed%"
+      jail-punishment-blocks: "&9Punishment blocks for this jail:"
       jail-punishment-blocks-format: "&9%material%"
       prisoner-header: "&9Information of %player%"
       prisoner-jail-name: "&9Jail name: %jail-name%"
       prisoner-punisher-name: "&9Punisher: %punisher%"
       prisoner-cause: "&9Punishment reason: %reason%"
       prisoner-punishment-time: "&9Punished date: %time%"
-      punishment-blocks: "&9Each punishment blocks' point (%page% / %max-page%)"
+      punishment-blocks: "&9Point of Each punishment blocks (%page% / %max-page%)"
       punishment-blocks-format: "&9%material%: %point% point"
   list:
     info:
       list-header: "&9Jail List (&aGreen = Running&9, &cRed = Stop&9)"
   put:
     info:
-      broadcast-jailed: "&9%player% is jailed! The jail name is:%jail-name%."
+      broadcast-jailed: "&9%player% is jailed! The jail name is: %jail-name%."
       broadcast-prisoners-cannot-speak: "&9%player% cannot speak now!"
-      broadcast-prisoners-cannot-hear: "&9%player% cannot see chat now!"
+      broadcast-prisoners-cannot-hear: "&9%player% cannot listen chat now!"
       jailed: "&9You were jailed by %sender%. The jail name is: %jail-name%."
       display-reason: "&9Reason: %reason%"
-      punishment-block-header: "&9Punishment blocks you must break to leave jail are:"
-      punishment-block-format: "&9%material%: %amount%"
+      punishment-point: "&9Punishment point: %point% point"
+      punishment-tips: "&9To leave jail, you have to reduce your punishment points by breaking punishment blocks which is automatically placed here.\nOr, point will decrease as time proceeds."
     error:
       player-is-already-jailed: "&c%player% is already jailed."
   reload:
@@ -131,3 +134,4 @@ in-jail:
   command-not-allowed: "&cYou cannot use %command% in %jail-name%."
   broadcast-finish-work: "&a%player% finished his work and were freed from jail!"
   punishment-point-notice: "&aYou have to earn %point% more points to get out!"
+  you-are-now-afk: "&9Your punishment point will not decrease automatically from now because you are afk."
