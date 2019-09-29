@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
@@ -95,7 +96,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
             lcListener = new LunaChatListener();
         }
         if (!isRunning()) {
-            runTaskTimer(plugin, 30L, (JailConfig.getBlockSpeed(jailName) * 30));
+            runTaskTimer(plugin, 30L, (JailConfig.getBlockInterval(jailName) * 30));
         }
     }
 
@@ -140,7 +141,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
 
     public static JailSystem getTask(String jailName) {
         try {
-            return tasks.getOrDefault(jailName, new JailSystem(jailName));
+            return Optional.ofNullable(tasks.get(jailName)).orElseGet(() -> new JailSystem(jailName));
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -192,28 +193,29 @@ public class JailSystem extends BukkitRunnable implements Listener {
 
         event.setDropItems(false);
 
-        if (canBypass(player)) {
-            punishmentBlocks.remove(broken);
-            return;
-        }
-
         if (Prisoners.isJailed(player) && Prisoners.getJailPlayerIsIn(player).equals(jailName)
                 && punishmentBlocks.contains(broken)) {
 
             Set<Material> jailPunishmentBlocks = JailConfig.getPunishmentBlocks(jailName);
             if (jailPunishmentBlocks.contains(broken.getType())) {
                 int point = Prisoners.getPunishmentPoint(player) - 1;
-                Prisoners.setPunishmentPoint(player, point);
-                if (point != 0 && point % 20 == 0) {
-                    Messages.sendMessage(player, "in-jail.punishment-point-notice", Map.of("%point%", point));
-                }
                 if (point <= 0) {
                     Bukkit.getOnlinePlayers().forEach(onlinePlayer -> Messages.sendMessage(onlinePlayer,
-                            "in-jail.broadcast-finish-work", Map.of("%player%", player.getName())));
+                    "in-jail.broadcast-finish-work", Map.of("%player%", player.getName())));
                     Prisoners.freePlayer(player);
+                    punishmentBlocks.remove(broken);
+                    return;
+                } else if (point % 20 == 0) {
+                    Messages.sendMessage(player, "in-jail.punishment-point-notice", Map.of("%point%", point));
                 }
+                Prisoners.setPunishmentPoint(player, point);
             }
 
+            punishmentBlocks.remove(broken);
+            return;
+        }
+
+        if (canBypass(player)) {
             punishmentBlocks.remove(broken);
             return;
         }

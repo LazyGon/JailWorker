@@ -42,6 +42,7 @@ public class AllowedCommand extends SubCommand {
             for (int i = 0; i < commands.size(); i++) {
                 Messages.sendMessage(sender, "command.allowed-command.info.list-command-line", Map.of("%command%", commands.get(i)));
             }
+            return true;
         }
 
         if (args.length == 3) {
@@ -57,11 +58,11 @@ public class AllowedCommand extends SubCommand {
         switch (arg) {
         case "add":
             JailConfig.addAllowedCommands(jailName, commands);
-            Messages.sendMessage(sender, "command.allowed-command.info.add-success");
+            Messages.sendMessage(sender, "command.allowed-command.info.add-success", Map.of("%jail-name%", jailName));
             return true;
         case "remove":
             JailConfig.removeAllowedCommands(jailName, commands);
-            Messages.sendMessage(sender, "command.allowed-command.info.remove-success");
+            Messages.sendMessage(sender, "command.allowed-command.info.remove-success", Map.of("%jail-name%", jailName));
             return true;
         default:
             Messages.sendMessage(sender, "command.general.error.missing-argument", Map.of("%missing-argument%", arg));

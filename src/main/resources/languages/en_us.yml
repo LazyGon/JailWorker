@@ -54,7 +54,7 @@ command:
       add-punishment-block: "&aYou added %material% to this jail!"
       remove-punishment-block: "&aYou removed %material% from this jail!"
       set-max-block-amount-success: "&aYou set max blocks placed into jail!"
-      set-block-speed-success: "&aYou set how often blocks are placed in jail!！"
+      set-block-interval-success: "&aYou set how often blocks are placed in jail!！"
       define-tips: "&9Please right click to specify position."
       success: "&aYou have successfully set the %location%!"
     error:
@@ -81,7 +81,7 @@ command:
       jail-is-not-running: "&cStop"
       jail-world-name: "&9World: %world-name%"
       jail-max-punishment-blocks: "&9Max punishment blocks for this jail is: %max-punishment-blocks%"
-      jail-block-appear-speed: "&9Punishment blocks appear speed is: %punishment-block-speed%"
+      jail-block-appear-interval: "&9Punishment blocks appear interval is: %punishment-block-interval%"
       jail-punishment-blocks: "&9Punishment blocks for this jail:"
       jail-punishment-blocks-format: "&9%material%"
       prisoner-header: "&9Information of %player%"

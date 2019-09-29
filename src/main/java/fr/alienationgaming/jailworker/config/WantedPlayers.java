@@ -12,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -29,7 +30,7 @@ public class WantedPlayers implements Listener {
 
     private WantedPlayers() {
     }
-    
+
     public static void startListener() {
         Bukkit.getPluginManager().registerEvents(instance, plugin);
     }
@@ -38,22 +39,29 @@ public class WantedPlayers implements Listener {
         HandlerList.unregisterAll(instance);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (isWanted(player)) {
-            String jailName = getJail(player);
-            if (jailName.isEmpty()) {
-                List<String> jails = JailConfig.getJails();
-                jails.removeIf(jail -> !JailSystem.isRunning(jail));
-                jailName = jails.get(new Random().nextInt(jails.size()));
-            }
-
-            int punishmentPoint = getPunishmentPoint(player);
-            String reason = getReason(player);
-            Prisoners.punishPlayer(player, jailName, null, punishmentPoint, reason);
-            Put.sendJailedMessage(player, jailName, Bukkit.getConsoleSender(), punishmentPoint, reason);
+        if (!isWanted(player)) {
+            return;
         }
+        if (Prisoners.isJailed(player)) {
+            removeWantedPlayer(player);
+            return;
+        }
+
+        String jailName = getJail(player);
+        if (jailName.isEmpty()) {
+            List<String> jails = JailConfig.getJails();
+            jails.removeIf(jail -> !JailSystem.isRunning(jail));
+            jailName = jails.get(new Random().nextInt(jails.size()));
+        }
+
+        int punishmentPoint = getPunishmentPoint(player);
+        String reason = getReason(player);
+        Prisoners.punishPlayer(player, jailName, null, punishmentPoint, reason);
+        Put.sendJailedMessage(player, jailName, Bukkit.getConsoleSender(), punishmentPoint, reason);
+
     }
 
     public static int getPunishmentPoint(OfflinePlayer player) throws IllegalArgumentException {
@@ -61,12 +69,21 @@ public class WantedPlayers implements Listener {
             throw new IllegalArgumentException("The player is not wanted.");
         }
 
-        return get().getInt(player.getUniqueId().toString() + ".punishment-point");
+        int punishmentPoint = get().getInt(player.getUniqueId().toString() + ".punishment-point");
+        if (punishmentPoint <= 0) {
+            return 1;
+        } else {
+            return punishmentPoint;
+        }
     }
 
     public static void setPunishmentPoint(OfflinePlayer player, int punishmentPoint) throws IllegalArgumentException {
         if (!isWanted(player)) {
             throw new IllegalArgumentException("The player is not wanted.");
+        }
+
+        if (punishmentPoint <= 0) {
+            punishmentPoint = 1;
         }
 
         get().set(player.getUniqueId().toString() + ".punishment-point", punishmentPoint);
@@ -104,7 +121,7 @@ public class WantedPlayers implements Listener {
             throw new IllegalArgumentException("The player is not wanted.");
         }
 
-        get().set(player.getUniqueId().toString(), reason);
+        get().set(player.getUniqueId().toString() + ".reason", reason);
         save();
     }
 
@@ -113,7 +130,7 @@ public class WantedPlayers implements Listener {
             throw new IllegalArgumentException("The player is not wanted.");
         }
 
-        return get().getString(player.getUniqueId().toString(), "No reason.");
+        return get().getString(player.getUniqueId().toString() + ".reason", "No reason.");
     }
 
     public static boolean isWanted(OfflinePlayer player) {
@@ -131,6 +148,10 @@ public class WantedPlayers implements Listener {
     }
 
     public static boolean addWantedPlayer(OfflinePlayer player, String jailName, int punishmentPoint, String reason) {
+        if (Prisoners.isJailed(player)) {
+            throw new IllegalArgumentException("The player is already jailed.");
+        }
+
         get().createSection(player.getUniqueId().toString());
         try {
             setJail(player, jailName);

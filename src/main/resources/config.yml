@@ -21,8 +21,8 @@ jails:
   # Default value for number of blocks prisoner have to break (when not defined with /jw config)
   default-max-punishment-blocks: 30
 
-  # Default value for speed-spawn for blocks on jails (seconds)
-  block-spawn-speed: 10
+  # Default value for interval-spawn for blocks on jails (seconds)
+  default-punishment-interval: 10
 
 
   # Allowed commands for all jails. You can add allowed commands per jail with /jw allowedcommand jail command1 command2 ...

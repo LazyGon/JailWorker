@@ -47,8 +47,8 @@ public final class Config {
         return config.getInt("jails.default-max-punishment-blocks", 30);
     }
 
-    public static int getDefaultBlockSpeed() {
-        return config.getInt("jails.default-block-spawn-speed", 10);
+    public static int getDefaultBlockInterval() {
+        return config.getInt("jails.default-default-punishment-interval", 10);
     }
 
     public static boolean canPrisonerSpeak() {

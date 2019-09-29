@@ -1,6 +1,6 @@
 example:
   max-punishment-blocks: 50
-  punishment-block-appear-speed: 10 # in second.
+  punishment-block-interval: 10 # in second.
   punishment-blocks:
     - "DIRT"
   allowed-commands: # If command starts with this string, command will be cancelled.

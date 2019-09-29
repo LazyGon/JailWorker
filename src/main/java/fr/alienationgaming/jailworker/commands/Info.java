@@ -86,7 +86,7 @@ public class Info extends SubCommand {
             // getValues
             boolean running = JailSystem.isRunning(jailName);
             int maxPunishmentBlock = JailConfig.getMaxPunishmentBlocks(jailName);
-            int punishmentBlockSpeed = JailConfig.getBlockSpeed(jailName);
+            int punishmentBlockInterval = JailConfig.getBlockInterval(jailName);
             String World = JailConfig.getWorld(jailName).getName();
 
             Messages.sendMessage(sender, "command.info.info.jail-name", Map.of("%jail-name%", jailName));
@@ -95,8 +95,8 @@ public class Info extends SubCommand {
             Messages.sendMessage(sender, false, "command.info.info.jail-world-name", Map.of("%world-name%", World));
             Messages.sendMessage(sender, false, "command.info.info.jail-max-punishment-blocks",
                     Map.of("%max-punishment-blocks%", maxPunishmentBlock));
-            Messages.sendMessage(sender, false, "command.info.info.jail-block-appear-speed",
-                    Map.of("%punishment-block-speed%", punishmentBlockSpeed));
+            Messages.sendMessage(sender, false, "command.info.info.jail-block-appear-interval",
+                    Map.of("%punishment-block-interval%", punishmentBlockInterval));
             Messages.sendMessage(sender, false, "command.info.info.jail-punishment-blocks");
             JailConfig.getPunishmentBlocks(jailName).forEach(material -> Messages.sendMessage(sender, false,
                     "command.info.info.jail-punishment-blocks-format", Map.of("%material%", material.name())));
@@ -128,8 +128,13 @@ public class Info extends SubCommand {
             Messages.sendMessage(sender, false, "command.general.info.line");
             Messages.sendMessage(sender, false, "command.info.info.prisoner-jail-name",
                     Map.of("%jail-name%", Prisoners.getJailPlayerIsIn(prisoner)));
+            String punisherName = "CONSOLE";
+            OfflinePlayer punisher = Prisoners.getPunisher(prisoner);
+            if (punisher != null && punisher.getName() != null) {
+                punisherName = punisher.getName();
+            }
             Messages.sendMessage(sender, false, "command.info.info.prisoner-punisher-name",
-                    Map.of("%punisher%", Prisoners.getPunisher(prisoner).getName()));
+                    Map.of("%punisher%", punisherName));
             Messages.sendMessage(sender, false, "command.info.info.prisoner-punishment-point",
                     Map.of("%point%", Prisoners.getPunishmentPoint(prisoner)));
             Messages.sendMessage(sender, false, "command.info.info.prisoner-cause",

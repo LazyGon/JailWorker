@@ -176,7 +176,15 @@ public final class Prisoners {
      * @return punishment point. If player is not prisoner, returns always 0.
      */
     public static int getPunishmentPoint(OfflinePlayer player) {
-        return get().getInt(player.getUniqueId().toString() + ".PunishmentPoint");
+        if (!isValidPrisoner(player)) {
+            throw new IllegalArgumentException("The player is null or not jailed");
+        }
+
+        int punishmentPoint = get().getInt(player.getUniqueId().toString() + ".punishment-point");
+        if (punishmentPoint < 0) {
+            punishmentPoint = 0;
+        }
+        return punishmentPoint;
     }
     
     /**
@@ -186,10 +194,15 @@ public final class Prisoners {
      * @param punishmentPoint
      */
     public static void setPunishmentPoint(OfflinePlayer player, int punishmentPoint) {
-        if (!getPrisoners().contains(player)) {
-            return;
+        if (!isValidPrisoner(player)) {
+            throw new IllegalArgumentException("The player is null or not jailed");
         }
-        get().set(player.getUniqueId().toString() + ".PunishmentPoint", punishmentPoint);
+
+        if (punishmentPoint < 0) {
+            punishmentPoint = 0;
+        }
+
+        get().set(player.getUniqueId().toString() + ".punishment-point", punishmentPoint);
         save();
     }
 
@@ -201,10 +214,10 @@ public final class Prisoners {
      * @return New value. If player is not prisoner, returns always 0.
      */
     public static int addPunishmentPoint(OfflinePlayer player, int punishmentPoint) {
-        if (!getPrisoners().contains(player)) {
-            return 0;
-        }
         int newPoint = getPunishmentPoint(player) + punishmentPoint;
+        if (newPoint < 0) {
+            newPoint = 0;
+        }
         setPunishmentPoint(player, newPoint);
         return newPoint;
     }

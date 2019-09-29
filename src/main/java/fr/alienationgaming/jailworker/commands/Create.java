@@ -49,13 +49,13 @@ public class Create extends SubCommand {
         private final String jailName;
         private final Player player;
         private int maxPunishmentBlocks = Config.getDefaultMaxBlocks();
-        private int punishmentBlockSpeed = Config.getDefaultBlockSpeed();
+        private int punishmentBlockInterval = Config.getDefaultBlockInterval();
         private final Set<Material> punishmentBlocks;
         private Location pos1;
         private Location pos2;
         private Location spawn;
 
-        InputGetter(String jailName, Player player, int maxPunishmentBlocks, int punishmentBlockSpeed,
+        InputGetter(String jailName, Player player, int maxPunishmentBlocks, int punishmentBlockInterval,
                 Set<Material> punishmentBlocks) {
             this.jailName = jailName;
             this.player = player;
@@ -78,8 +78,8 @@ public class Create extends SubCommand {
                 this.maxPunishmentBlocks = maxPunishmentBlocks;
             }
 
-            if (punishmentBlockSpeed >= 0) {
-                this.punishmentBlockSpeed = punishmentBlockSpeed;
+            if (punishmentBlockInterval >= 0) {
+                this.punishmentBlockInterval = punishmentBlockInterval;
             }
         }
 
@@ -113,7 +113,7 @@ public class Create extends SubCommand {
                 Messages.sendMessage(player, "command.create.info.finish", Map.of("%jail-name%", jailName));
                 HandlerList.unregisterAll(this);
                 data.remove(player);
-                JailConfig.addJail(jailName, maxPunishmentBlocks, punishmentBlockSpeed, punishmentBlocks, List.of(),
+                JailConfig.addJail(jailName, maxPunishmentBlocks, punishmentBlockInterval, punishmentBlocks, List.of(),
                         pos.getWorld(), pos1, pos2, spawn);
             }
         }
@@ -182,7 +182,7 @@ public class Create extends SubCommand {
             return false;
         }
 
-        int maxBlocks, blockSpeed;
+        int maxBlocks, blockInterval;
 
         try {
             maxBlocks = Integer.parseInt(args[2]);
@@ -191,9 +191,9 @@ public class Create extends SubCommand {
         }
 
         try {
-            blockSpeed = Integer.parseInt(args[3]);
+            blockInterval = Integer.parseInt(args[3]);
         } catch (NumberFormatException e) {
-            blockSpeed = Config.getDefaultBlockSpeed();
+            blockInterval = Config.getDefaultBlockInterval();
         }
 
         Set<Material> punishmentBlocks = new HashSet<>();
@@ -205,7 +205,7 @@ public class Create extends SubCommand {
             }
         }
 
-        new InputGetter(jailName, (Player) sender, maxBlocks, blockSpeed, punishmentBlocks);
+        new InputGetter(jailName, (Player) sender, maxBlocks, blockInterval, punishmentBlocks);
         return true;
     }
 
@@ -252,6 +252,6 @@ public class Create extends SubCommand {
 
     @Override
     String getUsage() {
-        return "/jailworker create <jail-name> <max-punishment-block> <punishment-block-speed> <punishment-bock-1> [punishment-bock-2]...";
+        return "/jailworker create <jail-name> <max-punishment-block> <punishment-block-interval> <punishment-bock-1> [punishment-bock-2]...";
     }
 }

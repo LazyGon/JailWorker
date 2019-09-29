@@ -54,7 +54,7 @@ command:
       add-punishment-block: "&a処罰ブロック %material% を牢獄に追加しました！"
       remove-punishment-block: "&a処罰ブロック %material% を牢獄から削除しました！"
       set-max-block-amount-success: "&a牢獄内の最大処罰ブロック数を設定しました！"
-      set-block-speed-success: "&a牢獄内の処罰ブロック出現速度を設定しました！"
+      set-block-interval-success: "&a牢獄内の処罰ブロック出現間隔を設定しました！"
       define-tips: "&9右クリックして地点を指定してください。"
       success: "&a%location% の設定に成功しました！"
     error:
@@ -82,7 +82,7 @@ command:
       jail-is-not-running: "&c停止中"
       jail-world-name: "&9ワールド: %world-name%"
       jail-max-punishment-blocks: "&9最大出現ブロック数: %max-punishment-blocks%"
-      jail-block-appear-speed: "&9ブロック出現速度: %punishment-block-speed%"
+      jail-block-appear-interval: "&9ブロック出現間隔: %punishment-block-interval%"
       jail-punishment-blocks: "&9出現するブロック:"
       jail-punishment-blocks-format: "&9%material%"
       prisoner-header: "&9%player% の情報"

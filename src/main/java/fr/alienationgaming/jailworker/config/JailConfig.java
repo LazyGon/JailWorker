@@ -83,23 +83,23 @@ public final class JailConfig {
     }
 
     /**
-     * Gets block speed to be placed.
+     * Gets block place interval.
      * 
      * @param jailName
-     * @return Block speed to be placed.
+     * @return Block place interval.
      */
-    public static int getBlockSpeed(String jailName) {
-        return get().getInt(jailName + ".block-appear-speed");
+    public static int getBlockInterval(String jailName) {
+        return get().getInt(jailName + ".punishment-block-interval");
     }
 
     /**
-     * Sets block speed to be placed.
+     * Sets block place interval.
      * 
      * @param jailName
      * @param second
      */
-    public static void setBlockSpeed(String jailName, int second) {
-        get().set(jailName + ".block-appear-speed", second);
+    public static void setBlockInterval(String jailName, int second) {
+        get().set(jailName + ".punishment-block-interval", second);
         save();
     }
 
@@ -389,11 +389,11 @@ public final class JailConfig {
         }
     }
 
-    public static void addJail(String jailName, int maxPunishmentBlocks, int punishmentBlockSpeed,
+    public static void addJail(String jailName, int maxPunishmentBlocks, int punishmentBlockInterval,
             Set<Material> punishmentBlocks, List<String> allowedCommands, World world, Location position1, Location position2, Location spawn) {
         get().createSection(jailName);
         setMaxPunishmentBlocks(jailName, maxPunishmentBlocks);
-        setBlockSpeed(jailName, punishmentBlockSpeed);
+        setBlockInterval(jailName, punishmentBlockInterval);
         setPunishmentBlocks(jailName, punishmentBlocks);
         setAllowedCommands(jailName, allowedCommands);
         setWorld(jailName, world);

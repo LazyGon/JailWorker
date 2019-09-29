@@ -85,7 +85,7 @@ public class Put extends SubCommand {
             Prisoners.punishPlayer(target.getPlayer(), jailName, punisher, point, reason);
             sendJailedMessage(target.getPlayer(), jailName, sender, point, reason);
         } else {
-            WantedPlayers.addWantedPlayer(punisher, jailName, point, reason);
+            WantedPlayers.addWantedPlayer(target, jailName, point, reason);
             Messages.sendMessage(sender, "command.put.info.player-is-now-wanted", Map.of("%player%", target.getName()));
             // TODO: Add fr language of this message.
         }

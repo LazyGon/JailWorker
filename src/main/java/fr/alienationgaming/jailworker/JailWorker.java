@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import fr.alienationgaming.jailworker.commands.JWCommand;
 import fr.alienationgaming.jailworker.config.ConfigUpdater;
 import fr.alienationgaming.jailworker.config.JailConfig;
+import fr.alienationgaming.jailworker.config.WantedPlayers;
 
 public class JailWorker extends JavaPlugin {
 
@@ -17,12 +18,14 @@ public class JailWorker extends JavaPlugin {
         this.getLogger().info(JailSystem.runAllJails() + " of " + JailConfig.getJails().size() + " jails started!");
         new JWCommand();
         AutoPointRemover.start();
+        WantedPlayers.startListener();
     }
     
     @Override
     public void onDisable() {
         JailSystem.stopAllJails();
         AutoPointRemover.stop();
+        WantedPlayers.stopListener();
     }
 
     public static JailWorker getInstance() {
