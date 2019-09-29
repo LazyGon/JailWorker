@@ -137,4 +137,4 @@ in-jail:
   command-not-allowed: "&c%jail-name% では %command% は使えません。"
   broadcast-finish-work: "&a%player% が労役を終えたので、牢獄から開放されました！"
   punishment-point-notice: "&aあと %point% ポイントで牢獄をでられます！"
-  you-are-afk-now: "&9あなたは放置中と見做されたので、移動しない限りはポイントが減りません。"
+  you-are-now-afk: "&9あなたは放置中と見做されたので、移動しない限りはポイントが減りません。"
