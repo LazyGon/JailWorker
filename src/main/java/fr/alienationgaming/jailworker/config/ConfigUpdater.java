@@ -2,8 +2,9 @@ package fr.alienationgaming.jailworker.config;
 
 import java.io.File;
 import java.io.IOException;
-
-import com.google.common.io.Files;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import fr.alienationgaming.jailworker.JailWorker;
 
@@ -35,7 +36,7 @@ public final class ConfigUpdater {
         String version = plugin.getDescription().getVersion();
         String oldversion = Config.getConfigVersion();
 
-        if (version.equals(oldversion)) {
+        if (version.startsWith(oldversion)) {
             return;
         }
 
@@ -44,14 +45,17 @@ public final class ConfigUpdater {
         }
 
         if (!oldversion.startsWith(String.valueOf(version.charAt(0)))) {
-            File datafoler = plugin.getDataFolder();
-            File oldDirectory = datafoler.toPath().resolve("old").resolve(oldversion).toFile();
-            oldDirectory.mkdirs();
+            Path datafoler = plugin.getDataFolder().toPath();
+            Path oldDirectory = datafoler.resolve("old").resolve(oldversion);
             try {
-                for (File file : datafoler.listFiles()) {
-                    File dest = oldDirectory.toPath().resolve(file.getName()).toFile();
-                    Files.copy(file, dest);
-                    file.delete();
+                Files.createDirectories(oldDirectory);
+                for (File file : datafoler.toFile().listFiles()) {
+                    if (file.getName().equals("old")) {
+                        continue;
+                    }
+                    Path dest = oldDirectory.resolve(file.getName());
+                    copy(file.toPath(), dest, StandardCopyOption.REPLACE_EXISTING);
+                    delete(file.toPath());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -73,6 +77,35 @@ public final class ConfigUpdater {
 
             plugin.getLogger()
                     .info("Go to http://dev.bukkit.org/bukkit-plugins/jail-worker/ for news and reporting bugs");
+        }
+    }
+
+    private static void copy(Path file, Path dest, StandardCopyOption option) {
+        try {
+            if (Files.isDirectory(file)) {
+                Files.createDirectories(dest);
+                for (File subFile : file.toFile().listFiles()) {
+                    copy(subFile.toPath(), dest.resolve(subFile.getName()), option);
+                }
+            } else {
+                Files.copy(file, dest, option);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void delete(Path file) {
+        try {
+            if (Files.isDirectory(file)) {
+                for (File subFile : file.toFile().listFiles()) {
+                    delete(subFile.toPath());
+                }
+            }
+
+            Files.delete(file);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

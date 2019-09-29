@@ -29,8 +29,8 @@ public class CustomConfig {
     CustomConfig(String name) {
         this.name = name;
         this.file = new File(plugin.getDataFolder(), this.name);
-        
-        if (!file.isFile()) {
+        initConfig();
+        if (file.isDirectory()) {
             throw new IllegalArgumentException("file must not be directory");
         }
     }
@@ -41,6 +41,7 @@ public class CustomConfig {
         }
         this.file = file;
         this.name = file.getName();
+        initConfig();
     }
 
     /**
