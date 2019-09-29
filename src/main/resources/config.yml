@@ -1,6 +1,6 @@
 plugin:
   # Do not modify this value!
-  version: 3.0.0
+  version: ${project.version}
   # Players will see their mather language if supported. Otherwise language will be default-language.
   use-player-locale: true
   # See this page https://minecraft.gamepedia.com/Language
