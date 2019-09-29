@@ -17,6 +17,6 @@
   cause: "No reason."
   previous-gamemode: SURVIVAL
   punished-date: 0 # current time in millisecond
-  prison: "example"
+  jail-name: "example"
 
   

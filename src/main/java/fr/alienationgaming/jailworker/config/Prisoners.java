@@ -343,7 +343,7 @@ public final class Prisoners {
      * @return jailName or null if the player is not punished.
      */
     public static String getJailPlayerIsIn(OfflinePlayer player) {
-        return get().getString(player.getUniqueId().toString() + ".prison");
+        return get().getString(player.getUniqueId().toString() + ".jail-name");
     }
 
     /**
@@ -357,7 +357,7 @@ public final class Prisoners {
             throw new IllegalArgumentException("The player is null or has never played before.");
         }
 
-        get().set(player.getUniqueId().toString() + ".prison", jailName);
+        get().set(player.getUniqueId().toString() + ".jail-name", jailName);
         save();
     }
 
