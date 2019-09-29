@@ -10,12 +10,10 @@ import fr.alienationgaming.jailworker.JailWorker;
 public final class Config {
 
     private static JailWorker plugin = JailWorker.getInstance();
-    private static FileConfiguration config = plugin.getConfig();
+    static FileConfiguration config = plugin.getConfig();
 
     private Config() {
     }
-
-
 
     public static int getAutoPointDecreaseInterval() {
         int autoReducePointInterval = config.getInt("prisoners.auto-reduce-point-interval");
@@ -61,6 +59,10 @@ public final class Config {
         return config.getBoolean("prisoners.can-hear");
     }
 
+    public static String getConfigVersion() {
+        return get().getString("plugin.version", "0.0.0");
+    }
+
     /**
      * Reload jail config. If this method used before {@code JailConfig.save()}, the
      * data on memory will be lost.
@@ -83,5 +85,9 @@ public final class Config {
      */
     public static void saveDefault() {
         plugin.saveDefaultConfig();
+    }
+
+    static FileConfiguration get() {
+        return config;
     }
 }

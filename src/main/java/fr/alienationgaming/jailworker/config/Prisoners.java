@@ -462,7 +462,7 @@ public final class Prisoners {
      * 
      * @return Prisoners config.
      */
-    private static FileConfiguration get() {
+    static FileConfiguration get() {
         return jailConfig.getConfig();
     }
 

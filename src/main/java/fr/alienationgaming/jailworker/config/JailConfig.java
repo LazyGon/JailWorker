@@ -429,7 +429,7 @@ public final class JailConfig {
      * 
      * @return jail config.
      */
-    private static FileConfiguration get() {
+    static FileConfiguration get() {
         return jailConfig.getConfig();
     }
 }

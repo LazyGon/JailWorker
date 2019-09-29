@@ -273,7 +273,7 @@ public final class BlockPoints {
      * 
      * @return Block points config.
      */
-    private static FileConfiguration get() {
+    static FileConfiguration get() {
         return jailConfig.getConfig();
     }
 }
