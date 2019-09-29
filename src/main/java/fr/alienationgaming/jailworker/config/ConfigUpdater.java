@@ -9,11 +9,11 @@ import fr.alienationgaming.jailworker.JailWorker;
 
 //import fr.alienationgaming.jailworker.JailWorker;
 
-public final class ConfigUpdator {
+public final class ConfigUpdater {
 
     private static JailWorker plugin = JailWorker.getInstance();
 
-    private ConfigUpdator() {
+    private ConfigUpdater() {
     }
 
     /**
@@ -31,7 +31,7 @@ public final class ConfigUpdator {
      * Updates old config. If config is incompatible because of majour update, it
      * will be copied to {@code old} folder.
      */
-    public void update() {
+    public static void update() {
         String version = plugin.getDescription().getVersion();
         String oldversion = Config.getConfigVersion();
 
