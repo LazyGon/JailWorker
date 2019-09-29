@@ -342,6 +342,20 @@ public final class JailConfig {
         save();
     }
 
+    public static boolean isInJail(String jailName, Location loc) {
+        Location pos1 = JailConfig.getPosition1(jailName);
+        Location pos2 = JailConfig.getPosition2(jailName);
+        return loc.getWorld() != null && pos1.getWorld() != null && pos2.getWorld() != null
+                && loc.getWorld().equals(pos1.getWorld())
+                && pos1.getWorld().equals(pos2.getWorld())
+                && Math.min(pos1.getBlockX(), pos2.getBlockX()) <= loc.getBlockX()
+                && Math.max(pos1.getBlockX(), pos2.getBlockX()) >= loc.getBlockX()
+                && Math.min(pos1.getBlockY(), pos2.getBlockY()) <= loc.getBlockY()
+                && Math.max(pos1.getBlockY(), pos2.getBlockY()) >= loc.getBlockY()
+                && Math.min(pos1.getBlockZ(), pos2.getBlockZ()) <= loc.getBlockZ()
+                && Math.max(pos1.getBlockZ(), pos2.getBlockZ()) >= loc.getBlockZ();
+    }
+
     /**
      * Check if the jail exists.
      * 
