@@ -307,7 +307,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
         }
 
         String command = event.getMessage();
-        if (command.startsWith("/jw give") || command.startsWith("/jw free") || command.startsWith("/jw changepoint")) {
+        if (command.startsWith("/jw give") || command.startsWith("/jw free") || command.startsWith("/jw punishpoint")) {
             event.setCancelled(true);
             Messages.sendMessage(player, "in-jail.forbidden-command", Map.of("%command%", command));
             return;

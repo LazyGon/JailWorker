@@ -44,12 +44,6 @@ command:
     error:
       you-are-already-in-creation: "&cYou are creating %jail-name% now."
       jail-already-exists: "&c%jail-name% is already exists."
-  change-point:
-    info:
-      notice-increase-target: "&9%sender% added %point% punishment points. (Current point is %new-point% points)"
-      notice-increase-sender: "&9You added %point% punishment points. (Current point is %new-point% points)"
-      notice-decrease-target: "&9%sender% removed %point% punishment points. (Current point is %new-point% points)"
-      notice-decrease-sender: "&9You removed %point% punishment points. (Current point is %new-point% points)"
   delete:
     info:
       success: "&a%jail-name% is removed!"
@@ -100,6 +94,12 @@ command:
   list:
     info:
       list-header: "&9Jail List (&aGreen = Running&9, &cRed = Stop&9)"
+  punish-point:
+    info:
+      notice-increase-target: "&9%sender% added %point% punishment points. (Current point is %new-point% points)"
+      notice-increase-sender: "&9You added %point% punishment points. (Current point is %new-point% points)"
+      notice-decrease-target: "&9%sender% removed %point% punishment points. (Current point is %new-point% points)"
+      notice-decrease-sender: "&9You removed %point% punishment points. (Current point is %new-point% points)"
   put:
     info:
       broadcast-jailed: "&9%player% is jailed! The jail name is: %jail-name%."

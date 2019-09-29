@@ -16,9 +16,9 @@ import org.bukkit.util.StringUtil;
 import fr.alienationgaming.jailworker.config.Messages;
 import fr.alienationgaming.jailworker.config.Prisoners;
 
-public class ChangePoint extends SubCommand {
+public class PunishPoint extends SubCommand {
 
-    ChangePoint() {
+    PunishPoint() {
     }
 
     @Override
@@ -74,14 +74,14 @@ public class ChangePoint extends SubCommand {
         }
 
         if (dif >= 0) {
-            Messages.sendMessage(target, "command.change-point.info.notice-increase-target",
+            Messages.sendMessage(target, "command.punish-point.info.notice-increase-target",
                     Map.of("%sender%", sender.getName(), "%point%", dif, "%new-point%", newValue));
-            Messages.sendMessage(sender, "command.change-point.info.notice-increase-sender",
+            Messages.sendMessage(sender, "command.punish-point.info.notice-increase-sender",
                     Map.of("%player%", target.getName(), "%point%", dif, "%new-point%", newValue));
         } else {
-            Messages.sendMessage(target, "command.change-point.info.notice-decrease-target",
+            Messages.sendMessage(target, "command.punish-point.info.notice-decrease-target",
                     Map.of("%sender%", sender.getName(), "%point%", dif, "%new-point%", newValue));
-            Messages.sendMessage(sender, "command.change-point.info.notice-decrease-sender",
+            Messages.sendMessage(sender, "command.punish-point.info.notice-decrease-sender",
                     Map.of("%player%", target.getName(), "%point%", dif, "%new-point%", newValue));
         }
 
@@ -93,7 +93,7 @@ public class ChangePoint extends SubCommand {
                 reasonBuilder.append(args[i]).append(" ");
             }
             String reason = ChatColor.translateAlternateColorCodes('&', reasonBuilder.toString());
-            Messages.sendMessage(target, "command.change-point.info.display-reason", Map.of("%reason%", reason));
+            Messages.sendMessage(target, "command.punish-point.info.display-reason", Map.of("%reason%", reason));
         }
 
         return true;
@@ -132,7 +132,7 @@ public class ChangePoint extends SubCommand {
 
     @Override
     String getPermissionNode() {
-        return "jailworker.command.change-point";
+        return "jailworker.command.punish-point";
     }
 
     @Override
@@ -142,7 +142,7 @@ public class ChangePoint extends SubCommand {
 
     @Override
     String getUsage() {
-        return "/jailworker changepoint <set|add|remove> <player> <point> [reason]";
+        return "/jailworker punishpoint <set|add|remove> <player> <point> [reason]";
     }
 
 }

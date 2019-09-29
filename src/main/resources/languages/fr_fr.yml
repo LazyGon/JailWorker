@@ -46,7 +46,7 @@ command:
     error:
       you-are-already-in-creation: "&cVous créez %jail-name% maintenant."
       jail-already-exist: "&c%jail-name% existe déjà."
-  change-point:
+  punish-point:
     info:
       notice-increase-target: "&9%sender% augmenté vos points de punition de points %point%. Le point actuel est %new-point%."
       notice-increase-sender: "&9Point de punition de %player% augmenté de %point% points. Le point actuel est %new-point%."

@@ -44,12 +44,6 @@ command:
     error:
       you-are-already-in-creation: "&c現在 %jail-name% を作成中です"
       jail-already-exists: "&c%jail-name% はすでに存在します。"
-  change-point:
-    info:
-      notice-increase-target: "&9%sender% があなたの 処罰ポイントを %point% 点しました。（現在 %new-point% 点）"
-      notice-increase-sender: "&9%player% の 処罰ポイントを %point% 点増やしました。（現在 %new-point% 点）"
-      notice-decrease-target: "&9%sender% があなたの 処罰ポイントを %point% 点減らしました。（現在 %new-point% 点）"
-      notice-decrease-sender: "&9%player% の 処罰ポイントを %point% 個減らしました。（現在 %new-point% 点）"
   delete:
     info:
       success: "&a%jail-name% が削除されました！"
@@ -101,6 +95,12 @@ command:
   list:
     info:
       list-header: "&9牢獄リスト（&a緑 = 稼働中&9、&c赤 = 停止中&9）"
+  punish-point:
+    info:
+      notice-increase-target: "&9%sender% があなたの 処罰ポイントを %point% 点しました。（現在 %new-point% 点）"
+      notice-increase-sender: "&9%player% の 処罰ポイントを %point% 点増やしました。（現在 %new-point% 点）"
+      notice-decrease-target: "&9%sender% があなたの 処罰ポイントを %point% 点減らしました。（現在 %new-point% 点）"
+      notice-decrease-sender: "&9%player% の 処罰ポイントを %point% 個減らしました。（現在 %new-point% 点）"
   put:
     info:
       broadcast-jailed: "&9%player% が %jail-name% に収監されました！"

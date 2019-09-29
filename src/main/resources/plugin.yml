@@ -32,7 +32,7 @@ permissions:
       jailworker.command.info.*: true
       jailworler.command.goto.*: true
       jailworker.command.give.*: true
-      jailworker.command.change-point: true
+      jailworker.command.punish-point: true
     default: op
   jailworker.bypass.*:
     description: Give ability to bypass all limits.
@@ -65,6 +65,6 @@ permissions:
       jailworker.command.info: true
       jailworler.command.goto: true
       jailworker.command.give: true
-      jailworker.command.change-point: true
+      jailworker.command.punish-point: true
       jailworker.bypass.blockedit: true
       jailworker.bypass.allowed-command: true

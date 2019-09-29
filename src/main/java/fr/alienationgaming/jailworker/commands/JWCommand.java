@@ -36,11 +36,11 @@ public class JWCommand implements CommandExecutor, TabCompleter {
         GIVE(new Give()),
         ALLOWED_COMMAND(new AllowedCommand()), 
         RELOAD(new Reload()), 
-        CHANGE_POINT(new ChangePoint()),;
+        PUNISH_POINT(new PunishPoint()),;
 
         private SubCommand subCommand;
         private static final List<String> subCommandInputs = List.of("create", "put", "start", "stop", "clean", "edit",
-                "list", "delete", "restart", "info", "free", "goto", "give", "allowedcommand", "reload", "changepoint");
+                "list", "delete", "restart", "info", "free", "goto", "give", "allowedcommand", "reload", "punishpoint");
 
         private SubCommands(SubCommand subCommand) {
             this.subCommand = subCommand;
@@ -82,8 +82,8 @@ public class JWCommand implements CommandExecutor, TabCompleter {
                 return SubCommands.ALLOWED_COMMAND.getInstance();
             case "reload":
                 return SubCommands.RELOAD.getInstance();
-            case "changepoint":
-                return SubCommands.CHANGE_POINT.getInstance();
+            case "punishpoint":
+                return SubCommands.PUNISH_POINT.getInstance();
             default:
                 return null;
             }
