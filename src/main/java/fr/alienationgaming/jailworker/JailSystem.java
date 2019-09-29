@@ -27,7 +27,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.alienationgaming.jailworker.config.Config;
@@ -184,7 +186,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
         Player player = event.getPlayer();
         Block broken = event.getBlock();
 
-        if (!isInRegion(broken.getLocation(), JailConfig.getPosition1(jailName), JailConfig.getPosition2(jailName))) {
+        if (!JailConfig.isInJail(jailName, broken.getLocation())) {
             return;
         }
 
@@ -203,8 +205,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
                 int point = Prisoners.getPunishmentPoint(player) - 1;
                 Prisoners.setPunishmentPoint(player, point);
                 if (point != 0 && point % 20 == 0) {
-                    Messages.sendMessage(player, "in-jail.punishment-point-notice",
-                            Map.of("%point%", point));
+                    Messages.sendMessage(player, "in-jail.punishment-point-notice", Map.of("%point%", point));
                 }
                 if (point <= 0) {
                     Bukkit.getOnlinePlayers().forEach(onlinePlayer -> Messages.sendMessage(onlinePlayer,
@@ -225,7 +226,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
         Player player = event.getPlayer();
         Block broken = event.getBlock();
 
-        if (!isInRegion(broken.getLocation(), JailConfig.getPosition1(jailName), JailConfig.getPosition2(jailName))) {
+        if (!JailConfig.isInJail(jailName, broken.getLocation())) {
             return;
         }
 
@@ -268,6 +269,33 @@ public class JailSystem extends BukkitRunnable implements Listener {
         if (Prisoners.isJailed(player) && Prisoners.getJailPlayerIsIn(player).equals(jailName)) {
             event.setRespawnLocation(JailConfig.getSpawnLocation(jailName));
         }
+    }
+
+    @EventHandler
+    private void onMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        if (!Prisoners.isJailed(player)) {
+            return;
+        }
+
+        if (!Prisoners.getJailPlayerIsIn(player).equals(jailName)) {
+            return;
+        }
+
+        if (JailConfig.isInJail(jailName, event.getTo())) {
+            return;
+        }
+
+        if (JailConfig.isInJail(jailName, event.getFrom())) {
+            event.setCancelled(true);
+        } else {
+            player.teleport(JailConfig.getSpawnLocation(jailName));
+        }
+    }
+
+    @EventHandler
+    private void onTeleport(PlayerTeleportEvent event) {
+        onMove(event);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -369,17 +397,6 @@ public class JailSystem extends BukkitRunnable implements Listener {
                 punishmentBlock.setType(chosen);
             }
         }
-    }
-
-    private static boolean isInRegion(Location loc, Location loc1, Location loc2) {
-        return loc1.getWorld() != null && loc2.getWorld() != null && loc1.getWorld().equals(loc2.getWorld())
-                && loc.getWorld().equals(loc1.getWorld())
-                && Math.min(loc1.getBlockX(), loc2.getBlockX()) <= loc.getBlockX()
-                && Math.max(loc1.getBlockX(), loc2.getBlockX()) >= loc.getBlockX()
-                && Math.min(loc1.getBlockY(), loc2.getBlockY()) <= loc.getBlockY()
-                && Math.max(loc1.getBlockY(), loc2.getBlockY()) >= loc.getBlockY()
-                && Math.min(loc1.getBlockZ(), loc2.getBlockZ()) <= loc.getBlockZ()
-                && Math.max(loc1.getBlockZ(), loc2.getBlockZ()) >= loc.getBlockZ();
     }
 
     private boolean canBypass(Player player) {

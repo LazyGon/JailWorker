@@ -425,11 +425,14 @@ public final class Prisoners {
             throw new IllegalArgumentException("The player is not jailed.");
         }
 
-        player.teleport(getPreviousPosition(player));
-        player.setGameMode(getPreviousGameMode(player));
+        Location previousLocation = getPreviousPosition(player);
+        GameMode previousGameMode = getPreviousGameMode(player);
         restorePreviousInventory(player);
-        get().set(player.getUniqueId().toString(), null);
+        // If prisoner data is not null, player cannot teleport.
+        get().set(player.getUniqueId().toString(), null); 
         save();
+        player.teleport(previousLocation);
+        player.setGameMode(previousGameMode);
     }
 
     /**
