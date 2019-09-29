@@ -1,9 +1,12 @@
 package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -12,6 +15,8 @@ import fr.alienationgaming.jailworker.config.JailConfig;
 import fr.alienationgaming.jailworker.config.Messages;
 
 public class Goto extends SubCommand {
+
+    private static final Map<Player, Location> previousLocations = new HashMap<>();
 
     Goto() {
     }
@@ -22,10 +27,23 @@ public class Goto extends SubCommand {
             Messages.sendMessage(sender, "command.general.error.only-player");
             return false;
         }
+        Player player = (Player) sender;
+        
+        previousLocations.entrySet().removeIf(entry -> !entry.getKey().isOnline());
 
         if (args.length == 1) {
-            Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
-            return false;
+            Location currentLocation = player.getLocation();
+            List<String> jails = JailConfig.getJails();
+            jails.removeIf(jail -> !JailConfig.exist(jail));
+            if (jails.stream().noneMatch(jail -> JailConfig.isInJail(jail, currentLocation))) {
+                Messages.sendMessage(sender, "command.goto.error.cannot-use-out-of-jail");
+                return false;
+            }
+            Location previousLocation = previousLocations.getOrDefault((Player) sender, Bukkit.getWorlds().get(0).getSpawnLocation());
+            ((Player) sender).teleport(previousLocation);
+            previousLocations.remove(player);
+            Messages.sendMessage(sender, "command.goto.info.left-jail");
+            return true;
         }
 
         String jailName = args[1];
@@ -39,6 +57,7 @@ public class Goto extends SubCommand {
             return false;
         }
 
+        previousLocations.put((Player) sender, ((Player) sender).getLocation());
         ((Player) sender).teleport(JailConfig.getSpawnLocation(jailName));
         Messages.sendMessage(sender, "command.goto.info.welcome", Map.of("%jail-name%", jailName));
         Messages.sendMessage(sender, "command.goto.info.to-leave-jail-tips");
