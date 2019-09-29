@@ -40,10 +40,6 @@ public final class ConfigUpdater {
             return;
         }
 
-        if (oldversion.equals("0.9")) {
-            oldversion = "0.9.0";
-        }
-
         if (!oldversion.startsWith(String.valueOf(version.charAt(0)))) {
             Path datafoler = plugin.getDataFolder().toPath();
             Path oldDirectory = datafoler.resolve("old").resolve(oldversion);
