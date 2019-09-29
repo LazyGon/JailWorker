@@ -229,7 +229,7 @@ public class Create extends SubCommand {
                     .collect(Collectors.toList());
             if (args.length > 5) {
                 List<String> inputBlock = new ArrayList<>();
-                for (int i = 5; i < args.length; i++) {
+                for (int i = 4; i < args.length; i++) {
                     inputBlock.add(args[i]);
                 }
                 punishmentBlocks.removeAll(inputBlock);
