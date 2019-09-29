@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -48,6 +49,7 @@ public class AutoPointRemover implements Listener {
     private static final AutoPointRemover instance = new AutoPointRemover();
 
     private AutoPointRemover() {
+        
     }
 
     static void start() {
@@ -75,6 +77,11 @@ public class AutoPointRemover implements Listener {
     }
 
     @EventHandler
+    private void onLogin(PlayerJoinEvent event) {
+        lastMovingTimes.put(event.getPlayer(), System.currentTimeMillis());
+    }
+
+    @EventHandler
     private void onLogout(PlayerQuitEvent event) {
         lastMovingTimes.remove(event.getPlayer());
         isAfkWarnFinished.remove(event.getPlayer());
@@ -82,7 +89,7 @@ public class AutoPointRemover implements Listener {
 
     private static boolean isAfk(Player player) {
         if (!lastMovingTimes.containsKey(player)) {
-            return false;
+            return true;
         }
         return lastMovingTimes.get(player) + (Config.getAfkTime() * 60 * 1000) < System.currentTimeMillis();
     }
