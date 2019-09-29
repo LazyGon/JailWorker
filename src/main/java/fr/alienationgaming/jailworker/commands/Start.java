@@ -31,16 +31,17 @@ public class Start extends SubCommand {
 
         if (JailSystem.isRunning(jailName)) {
             Messages.sendMessage(sender, "command.start.error.jail-is-already-running", Map.of("%jail-name%", jailName));
-            return true;
+            return false;
         }
 
         JailSystem task = JailSystem.getTask(jailName);
-        if (task != null) {
-            task.start();
-            Messages.sendMessage(sender, "command.start.info.success", Map.of("%jail-name%", jailName));
+        if (task == null) {
+            Messages.sendMessage(sender, "command.start.error.faulure", Map.of("%jail-name%", jailName));        
+            return false;
         }
-        Messages.sendMessage(sender, "command.start.error.faulure", Map.of("%jail-name%", jailName));
         
+        task.start();
+        Messages.sendMessage(sender, "command.start.info.success", Map.of("%jail-name%", jailName));
         return true;
     }
 
