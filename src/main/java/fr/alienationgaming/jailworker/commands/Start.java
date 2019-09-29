@@ -48,7 +48,7 @@ public class Start extends SubCommand {
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
         List<String> jails = JailConfig.getJails();
-        jails.removeIf(jail -> !JailSystem.isRunning(jail));
+        jails.removeIf(jail -> JailSystem.isRunning(jail));
         jails.removeIf(jail -> !hasPermission(sender, jail));
         if (args.length == 2) {
             return StringUtil.copyPartialMatches(args[1], jails, result);
