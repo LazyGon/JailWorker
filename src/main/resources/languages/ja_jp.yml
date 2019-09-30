@@ -6,10 +6,12 @@
 # 他の言語に設定しているプレイヤーのために、言語を追加するには <locale>_<country>.yml という形式のファイルを追加します。
 # ファイル名に使える言語コードと国コードはここを参照してください: https://minecraft.gamepedia.com/Language
 # 言語を追加したあとにGithubなどでファイルを渡してくれると、デフォルトのサポート言語に追加します。
+plugin:
+  prefix: "&8[&cJail&aWorker&8]&r"
+
 command:
   general:
     info:
-      plugin-prefix: "&8[&cJail&aWorker&8]&r"
       line: "--------------------"
     error:
       not-enough-arguments: "&c引数が足りません。"

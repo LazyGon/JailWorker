@@ -64,7 +64,7 @@ public final class Messages {
         FileConfiguration config = languages.getOrDefault(code, languages.get("en_us")).getConfig();
         String prefix;
         if (addPrefix) {
-            prefix = config.getString("command.general.info.plugin-prefix", "&8[&cJail&aWorker&8]&r") + " ";
+            prefix = config.getString("plugin.prefix", "&8[&cJail&aWorker&8]&r") + " ";
         } else {
             prefix = "";
         }

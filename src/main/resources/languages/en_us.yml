@@ -6,10 +6,11 @@
 # To add another language for player who sets different language, add file named <locale>_<country>.yml
 # File name format you can use is listed here: https://minecraft.gamepedia.com/Language
 # If you add language file and want to add file default supported language, please pass the file to me on github.
+plugin:
+  prefix: "&8[&cJail&aWorker&8]&r"
 command:
   general:
     info:
-      plugin-prefix: "&8[&cJail&aWorker&8]&r"
       line: "--------------------"
     error:
       not-enough-arguments: "&cNot enough arguments."
