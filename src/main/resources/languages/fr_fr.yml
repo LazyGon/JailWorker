@@ -1,135 +1,139 @@
-# Message systËme = &9
-# SuccËs = &a Èchec = &c
-# Running = &a Stop = &c
+# Message syst√®me = &9
+# Succ√®s = &a Erreur = &c
+# En marche = &a A l'arret = &c
 
 # Vous pouvez modifier les messages comme vous le souhaitez.
-# Pour ajouter une autre langue pour les joueurs qui dÈfinissent une langue diffÈrente, ajoutez le fichier nommÈ <locale> _ <pays> .yml
-# Le format de nom de fichier que vous pouvez utiliser est rÈpertoriÈ ici:
-# Si vous ajoutez un fichier de langue et souhaitez ajouter une langue de fichier prise en charge par dÈfaut, veuillez me le transmettre sur github.
-
-# THIS FILE IS CREATED BY GOOGLE TRANSLATION. PLEASE REWRITE.
+# Pour ajouter une nouvelle langue pour des joueurs d'une autre nationalit√©, ajouter un fichier nomm√© <locale>_<pays>.yml
+# Les formats de nom de fichiers que vous pouvez utiliser sont list√©s ici : https://minecraft.gamepedia.com/Language
+# Si vous ajouter un language et que vous souhaitez qu'ils soit par d√©faut inclut dans le plugin, merci de me l'envoyer sur mon github
+plugin:
+  prefix: "&8[&cJail&aWorker&8]&r"
 command:
   general:
     info:
-      plugin-prefix: "&8[&cJail&aWorker&8]&r"
       line: "--------------------"
     error:
       not-enough-arguments: "&cPas assez d'arguments."
       no-permission: "&cVous n'avez pas la permission."
-      jail-does-not-exist: "&cJail nommÈ %jail-name% n'existe pas."
-      missing-argument: "&cIl n'y a pas d'argument %missing-argument%."
-      jail-is-not-running: "&c%jail-name% n'est pas en cours d'exÈcution."
-      only-player: "&cCette commande est rÈservÈe ‡ un joueur."
-      player-is-offline: "&c%player% est dÈconnectÈ."
-      player-has-never-played: "&c%player% n'a jamais jouÈ auparavant."
-      player-is-not-jailed: "&c%player% n'est pas emprisonnÈ."
+      jail-does-not-exist: "&cLa prison %jail-name% n'existe pas."
+      missing-argument: "&cIl n'y pas d'argument %missing-argument%."
+      jail-is-not-running: "&c%jail-name% n'est pas en marche."
+      only-player: "&cCette commande est uniquement pour les joueurs."
+      player-is-offline: "&c%player% est hors ligne."
+      player-has-never-played: "&c%player% n'a jamais jou√© pour le moment."
+      player-is-not-jailed: "&c%player% n'est pas en prison."
       invalid-number: "Nombre invalide."
-      material-does-not-exist: "&c%material% n'existe pas. Voir&f: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html"
-      invalid-material: "&c%material% est un matÈriau invalide. Voir&f: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html"
+      material-does-not-exist: "&c%material% n'existe pas. Voir: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html"
+      invalid-material: "&c%material% est un mat√©riel invalide."
   allowed-command:
     info:
-      add-success: "&aAdded a spÈcifiÈ les commandes autorisÈes ‡ %jail-name%."
-      remove-success: "&aRemoved a autorisÈ les commandes autorisÈes ‡ partir de %jail-name%"
-      list-header: "Liste de commandes &9Allowd pour %jail-name%."
-      list-command-line: "&f- &9%command%"
+      add-success: "&aVous avez ajout√© une commande autoris√©e √† %jail-name%."
+      remove-success: "&aVous avez supprim√© une commande autoris√©e √† %jail-name%"
+      list-header: "&9Vous avez autoris√© les commande suivantes pour %jail-name%."
+      list-command-line: "  &f- &9%command%"
   clean:
     info:
-      blocks-deleted: "&9%delete-count%Les blocs de punition ininterrompus ont ÈtÈ supprimÈs dans %jail-name%."
+      blocks-deleted: "&9%deleted-count% blocs de punition non cass√©s dans %jail-name% ont √©t√© d√©truits."
   create:
     info:
-      define-tips: "&9Faites une sÈlection cuboÔde pour votre prison &c(clic droit)"
-      Waiting for First: "&9Veuillez cliquer avec le bouton droit de la souris sur la premiËre position."
-      wait-for-second: "&9Veuillez cliquer avec le bouton droit sur la seconde position."
-      retrieve-worldedit: "&9RÈcupÈrer la sÈlection de cuboÔdes dans WorldEdit."
-      waiting-for-spawn: "&9pVeuillez cliquer avec le bouton droit de la souris sur la position d'apparition de spawn pour cette prison."
-      finish: "&a%jail-name% est dÈfini!"
+      define-tips: "&9Faire une selection cubique pour votre prison &c(clic droit)"
+      waiting-for-first: "&9Merci de faire un clic droit sur la premi√®re position."
+      waiting-for-second: "&9Merci de faire un clic droit sur la deuxi√®me position."
+      retrieve-worldedit: "&9R√©cup√©ration de la s√©lection depuis WorldEdit."
+      waiting-for-spawn: "&9pMerci de faire un clic droit sur la position de spawn pour cette prison."
+      finish: "&a%jail-name% vient d'√™tre cr√©√©e!"
     error:
-      you-are-already-in-creation: "&cVous crÈez %jail-name% maintenant."
-      jail-already-exist: "&c%jail-name% existe dÈj‡."
-  punish-point:
-    info:
-      notice-increase-target: "&9%sender% augmentÈ vos points de punition de points %point%. Le point actuel est %new-point%."
-      notice-increase-sender: "&9Point de punition de %player% augmentÈ de %point% points. Le point actuel est %new-point%."
-      notice-decrease-target: "&9%sender% rÈduit vos points de punition de %point% points. Le point actuel est %new-point%."
-      notice-decrease-sender: "&9RÈduction du point de punition de %player% de %point% points. Le point actuel est %new-point%."
+      you-are-already-in-creation: "&cVous √™tes en train de d√©finir %jail-name% pour le moment."
+      jail-already-exists: "&c%jail-name% exists d√©j√†."
   delete:
     info:
-      success: "&a%jail-name% est supprimÈ!"
+      success: "&a%jail-name% a √©t√© supprim√©!"
     error:
-      failure: "&c%jail-name% ne peut pas Ítre supprimÈ. Signalez-le ‡ l'administrateur."
+      failure: "&c%jail-name% ne peut pas √™tre supprim√©. Merci d'en faire part √† l'administateur."
   edit:
     info:
-      add-punishment-block: "&aAjout du bloc de punition %material% en prison!"
-      remove-punishment-block: "&aLe bloc de peine %material% a ÈtÈ retirÈ de prison!"
-      set-max-block-amount-success: "&aDÈfinir le nombre maximum de blocs ‡ placer en prison"
-      set-block-speed-success: "&aDÈfinissez la frÈquence ‡ laquelle des blocs sont placÈs en prison!"
-      define-tips: "&9Veuillez cliquer avec le bouton droit de la souris pour spÈcifier la position."
-      success: "&aVous avez dÈfini avec succËs %location%!"
+      add-punishment-block: "&aVous avez ajout√© %material% √† la prison!"
+      remove-punishment-block: "&aVous avez retir√© %material% de la prison!"
+      set-max-block-amount-success: "&aVous avez d√©fini le nombre max de blocs dans la prison!"
+      set-block-interval-success: "&aVous avez d√©fini la fr√©quence d'apparition des blocs dans la prison!ÔºÅ"
+      define-tips: "&9Merci de faire un clic droit pour d√©finir la position."
+      success: "&aVous avez d√©fini la position %location% avec succ√®s!"
     error:
   free:
     info:
-      free-player: "&a%player% est maintenant libÈrÈ de %jail-name%."
-      you-are-now-free: "&9%sender% vous a libÈrÈ de %jail-name%."
-      display-reason: "&9Raison: %reason%"
+      free-player: "&a%player% est maintenant lib√©r√© de la prison %jail-name%."
+      you-are-now-free: "&9%sender% vous √† lib√©r√© de la prison %jail-name%."
+      display-reason: "&Raison: %reason%"
   give:
     info:
-      give-item: "&aVous avez donnÈ %amount% %material%s ‡ %player%."
-      given-item: "&aVous avez reÁu %amount% %material%s de %sender%"
+      give-item: "&aVous avez ajout√© %amount% %material%s au joueur %player%."
+      given-item: "&aVous avez re√ßu %amount% %materials%s de la part de %sender%"
   goto:
     info:
-      to-leave-jail-tips: "&9Pour partir, tÈlÈportez-vous hors de prison par un moyen quelconque..."
-      welcome: "&9Bienvenue ‡ %jail-name%!"
+      to-leave-jail-tips: "&9Pour quitter la prison, utilisez la commande /goto sans arguments!"
+      welcome: "&9Bienvenue dans la prison %jail-name%!"
+      left-jail: "&9Vous avez quitt√© la prison %jail-name%!"
+    error:
+      already-out-of-jail: "&cVous avez d√©j√† quitt√© la prison."
   info:
     info:
-      jail-name: "&9Information de %jail-name%"
-      jail-is-running: "&aRunning"
-      jail-is-not-running: "&cStop"
-      jail-world-name: "&9World: %world%"
-      jail-max-punishment-blocks: "&9Les blocs de punition de max pour cette prison sont: %max-punishment-blocks%"
-      jail-block-appear-speed: "&9Les blocs de punition speed ??apparaissent: %punishment-block-speed%"
-      jail-punishment-blocks: "&9Bloc installÈ:"
+      jail-name: "&9Informations sur la prison %jail-name%"
+      jail-is-running: "&aEn marche"
+      jail-is-not-running: "&cA l'arret"
+      jail-world-name: "&9Monde: %world-name%"
+      jail-max-punishment-blocks: "&9Le nombre maximum de blocs dans cette prison est de %max-punishment-blocks%"
+      jail-block-appear-interval: "&9La vitesse d'apparition des blocs est: %punishment-block-interval%"
+      jail-punishment-blocks: "&9Les blocs de punition pour cette prison sont:"
       jail-punishment-blocks-format: "&9%material%"
-      prisoner-header: "&9Information de %player%"
+      prisoner-header: "&9Informations sur le joueur %player%"
       prisoner-jail-name: "&9Nom de la prison: %jail-name%"
-      prisoner-punisher-name: "&9Punisher: %punisher%"
-      prisoner-cause: "&9Pause motif: %reason%"
-      prisoner-punishment-time: "&9Date punie:%time%"
-      punishment-blocks: "&9punition bloc point (%page% / %max-page%)"
-      punishment-blocks-format: "&9%material%: %point%"
+      prisoner-punisher-name: "&9Tortionnaire: %punisher%"
+      prisoner-punishment-point: "&9punition point: %point%"
+      prisoner-cause: "&9Raison de la punition: %reason%"
+      prisoner-punishment-time: "&9Date de la punition: %time%"
+      punishment-blocks: "&9Points pour chaque blocs de punition (%page% / %max-page%)"
+      punishment-blocks-format: "&9%materiel%: %point% point"
   list:
     info:
-      list-header: "&9Jail List (&aGreen = Running&9, &cRed = Stop&9)"
+      list-header: "&9Liste des prisons (&aGreen = En marche&9, &cRed = A l'arret&9)"
+  punish-point:
+    info:
+      notice-increase-target: "&9%sender% √† ajout√© %point% points de punition. (Points actuels: %new-point% points)"
+      notice-increase-sender: "&9Vous avez ajout√© %point% points de punition. (Points actuels: %new-point% points)"
+      notice-decrease-target: "&9%sender% a retir√© %point% points de punition. (Points actuels: %new-point% points)"
+      notice-decrease-sender: "&9Vous avez retir√© %point% points de punition. (Points actuels: %new-point% points)"
   put:
     info:
-      broadcast-jailed: "&9%player% est emprisonnÈ! Le nom de la prison est: %jail-name%."
-      broadcast-prisoners-cannot-speak: "&9%player% ne peuvent pas parler maintenant!"
-      broadcast-prisoners-cannot-hear: "&9%player% ne peuvent pas voir le chat maintenant!"
-      jailed: "&9Vous Ítes emprisonnÈ par %sender%. Le nom de la prison est: %jail-name%."
+      broadcast-jailed: "&9%player% est en prison! Le nom de la prison est: %jail-name%."
+      broadcast-prisoners-cannot-speak: "&9%player% ne peut pas parler pour l'instant!"
+      broadcast-prisoners-cannot-hear: "&9%player% ne voit pas le chat pour l'instant!"
+      jailed: "&9Vous avez √©t√© envoy√© en prison par %sender%. Le nom de la prison est: %jail-name%."
       display-reason: "&9Raison: %reason%"
-      punishment-block-header: "&9Les blocs que vous devez rompre pour sortir de prison sont&f:"
-      punishment-block-format: "&9%material%: %amount%"
+      punishment-point: "&9Points de punition: %point% point(s)"
+      punishment-tips: "&9Pour quitter la prison, vous devez r√©duire vos points de punition en cassant des blocs qui sont automatiquement plac√©s ici.\nOu, les points diminueront tout seuls avec le temps."
     error:
-      player-is-already-jailed: "&c%player% est dÈj‡ emprisonnÈ."
+      player-is-already-jailed: "&c%player% est d√©j√† en prison."
   reload:
     info:
-      success: "&aune configuration rechargÈe!"
+      success: "&aConfiguration recharg√©e!"
   restart:
     info:
-      success: "&a%jail-name% est redÈmarrÈ!"
+      success: "&a%jail-name% a √©t√© red√©marr√©e!"
     error:
-      failure: "&cN'a pas rÈussi ‡ redÈmarrer %jail-name%."
+      failure: "&cImpossible de red√©marrer %jail-name%."
   start:
     info:
-      success: "&a%jail-name% est commencÈ!"
+      success: "&a%jail-name% est d√©marr√©e!"
     error:
-      failure: "&cN'a pas rÈussi ‡ dÈmarrer %jail-name%."
-      jail-is-already-running: "&c%jail-name% est dÈj‡ en cours d'exÈcution."
+      failure: "&cImpossile de d√©marrer %jail-name%."
+      jail-is-already-running: "&c%jail-name% est d√©j√† en marche."
   stop:
     info:
-      success: "&a%jail-name% arrÍtÈ!"
+      success: "&a%jail-name% arr√©t√©e!"
 in-jail:
-  cannot-speak: "&cNe parlez pas, juste du travail."
+  cannot-speak: "&cNe parlez pas. Travaillez."
   forbidden-command: "&cVous ne pouvez pas utiliser %command% en prison."
-  command-not-allowed: "&cVous ne pouvez pas utiliser %command% dans %jail-name%."
-  broadcast-finish-works: "&a%player% a ÈtÈ libÈrÈ de prison parce que j'ai fini de travailler."
-  punishment-point-notice: "&aVous pouvez obtenir une prison pour %point% points!"
+  command-not-allowed: "&cVous ne pouvez pas utiliser %command% dans la prison %jail-name%."
+  broadcast-finish-work: "&a%player% a termin√© son travail et a √©t√© lib√©r√© de prison!"
+  punishment-point-notice: "&aVous devez gagner %point% points de plus pour sortir!"
+  you-are-now-afk: "&9Vos points vont arr√©ter de descendre tout seuls car vous √™tes AFK."
