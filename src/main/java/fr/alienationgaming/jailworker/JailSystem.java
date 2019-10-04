@@ -316,7 +316,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
             return;
         }
 
-        if (player.hasPermission("jailworker.bypass.allowedcommand")) {
+        if (player.hasPermission("jailworker.bypass.allowed-command")) {
             return;
         }
 
@@ -403,10 +403,10 @@ public class JailSystem extends BukkitRunnable implements Listener {
     }
 
     private boolean canBypass(Player player) {
-        if (player.hasPermission("jailworker.bypass.blockedit.*")) {
+        if (player.hasPermission("jailworker.bypass.block-edit.*")) {
             return true;
         }
-        if (player.hasPermission("jailworker.bypass.blockedit." + jailName)) {
+        if (player.hasPermission("jailworker.bypass.block-edit." + jailName)) {
             return true;
         }
 

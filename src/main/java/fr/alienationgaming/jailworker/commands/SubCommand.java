@@ -54,7 +54,7 @@ public abstract class SubCommand {
     abstract String getUsage();
 
     protected boolean isAdmin(CommandSender sender) {
-        return sender instanceof ConsoleCommandSender || sender.hasPermission("jailworker.admin");
+        return sender instanceof ConsoleCommandSender || sender.hasPermission("jailworker.*");
     }
 
     protected boolean hasPermission(CommandSender sender) {
