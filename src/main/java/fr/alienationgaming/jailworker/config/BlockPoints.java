@@ -14,11 +14,25 @@ import org.bukkit.inventory.ItemStack;
 
 public final class BlockPoints {
 
-    private static CustomConfig jailConfig = new CustomConfig("punishment-block-points.yml");
+    // NMS reflection variables
+    private static String nmsVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+    private static String nmsPackageName = "net.minecraft.server." + nmsVersion;
+    private static Method asNMSCopy;
+    private static Method getItem;
+    private static Method p;
+    private static Method c;
     static {
-        saveDefault();
+        try {
+            asNMSCopy = Class.forName("org.bukkit.craftbukkit." + nmsVersion + ".inventory.CraftItemStack").getMethod("asNMSCopy",
+                    ItemStack.class);
+            getItem = Class.forName(nmsPackageName + ".ItemStack").getMethod("getItem");
+            p = Class.forName(nmsPackageName + ".Item").getMethod("p");
+            c = Class.forName(nmsPackageName + ".CreativeModeTab").getMethod("c");
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
-
+    
     private static final Set<Material> validBlocks = new HashSet<Material>() {
         private static final long serialVersionUID = 1L;
 
@@ -28,6 +42,17 @@ public final class BlockPoints {
             remove(Material.BEDROCK);
         }
     };
+
+    private static CustomConfig jailConfig = new CustomConfig("punishment-block-points.yml");
+    static {
+        saveDefault();
+        validBlocks.forEach(material -> {
+            if (!get().contains(material.name())) {
+                get().set(material.name(), 1);
+            }
+        });
+        save();
+    }
 
     public static Set<Material> getAllBlocks() {
         return Collections.unmodifiableSet(validBlocks);
@@ -93,30 +118,15 @@ public final class BlockPoints {
         return jailConfig.getConfig();
     }
 
-    private static String nmsVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-    private static String nmsPackageName = "net.minecraft.server." + nmsVersion;
-    private static Method asNMSCopy;
-    private static Method getItem;
-    private static Method p;
-    private static Method c;
-    static {
-        try {
-            asNMSCopy = Class.forName("org.bukkit.craftbukkit." + nmsVersion + ".inventory.CraftItemStack").getMethod("asNMSCopy",
-                    ItemStack.class);
-            getItem = Class.forName(nmsPackageName + ".ItemStack").getMethod("getItem");
-            p = Class.forName(nmsPackageName + ".Item").getMethod("p");
-            c = Class.forName(nmsPackageName + ".CreativeModeTab").getMethod("c");
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
-
     private static boolean isBuildingBlocks(Material material) {
         try {
             Object itemStackInvokeObj = asNMSCopy.invoke(null, new ItemStack(material));
             Object itemInvokeObj = getItem.invoke(itemStackInvokeObj);
-            Object creativeModetabInvokeObj = p.invoke(itemInvokeObj);
-            return ((String) c.invoke(creativeModetabInvokeObj)).equals("building_blocks");
+            Object creativeModeTabInvokeObj = p.invoke(itemInvokeObj);
+            if (creativeModeTabInvokeObj == null) {
+                return false;
+            }
+            return ((String) c.invoke(creativeModeTabInvokeObj)).equals("building_blocks");
         } catch (IllegalAccessException | InvocationTargetException ignored) {
             return false;
         }
