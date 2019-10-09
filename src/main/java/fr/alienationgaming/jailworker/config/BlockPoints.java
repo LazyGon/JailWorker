@@ -47,7 +47,7 @@ public final class BlockPoints {
     static {
         saveDefault();
         validBlocks.forEach(material -> {
-            if (!get().contains(material.name())) {
+            if (!get().contains(material.name(), true)) {
                 get().set(material.name(), 1);
             }
         });
