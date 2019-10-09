@@ -38,6 +38,8 @@ import fr.alienationgaming.jailworker.config.Config;
 import fr.alienationgaming.jailworker.config.JailConfig;
 import fr.alienationgaming.jailworker.config.Messages;
 import fr.alienationgaming.jailworker.config.Prisoners;
+import fr.alienationgaming.jailworker.events.PunishmentBlockBreakEvent;
+import fr.alienationgaming.jailworker.events.PunishmentBlockPlaceEvent;
 
 public class JailSystem extends BukkitRunnable implements Listener {
 
@@ -194,6 +196,13 @@ public class JailSystem extends BukkitRunnable implements Listener {
 
         event.setDropItems(false);
 
+        PunishmentBlockBreakEvent breakEvent = new PunishmentBlockBreakEvent(player, broken);
+        Bukkit.getPluginManager().callEvent(breakEvent);
+        if (breakEvent.isCancelled()) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (Prisoners.isJailed(player) && Prisoners.getJailPlayerIsIn(player).equals(jailName)
                 && punishmentBlocks.contains(broken)) {
 
@@ -230,6 +239,18 @@ public class JailSystem extends BukkitRunnable implements Listener {
         Block placed = event.getBlock();
 
         if (!JailConfig.isInJail(jailName, placed.getLocation())) {
+            return;
+        }
+
+        PunishmentBlockPlaceEvent placeEvent = new PunishmentBlockPlaceEvent(jailName, placed);
+        Bukkit.getPluginManager().callEvent(placeEvent);
+        if (placeEvent.isCancelled()) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (!JailConfig.isInJail(jailName, placed.getLocation())) {
+            event.setCancelled(true);
             return;
         }
 

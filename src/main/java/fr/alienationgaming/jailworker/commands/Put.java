@@ -20,6 +20,7 @@ import fr.alienationgaming.jailworker.config.JailConfig;
 import fr.alienationgaming.jailworker.config.Messages;
 import fr.alienationgaming.jailworker.config.Prisoners;
 import fr.alienationgaming.jailworker.config.WantedPlayers;
+import fr.alienationgaming.jailworker.events.PlayerJailedEvent;
 
 public class Put extends SubCommand {
 
@@ -81,13 +82,22 @@ public class Put extends SubCommand {
         }
 
         OfflinePlayer punisher = (sender instanceof Player) ? (OfflinePlayer) sender : null;
+        PlayerJailedEvent jailedEvent = new PlayerJailedEvent(target, jailName, punisher, point, reason);
+        Bukkit.getPluginManager().callEvent(jailedEvent);
+        if (jailedEvent.isCancelled()) {
+            return false;
+        }
+
+        punisher = jailedEvent.getPunisher();
+        point = jailedEvent.getPunishmentPoint();
+        reason = jailedEvent.getReason();
+        
         if (target.isOnline()) {
             Prisoners.punishPlayer(target.getPlayer(), jailName, punisher, point, reason);
             sendJailedMessage(target.getPlayer(), jailName, sender, point, reason);
         } else {
             WantedPlayers.addWantedPlayer(target, jailName, point, reason);
             Messages.sendMessage(sender, "command.put.info.player-is-now-wanted", Map.of("%player%", target.getName()));
-            // TODO: Add fr language of this message.
         }
         return true;
     }

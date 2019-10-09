@@ -15,6 +15,7 @@ import org.bukkit.util.StringUtil;
 import fr.alienationgaming.jailworker.config.Messages;
 import fr.alienationgaming.jailworker.config.Prisoners;
 import fr.alienationgaming.jailworker.config.WantedPlayers;
+import fr.alienationgaming.jailworker.events.PlayerFreedEvent;
 
 public class Free extends SubCommand {
 
@@ -52,6 +53,12 @@ public class Free extends SubCommand {
         }
         Messages.sendMessage(sender, "command.free.info.free-player",
                 Map.of("%player%", target.getName(), "%jail-name%", jailName));
+
+        PlayerFreedEvent freedEvent = new PlayerFreedEvent(target);
+        Bukkit.getPluginManager().callEvent(freedEvent);
+        if (freedEvent.isCancelled()) {
+            return false;
+        }
 
         if (target.isOnline()) {
             Messages.sendMessage(target.getPlayer(), "command.free.info.you-are-now-free",

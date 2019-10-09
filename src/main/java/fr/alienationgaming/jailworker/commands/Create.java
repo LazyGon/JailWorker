@@ -38,6 +38,7 @@ import fr.alienationgaming.jailworker.config.BlockPoints;
 import fr.alienationgaming.jailworker.config.Config;
 import fr.alienationgaming.jailworker.config.JailConfig;
 import fr.alienationgaming.jailworker.config.Messages;
+import fr.alienationgaming.jailworker.events.JailCreateEvent;
 
 public class Create extends SubCommand {
 
@@ -50,7 +51,7 @@ public class Create extends SubCommand {
         private final Player player;
         private int maxPunishmentBlocks = Config.getDefaultMaxBlocks();
         private int punishmentBlockInterval = Config.getDefaultBlockInterval();
-        private final Set<Material> punishmentBlocks;
+        private Set<Material> punishmentBlocks;
         private Location pos1;
         private Location pos2;
         private Location spawn;
@@ -113,8 +114,19 @@ public class Create extends SubCommand {
                 Messages.sendMessage(player, "command.create.info.finish", Map.of("%jail-name%", jailName));
                 HandlerList.unregisterAll(this);
                 data.remove(player);
-                JailConfig.addJail(jailName, maxPunishmentBlocks, punishmentBlockInterval, punishmentBlocks, List.of(),
-                        pos.getWorld(), pos1, pos2, spawn);
+                JailCreateEvent createEvent = new JailCreateEvent(jailName, maxPunishmentBlocks,
+                        punishmentBlockInterval, punishmentBlocks, pos1, pos2, spawn);
+                Bukkit.getPluginManager().callEvent(createEvent);
+                if (!createEvent.isCancelled()) {
+                    maxPunishmentBlocks = createEvent.getMaxPunishmentBlocks();
+                    punishmentBlockInterval = createEvent.getPunishmentBlockInterval();
+                    punishmentBlocks = createEvent.getPunishmentBlocks();
+                    pos1 = createEvent.getPos1();
+                    pos2 = createEvent.getPos2();
+                    spawn = createEvent.getSpawn();
+                    JailConfig.addJail(jailName, maxPunishmentBlocks, punishmentBlockInterval, punishmentBlocks,
+                            List.of(), pos.getWorld(), pos1, pos2, spawn);
+                }
             }
         }
 

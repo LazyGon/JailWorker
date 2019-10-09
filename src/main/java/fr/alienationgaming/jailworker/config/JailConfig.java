@@ -407,7 +407,9 @@ public final class JailConfig {
         setPosition1(jailName, position1);
         setPosition2(jailName, position2);
         setSpawnLocation(jailName, spawn);
-        JailSystem.getTask(jailName).start();
+        if (exist(jailName, true)) {
+            JailSystem.getTask(jailName).start();
+        }
     }
 
     /**

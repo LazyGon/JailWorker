@@ -18,6 +18,7 @@ import org.bukkit.util.StringUtil;
 
 import fr.alienationgaming.jailworker.config.Messages;
 import fr.alienationgaming.jailworker.config.Prisoners;
+import fr.alienationgaming.jailworker.events.PlayerItemGivenEvent;
 
 public class Give extends SubCommand {
 
@@ -65,7 +66,14 @@ public class Give extends SubCommand {
             }
         }
 
-        target.getInventory().addItem(new ItemStack(item, amount));
+        ItemStack itemStack = new ItemStack(item, amount);
+        PlayerItemGivenEvent givenEvent = new PlayerItemGivenEvent(target, itemStack);
+        Bukkit.getPluginManager().callEvent(givenEvent);
+        if (givenEvent.isCancelled()) {
+            return false;
+        }
+
+        target.getInventory().addItem(givenEvent.getItem());
         Messages.sendMessage(target, "command.give.info.given-item", Map.of("%sender%", sender.getName(), "%mateiral%", item.toString(), "%amount%", String.valueOf(amount)));
         Messages.sendMessage(sender, "command.give.info.give-item", Map.of("%player%", target.getName(), "%material%", item.toString(), "%amount%", String.valueOf(amount)));
 

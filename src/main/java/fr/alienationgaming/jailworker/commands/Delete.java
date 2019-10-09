@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
 
 import fr.alienationgaming.jailworker.config.JailConfig;
 import fr.alienationgaming.jailworker.config.Messages;
+import fr.alienationgaming.jailworker.events.JailDeleteEvent;
 
 public class Delete extends SubCommand {
 
@@ -34,6 +36,11 @@ public class Delete extends SubCommand {
         }
 
         // JailConfig#removeJail will also remove running task.
+        JailDeleteEvent deleteEvent = new JailDeleteEvent(jailName);
+        Bukkit.getPluginManager().callEvent(deleteEvent);
+        if (deleteEvent.isCancelled()) {
+            return false;
+        }
         JailConfig.removeJail(jailName);
 
         if (!JailConfig.exist(jailName)) {

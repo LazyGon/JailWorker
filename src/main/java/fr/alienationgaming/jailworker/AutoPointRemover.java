@@ -16,6 +16,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import fr.alienationgaming.jailworker.config.Config;
 import fr.alienationgaming.jailworker.config.Messages;
 import fr.alienationgaming.jailworker.config.Prisoners;
+import fr.alienationgaming.jailworker.events.PlayerFreedEvent;
+import fr.alienationgaming.jailworker.events.PunishmentPointChangeEvent;
 
 public class AutoPointRemover implements Listener {
 
@@ -31,8 +33,21 @@ public class AutoPointRemover implements Listener {
                 if (prisoner.isOnline()) {
                     Player player = prisoner.getPlayer();
                     if (!isAfk(player)) {
-                        Prisoners.addPunishmentPoint(prisoner, -1);
-                        if (Prisoners.getPunishmentPoint(player) == 0) {
+                        int firstPunishmentPoint = Prisoners.getPunishmentPoint(player);
+                        int punishmentPoint = Prisoners.getPunishmentPoint(player);
+                        PunishmentPointChangeEvent changeEvent = new PunishmentPointChangeEvent(player, punishmentPoint, punishmentPoint - 1);
+                        Bukkit.getPluginManager().callEvent(changeEvent);
+                        punishmentPoint = changeEvent.getNewPunishmentPoint();
+                        Prisoners.setPunishmentPoint(player, punishmentPoint);
+
+                        if (Prisoners.getPunishmentPoint(player) <= 0) {
+                            PlayerFreedEvent freedEvent = new PlayerFreedEvent(player);
+                            Bukkit.getPluginManager().callEvent(freedEvent);
+                            if (freedEvent.isCancelled()) {
+                                Prisoners.setPunishmentPoint(player, firstPunishmentPoint);
+                                return;
+                            }
+
                             Bukkit.getOnlinePlayers().forEach(onlinePlayer -> Messages.sendMessage(onlinePlayer,
                                     "in-jail.broadcast-finish-work", Map.of("%player%", player.getName())));
                             Prisoners.freePlayer(player);
@@ -49,7 +64,6 @@ public class AutoPointRemover implements Listener {
     private static final AutoPointRemover instance = new AutoPointRemover();
 
     private AutoPointRemover() {
-        
     }
 
     public static void start() {

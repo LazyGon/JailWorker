@@ -16,6 +16,7 @@ import org.bukkit.util.StringUtil;
 import fr.alienationgaming.jailworker.config.Messages;
 import fr.alienationgaming.jailworker.config.Prisoners;
 import fr.alienationgaming.jailworker.config.WantedPlayers;
+import fr.alienationgaming.jailworker.events.PunishmentPointChangeEvent;
 
 public class PunishPoint extends SubCommand {
 
@@ -75,6 +76,15 @@ public class PunishPoint extends SubCommand {
         } else {
             dif = newValue - Prisoners.getPunishmentPoint(target);
         }
+
+        PunishmentPointChangeEvent changeEvent = new PunishmentPointChangeEvent(target, Prisoners.getPunishmentPoint(target), newValue);
+        Bukkit.getPluginManager().callEvent(changeEvent);
+        if (changeEvent.isCancelled()) {
+            return false;
+        }
+
+        newValue = changeEvent.getNewPunishmentPoint();
+        dif = Math.abs(newValue - changeEvent.getPreviousPunishmentPoint());
 
         if (target.isOnline()) {
             if (dif >= 0) {
