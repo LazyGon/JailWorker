@@ -30,15 +30,11 @@ public final class ConfigUpdater {
 
     /**
      * Updates old config. If config is incompatible because of majour update, it
-     * will be copied to {@code old} folder.
+     * will be copied to {@code old} folder and deleted.
      */
     public static void update() {
         String version = plugin.getDescription().getVersion();
         String oldVersion = Config.getConfigVersion();
-
-        if (version.equalsIgnoreCase(oldVersion)) {
-            return;
-        }
 
         if (!oldVersion.startsWith(String.valueOf(version.charAt(0)))) {
             Path datafoler = plugin.getDataFolder().toPath();
@@ -63,18 +59,31 @@ public final class ConfigUpdater {
                     .info("Go to http://dev.bukkit.org/bukkit-plugins/jail-worker/ for news and reporting bugs");
             return;
         }
-        
+
         Config.saveAllDefaultConfigs();
 
         if (version.compareTo(oldVersion) > 0) {
             plugin.getLogger().info("Updating...");
 
             if (oldVersion.equals("3.0.0")) {
+                Config.get().set("plugin.version", "3.1.0");
+                oldVersion = "3.1.0";
+            }
+            
+            if (oldVersion.equals("3.1.0")) {
+                Config.get().set("plugin.version", "3.1.1");
+                oldVersion = "3.1.1";
+            }
+
+            if (oldVersion.equals("3.1.1")) {
+
             }
 
             plugin.getLogger()
                     .info("Go to http://dev.bukkit.org/bukkit-plugins/jail-worker/ for news and reporting bugs");
+            Config.save();
         }
+
     }
 
     private static void copy(Path file, Path dest, StandardCopyOption option) {
