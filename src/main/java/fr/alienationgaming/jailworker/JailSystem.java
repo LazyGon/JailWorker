@@ -326,7 +326,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
     private void onCommand(PlayerCommandPreprocessEvent event) {
 
         Player player = event.getPlayer();
-        if (!Prisoners.isJailed(player)) {
+        if (!Prisoners.isJailed(player) || !Prisoners.getJailPlayerIsIn(player).equals(jailName)) {
             return;
         }
 

@@ -62,17 +62,19 @@ public class Create extends SubCommand {
             this.player = player;
             this.punishmentBlocks = punishmentBlocks;
             Bukkit.getPluginManager().registerEvents(this, plugin);
-            Region region = getWorldEditSelection();
-            if (region == null) {
+            
+            if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
+                WEInputGetter weInputGetter = new WEInputGetter(player);
+                pos1 = weInputGetter.getPos1();
+                pos2 = weInputGetter.getPos2();
+                if (pos1 != null && pos2 != null) {
+                    Messages.sendMessage(player, "command.create.info.retrieve-worldedit");
+                }
+            }
+
+            if (pos1 == null || pos2 == null) {
                 Messages.sendMessage(player, "command.create.info.define-tips");
                 Messages.sendMessage(player, "command.create.info.waiting-for-first");
-            } else {
-                World world = Bukkit.getWorld(region.getWorld().getName());
-                BlockVector3 max = region.getMaximumPoint();
-                BlockVector3 min = region.getMinimumPoint();
-                pos1 = new Location(world, max.getX(), max.getY(), max.getZ());
-                pos2 = new Location(world, min.getX(), min.getY(), min.getZ());
-                Messages.sendMessage(player, "command.create.info.retrieve-worldedit");
             }
 
             if (maxPunishmentBlocks >= 0) {
@@ -142,6 +144,38 @@ public class Create extends SubCommand {
             player.sendMessage(ChatColor.BLUE + "x :" + ChatColor.RESET + pos.getX());
             player.sendMessage(ChatColor.BLUE + "y :" + ChatColor.RESET + pos.getY());
             player.sendMessage(ChatColor.BLUE + "z :" + ChatColor.RESET + pos.getZ());
+        }
+
+
+    }
+
+    private class WEInputGetter {
+
+        private final Player player;
+        private final Location pos1;
+        private final Location pos2;
+
+        private WEInputGetter(Player player) {
+            this.player = player;
+            Region region = getWorldEditSelection();
+            if (region == null) {
+                pos1 = null;
+                pos2 = null;
+                return;
+            }
+            World world = Bukkit.getWorld(region.getWorld().getName());
+            BlockVector3 max = region.getMaximumPoint();
+            BlockVector3 min = region.getMinimumPoint();
+            pos1 = new Location(world, max.getX(), max.getY(), max.getZ());
+            pos2 = new Location(world, min.getX(), min.getY(), min.getZ());
+        }
+
+        private Location getPos1() {
+            return pos1;
+        }
+
+        private Location getPos2() {
+            return pos2;
         }
 
         private Region getWorldEditSelection() {
@@ -217,7 +251,7 @@ public class Create extends SubCommand {
             }
         }
 
-        new InputGetter(jailName, (Player) sender, maxBlocks, blockInterval, punishmentBlocks);
+        data.put((Player) sender, new InputGetter(jailName, (Player) sender, maxBlocks, blockInterval, punishmentBlocks));
         return true;
     }
 

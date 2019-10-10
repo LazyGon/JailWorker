@@ -77,7 +77,12 @@ public class PunishPoint extends SubCommand {
             dif = newValue - Prisoners.getPunishmentPoint(target);
         }
 
-        PunishmentPointChangeEvent changeEvent = new PunishmentPointChangeEvent(target, Prisoners.getPunishmentPoint(target), newValue);
+        PunishmentPointChangeEvent changeEvent = new PunishmentPointChangeEvent(
+                target,
+                (WantedPlayers.isWanted(target))
+                        ? WantedPlayers.getPunishmentPoint(target)
+                        : Prisoners.getPunishmentPoint(target),
+                newValue);
         Bukkit.getPluginManager().callEvent(changeEvent);
         if (changeEvent.isCancelled()) {
             return false;
@@ -86,17 +91,21 @@ public class PunishPoint extends SubCommand {
         newValue = changeEvent.getNewPunishmentPoint();
         dif = Math.abs(newValue - changeEvent.getPreviousPunishmentPoint());
 
+        if (dif >= 0) {
+            Messages.sendMessage(sender, "command.punish-point.info.notice-increase-sender",
+                    Map.of("%player%", target.getName(), "%point%", dif, "%new-point%", newValue));
+        } else {
+            Messages.sendMessage(sender, "command.punish-point.info.notice-decrease-sender",
+                    Map.of("%player%", target.getName(), "%point%", dif, "%new-point%", newValue));
+        }
+
         if (target.isOnline()) {
             if (dif >= 0) {
                 Messages.sendMessage(target.getPlayer(), "command.punish-point.info.notice-increase-target",
                         Map.of("%sender%", sender.getName(), "%point%", dif, "%new-point%", newValue));
-                Messages.sendMessage(sender, "command.punish-point.info.notice-increase-sender",
-                        Map.of("%player%", target.getName(), "%point%", dif, "%new-point%", newValue));
             } else {
                 Messages.sendMessage(target.getPlayer(), "command.punish-point.info.notice-decrease-target",
                         Map.of("%sender%", sender.getName(), "%point%", dif, "%new-point%", newValue));
-                Messages.sendMessage(sender, "command.punish-point.info.notice-decrease-sender",
-                        Map.of("%player%", target.getName(), "%point%", dif, "%new-point%", newValue));
             }
 
             if (args.length > 4) {
@@ -105,7 +114,8 @@ public class PunishPoint extends SubCommand {
                     reasonBuilder.append(args[i]).append(" ");
                 }
                 String reason = ChatColor.translateAlternateColorCodes('&', reasonBuilder.toString());
-                Messages.sendMessage(target.getPlayer(), "command.punish-point.info.display-reason", Map.of("%reason%", reason));
+                Messages.sendMessage(target.getPlayer(), "command.punish-point.info.display-reason",
+                        Map.of("%reason%", reason));
             }
         }
 

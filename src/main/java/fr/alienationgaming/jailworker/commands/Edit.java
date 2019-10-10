@@ -125,7 +125,7 @@ public class Edit extends SubCommand {
             try {
                 material = Material.valueOf(materialName);
                 if (!BlockPoints.exist(material)) {
-                    throw new IllegalArgumentException("The material is not defined in config.");
+                    throw new IllegalArgumentException("The material cannot be used.");
                 }
             } catch (IllegalArgumentException e) {
                 Messages.sendMessage(sender, "command.general.error.invalid-material",

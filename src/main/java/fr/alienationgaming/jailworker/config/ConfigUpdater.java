@@ -33,6 +33,7 @@ public final class ConfigUpdater {
      * will be copied to {@code old} folder and deleted.
      */
     public static void update() {
+        Config.saveAllDefaultConfigs();
         String version = plugin.getDescription().getVersion();
         String oldVersion = Config.getConfigVersion();
 
@@ -59,8 +60,6 @@ public final class ConfigUpdater {
                     .info("Go to http://dev.bukkit.org/bukkit-plugins/jail-worker/ for news and reporting bugs");
             return;
         }
-
-        Config.saveAllDefaultConfigs();
 
         if (version.compareTo(oldVersion) > 0) {
             plugin.getLogger().info("Updating...");

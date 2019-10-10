@@ -40,10 +40,6 @@ public class Info extends SubCommand {
                     page = Integer.parseInt(args[2]);
                 } catch (NumberFormatException ignore) {
                 }
-
-                if (page <= 0) {
-                    page = 1;
-                }
             }
 
             List<String> punishmentBlocks = BlockPoints.getAllBlocks().stream().map(Material::name)
@@ -53,6 +49,10 @@ public class Info extends SubCommand {
             int size = punishmentBlocks.size();
             int maxPage = size % 9 == 0 ? size / 9 : size / 9 + 1;
             page = Math.min(maxPage, page);
+
+            if (page <= 0) {
+                page = 1;
+            }
 
             Messages.sendMessage(sender, "command.info.info.punishment-blocks",
                     Map.of("%page%", page, "%max-page%", maxPage));
