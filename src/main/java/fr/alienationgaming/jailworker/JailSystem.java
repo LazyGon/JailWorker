@@ -32,6 +32,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import fr.alienationgaming.jailworker.config.BlockPoints;
 import fr.alienationgaming.jailworker.config.Config;
@@ -124,8 +125,9 @@ public class JailSystem extends BukkitRunnable implements Listener {
     }
 
     public boolean isRunning() {
+        BukkitScheduler scheduler = Bukkit.getScheduler();
         try {
-            return !isCancelled();
+            return scheduler.isCurrentlyRunning(getTaskId()) || scheduler.isQueued(getTaskId());
         } catch (IllegalStateException e) {
             return false;
         }
@@ -186,15 +188,12 @@ public class JailSystem extends BukkitRunnable implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     private void onBlockBreak(BlockBreakEvent event) {
-        // Bukkit.getPlayer("lazy_gon").sendMessage("test: 1");
         Player player = event.getPlayer();
         Block broken = event.getBlock();
 
         if (!JailConfig.isInJail(jailName, broken.getLocation())) {
             return;
         }
-
-        event.setDropItems(false);
 
         PunishmentBlockBreakEvent breakEvent = new PunishmentBlockBreakEvent(player, broken);
         Bukkit.getPluginManager().callEvent(breakEvent);
@@ -214,6 +213,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
                             "in-jail.broadcast-finish-work", Map.of("%player%", player.getName())));
                     Prisoners.freePlayer(player);
                     punishmentBlocks.remove(broken);
+                    broken.setType(Material.AIR);
                     return;
                 } else if (point % 20 == 0) {
                     Messages.sendMessage(player, "in-jail.punishment-point-notice", Map.of("%point%", point));
@@ -222,11 +222,13 @@ public class JailSystem extends BukkitRunnable implements Listener {
             }
 
             punishmentBlocks.remove(broken);
+            broken.setType(Material.AIR);
             return;
         }
 
         if (canBypass(player)) {
             punishmentBlocks.remove(broken);
+            broken.setType(Material.AIR);
             return;
         }
 
@@ -356,7 +358,6 @@ public class JailSystem extends BukkitRunnable implements Listener {
 
     @Override
     public void run() {
-        // Bukkit.getPlayer("lazy_gon").sendMessage("test: 1");
         List<OfflinePlayer> prisoners = Prisoners.getPrisoners();
         prisoners.removeIf(prisoner -> !Prisoners.getJailPlayerIsIn(prisoner).equals(jailName));
 

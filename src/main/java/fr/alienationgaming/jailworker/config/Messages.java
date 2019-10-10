@@ -52,7 +52,7 @@ public final class Messages {
     public static void sendMessage(CommandSender sender, boolean addPrefix, String path, Map<String, Object> placeholders) {
         String code;
         if (Config.isUsingPlayerLocale() && sender instanceof Player) {
-            code = ((Player) sender).getLocale();
+            code = getLocale((Player) sender);
         } else {
             code = Config.getDefaultLanguage();
         }
@@ -158,7 +158,7 @@ public final class Messages {
             }
         });
 
-        String code = (sender instanceof Player) ? ((Player) sender).getLocale() : Config.getDefaultLanguage();
+        String code = (sender instanceof Player) ? getLocale((Player) sender) : Config.getDefaultLanguage();
         if (!supportedLanguages.contains(code)) {
             code = "en_us";
         }
@@ -175,5 +175,14 @@ public final class Messages {
     public static void reload() {
         initLanguage(Bukkit.getConsoleSender());
         languages.values().forEach(CustomConfig::initConfig);
+    }
+
+    private static final String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+    private static String getLocale(Player player) {
+        if (version.compareTo("v1_12") >= 0 && !version.startsWith("v1_11")) {
+            return player.getLocale();
+        } else {
+            return Config.getDefaultLanguage();
+        }
     }
 }

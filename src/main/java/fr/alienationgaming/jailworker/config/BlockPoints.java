@@ -1,7 +1,9 @@
 package fr.alienationgaming.jailworker.config;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -19,15 +21,23 @@ public final class BlockPoints {
     private static String nmsPackageName = "net.minecraft.server." + nmsVersion;
     private static Method asNMSCopy;
     private static Method getItem;
-    private static Method p;
-    private static Method c;
+    private static Method getCreativeModeTab;
+    private static Field name;
     static {
         try {
             asNMSCopy = Class.forName("org.bukkit.craftbukkit." + nmsVersion + ".inventory.CraftItemStack").getMethod("asNMSCopy",
                     ItemStack.class);
             getItem = Class.forName(nmsPackageName + ".ItemStack").getMethod("getItem");
-            p = Class.forName(nmsPackageName + ".Item").getMethod("p");
-            c = Class.forName(nmsPackageName + ".CreativeModeTab").getMethod("c");
+            for (Method method : Class.forName(nmsPackageName + ".Item").getMethods()) {
+                if (method.getReturnType().getName().equals(nmsPackageName + ".CreativeModeTab")) {
+                    getCreativeModeTab = method;
+                }
+            }
+            for (Field field : Class.forName(nmsPackageName + ".CreativeModeTab").getDeclaredFields()) {
+                if (field.getType() == String.class && Modifier.isFinal(field.getModifiers())) {
+                    name = field;
+                }
+            }
         } catch (ClassNotFoundException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -119,14 +129,20 @@ public final class BlockPoints {
     }
 
     private static boolean isBuildingBlocks(Material material) {
+        if (getCreativeModeTab == null || name == null) {
+            return false;
+        }
         try {
             Object itemStackInvokeObj = asNMSCopy.invoke(null, new ItemStack(material));
             Object itemInvokeObj = getItem.invoke(itemStackInvokeObj);
-            Object creativeModeTabInvokeObj = p.invoke(itemInvokeObj);
+            Object creativeModeTabInvokeObj = getCreativeModeTab.invoke(itemInvokeObj);
             if (creativeModeTabInvokeObj == null) {
                 return false;
             }
-            return ((String) c.invoke(creativeModeTabInvokeObj)).equals("building_blocks");
+            if (!name.canAccess(creativeModeTabInvokeObj)) {
+                name.setAccessible(true);
+            }
+            return ((String) name.get(creativeModeTabInvokeObj)).equals("buildingBlocks");
         } catch (IllegalAccessException | InvocationTargetException ignored) {
             return false;
         }
