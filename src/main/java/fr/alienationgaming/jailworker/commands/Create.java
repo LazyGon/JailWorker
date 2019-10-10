@@ -245,9 +245,13 @@ public class Create extends SubCommand {
         Set<Material> punishmentBlocks = new HashSet<>();
 
         for (int i = 4; i < args.length; i++) {
+            String blockName = args[i].toUpperCase(Locale.ROOT);
             try {
-                punishmentBlocks.add(Material.valueOf(args[i].toUpperCase(Locale.ROOT)));
+                punishmentBlocks.add(Material.valueOf(blockName));
             } catch (IllegalArgumentException ignored) {
+                Messages.sendMessage(sender, "command.general.error.invalid-material",
+                        Map.of("%material%", blockName));
+                return false;
             }
         }
 
