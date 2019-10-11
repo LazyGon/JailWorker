@@ -386,6 +386,7 @@ public final class Prisoners {
 
     /**
      * Puts player into jail, with some params. If punisher is Console, put null into {@code punisher}.
+     * This method do not send any message.
      * 
      * @param player
      * @param jailName
