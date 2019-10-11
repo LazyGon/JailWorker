@@ -83,6 +83,11 @@ public final class ConfigUpdater {
                 oldVersion = "3.3.2";
                 Config.get().set("plugin.version", oldVersion);
             }
+            
+            if (oldVersion.equals("3.3.2")) {
+                oldVersion = "3.3.3";
+                Config.get().set("plugin.version", oldVersion);
+            }
 
             plugin.getLogger()
                     .info("Go to http://dev.bukkit.org/bukkit-plugins/jail-worker/ for news and reporting bugs");

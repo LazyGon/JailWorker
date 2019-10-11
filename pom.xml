@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.stevecohen.jailworker</groupId>
     <artifactId>JailWorker</artifactId>
-    <version>3.3.2</version>
+    <version>3.3.3</version>
     <repositories>
         <repository>
             <id>spigot-repo</id>

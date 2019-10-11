@@ -72,6 +72,10 @@ public class Create extends SubCommand {
                     Messages.sendMessage(player, "command.create.info.retrieve-worldedit");
                 }
             }
+            if ((pos1 != null && pos1.getWorld() != player.getWorld()) || pos2 != null && pos2.getWorld() != player.getWorld()) {
+                pos1 = null;
+                pos2 = null;
+            }
 
             if (pos1 == null || pos2 == null) {
                 Messages.sendMessage(player, "command.create.info.define-tips");
@@ -89,6 +93,10 @@ public class Create extends SubCommand {
 
         @EventHandler
         public void onPlayerInteract(PlayerInteractEvent event) {
+            if (!event.getPlayer().equals(player)) {
+                return;
+            }
+
             if (event.getHand() == EquipmentSlot.OFF_HAND) {
                 return;
             }
