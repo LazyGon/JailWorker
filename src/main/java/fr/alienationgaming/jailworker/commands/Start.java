@@ -2,7 +2,6 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
@@ -30,18 +29,18 @@ public class Start extends SubCommand {
         }
 
         if (JailSystem.isRunning(jailName)) {
-            Messages.sendMessage(sender, "command.start.error.jail-is-already-running", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.start.error.jail-is-already-running", Messages.placeholder("%jail-name%", jailName));
             return false;
         }
 
         JailSystem task = JailSystem.getTask(jailName);
         if (task == null) {
-            Messages.sendMessage(sender, "command.start.error.faulure", Map.of("%jail-name%", jailName));        
+            Messages.sendMessage(sender, "command.start.error.faulure", Messages.placeholder("%jail-name%", jailName));        
             return false;
         }
         
         task.start();
-        Messages.sendMessage(sender, "command.start.info.success", Map.of("%jail-name%", jailName));
+        Messages.sendMessage(sender, "command.start.info.success", Messages.placeholder("%jail-name%", jailName));
         return true;
     }
 

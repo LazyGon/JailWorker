@@ -1,6 +1,7 @@
 package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -78,7 +79,7 @@ public class Edit extends SubCommand {
             player.sendMessage(ChatColor.BLUE + "x :" + ChatColor.RESET + pos.getX());
             player.sendMessage(ChatColor.BLUE + "y :" + ChatColor.RESET + pos.getY());
             player.sendMessage(ChatColor.BLUE + "z :" + ChatColor.RESET + pos.getZ());
-            Messages.sendMessage(player, "command.edit.info.success", Map.of("%location%", commandName));
+            Messages.sendMessage(player, "command.edit.info.success", Messages.placeholder("%location%", commandName));
             HandlerList.unregisterAll(this);
             data.remove(player);
         }
@@ -108,7 +109,7 @@ public class Edit extends SubCommand {
         }
 
         if (!JailConfig.exist(jailName)) {
-            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Messages.placeholder("%jail-name%", jailName));
             return false;
         }
 
@@ -129,23 +130,23 @@ public class Edit extends SubCommand {
                 }
             } catch (IllegalArgumentException e) {
                 Messages.sendMessage(sender, "command.general.error.invalid-material",
-                        Map.of("%material%", materialName));
+                        Messages.placeholder("%material%", materialName));
                 return false;
             }
 
             if (args[3].equals("add")) {
                 JailConfig.addPunishmentBlock(jailName, material);
                 Messages.sendMessage(sender, "command.edit.info.add-punishment-block",
-                        Map.of("%material%", materialName));
+                        Messages.placeholder("%material%", materialName));
                 return true;
             } else if (args[3].equals("remove")) {
                 JailConfig.removePunishmentBlock(jailName, material);
                 Messages.sendMessage(sender, "command.edit.info.remove-punishment-block",
-                        Map.of("%material%", materialName));
+                        Messages.placeholder("%material%", materialName));
                 return true;
             } else {
                 Messages.sendMessage(sender, "command.general.error.missing-argument",
-                        Map.of("%missing-argument%", args[3]));
+                        Messages.placeholder("%missing-argument%", args[3]));
                 return false;
             }
 
@@ -189,7 +190,7 @@ public class Edit extends SubCommand {
             return true;
         default:
             Messages.sendMessage(sender, "command.general.error.missing-argument",
-                    Map.of("%missing-argument%", command));
+                    Messages.placeholder("%missing-argument%", command));
             return false;
         }
     }
@@ -210,7 +211,7 @@ public class Edit extends SubCommand {
             return result;
         }
 
-        List<String> subCommands = List.of("maxblock", "blockinterval", "punishmentblock", "spawn", "pos1", "pos2");
+        List<String> subCommands = Arrays.asList("maxblock", "blockinterval", "punishmentblock", "spawn", "pos1", "pos2");
 
         if (args.length == 3) {
             return StringUtil.copyPartialMatches(args[2], subCommands, result);
@@ -225,11 +226,11 @@ public class Edit extends SubCommand {
         if (args.length == 4) {
             switch (subCommand) {
             case "maxblock":
-                return StringUtil.copyPartialMatches(args[3], List.of("<max-punishment-blocks>"), result);
+                return StringUtil.copyPartialMatches(args[3], Arrays.asList("<max-punishment-blocks>"), result);
             case "blockinterval":
-                return StringUtil.copyPartialMatches(args[3], List.of("<max-block-interval>"), result);
+                return StringUtil.copyPartialMatches(args[3], Arrays.asList("<max-block-interval>"), result);
             case "punishmentblock":
-                return StringUtil.copyPartialMatches(args[3], List.of("add", "remove"), result);
+                return StringUtil.copyPartialMatches(args[3], Arrays.asList("add", "remove"), result);
             }
         }
 

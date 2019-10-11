@@ -1,10 +1,10 @@
 package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 
 import org.bukkit.command.Command;
@@ -39,7 +39,7 @@ public class JWCommand implements CommandExecutor, TabCompleter {
         PUNISH_POINT(new PunishPoint()),;
 
         private SubCommand subCommand;
-        private static final List<String> subCommandInputs = List.of("create", "put", "start", "stop", "clean", "edit",
+        private static final List<String> subCommandInputs = Arrays.asList("create", "put", "start", "stop", "clean", "edit",
                 "list", "delete", "restart", "info", "free", "goto", "give", "allowedcommand", "reload", "punishpoint");
 
         private SubCommands(SubCommand subCommand) {
@@ -117,7 +117,7 @@ public class JWCommand implements CommandExecutor, TabCompleter {
         SubCommand subCommand = SubCommands.getSubCommand(args[0]);
         if (subCommand == null) {
             Messages.sendMessage(sender, "command.general.error.missing-argument",
-                    Map.of("%missing-argument%", subCommand));
+                    Messages.placeholder("%missing-argument%", subCommand));
             return false;
         }
 
@@ -138,7 +138,7 @@ public class JWCommand implements CommandExecutor, TabCompleter {
 
         SubCommand subCommand = SubCommands.getSubCommand(args[0]);
         if (subCommand == null || !subCommand.hasPermission(sender)) {
-            return List.of();
+            return new ArrayList<>();
         }
 
         return subCommand.runTabComplete(sender, args);

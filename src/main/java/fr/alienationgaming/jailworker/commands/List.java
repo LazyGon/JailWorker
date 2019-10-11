@@ -1,5 +1,6 @@
 package fr.alienationgaming.jailworker.commands;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import org.bukkit.ChatColor;
@@ -33,7 +34,7 @@ public class List extends SubCommand {
 
     @Override
     java.util.List<String> runTabComplete(CommandSender sender, String[] args) {
-        return java.util.List.of();
+        return new ArrayList<>();
     }
 
     @Override

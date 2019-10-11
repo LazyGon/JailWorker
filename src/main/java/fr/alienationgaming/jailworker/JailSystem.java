@@ -210,13 +210,13 @@ public class JailSystem extends BukkitRunnable implements Listener {
                 int point = Prisoners.getPunishmentPoint(player) - BlockPoints.getPoint(broken.getType());
                 if (point <= 0) {
                     Bukkit.getOnlinePlayers().forEach(onlinePlayer -> Messages.sendMessage(onlinePlayer,
-                            "in-jail.broadcast-finish-work", Map.of("%player%", player.getName())));
+                            "in-jail.broadcast-finish-work", Messages.placeholder("%player%", player.getName())));
                     Prisoners.freePlayer(player);
                     punishmentBlocks.remove(broken);
                     broken.setType(Material.AIR);
                     return;
                 } else if (point % 20 == 0) {
-                    Messages.sendMessage(player, "in-jail.punishment-point-notice", Map.of("%point%", point));
+                    Messages.sendMessage(player, "in-jail.punishment-point-notice", Messages.placeholder("%point%", point));
                 }
                 Prisoners.setPunishmentPoint(player, point);
             }
@@ -335,7 +335,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
         String command = event.getMessage();
         if (command.startsWith("/jw give") || command.startsWith("/jw free") || command.startsWith("/jw punishpoint")) {
             event.setCancelled(true);
-            Messages.sendMessage(player, "in-jail.forbidden-command", Map.of("%command%", command));
+            Messages.sendMessage(player, "in-jail.forbidden-command", Messages.placeholder("%command%", command));
             return;
         }
 
@@ -353,7 +353,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
 
         event.setCancelled(true);
         Messages.sendMessage(player, "in-jail.command-not-allowed",
-                Map.of("%command%", command, "%jail-name%", jailName));
+                Messages.placeholder("%command%", command, "%jail-name%", jailName));
     }
 
     @Override

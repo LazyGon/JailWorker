@@ -49,7 +49,7 @@ public class AutoPointRemover implements Listener {
                             }
 
                             Bukkit.getOnlinePlayers().forEach(onlinePlayer -> Messages.sendMessage(onlinePlayer,
-                                    "in-jail.broadcast-finish-work", Map.of("%player%", player.getName())));
+                                    "in-jail.broadcast-finish-work", Messages.placeholder("%player%", player.getName())));
                             Prisoners.freePlayer(player);
                         }
                     } else if (!isAfkWarnFinished.getOrDefault(player, false)) {

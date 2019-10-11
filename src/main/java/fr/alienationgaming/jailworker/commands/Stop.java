@@ -2,7 +2,6 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
@@ -31,17 +30,17 @@ public class Stop extends SubCommand {
         }
 
         if (!JailConfig.exist(jailName)) {
-            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Messages.placeholder("%jail-name%", jailName));
             return false;
         }
 
         if (!JailSystem.isRunning(jailName)) {
-            Messages.sendMessage(sender, "command.general.error.jail-is-not-running", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.general.error.jail-is-not-running", Messages.placeholder("%jail-name%", jailName));
             return false;
         }
 
         JailSystem.getTask(jailName).stop();
-        Messages.sendMessage(sender, "command.stop.info.success", Map.of("%jail-name%", jailName));
+        Messages.sendMessage(sender, "command.stop.info.success", Messages.placeholder("%jail-name%", jailName));
 
         return true;
     }

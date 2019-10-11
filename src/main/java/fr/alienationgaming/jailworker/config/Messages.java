@@ -101,7 +101,7 @@ public final class Messages {
      * @param path
      */
     public static void sendMessage(CommandSender sender, String path) {
-        sendMessage(sender, path, Map.of());
+        sendMessage(sender, path, Messages.placeholder());
     }
 
     /**
@@ -114,7 +114,7 @@ public final class Messages {
      * @param path
      */
     public static void sendMessage(CommandSender sender, boolean addPrefix, String path) {
-        sendMessage(sender, addPrefix, path, Map.of());
+        sendMessage(sender, addPrefix, path, Messages.placeholder());
     }
 
     /**
@@ -138,7 +138,25 @@ public final class Messages {
      * @param path
      */
     public static void sendMessage(ChannelPlayer channelPlayer, String path) {
-        sendMessage(channelPlayer, path, Map.of());
+        sendMessage(channelPlayer, path, Messages.placeholder());
+    }
+
+    public static Map<String, Object> placeholder(Object ... elements) {
+        if (elements.length % 2 != 0) {
+            throw new IllegalArgumentException("elements length cannot be odd number.");
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        for (int i = 0; i < elements.length / 2; i++) {
+            if (!(elements[i] instanceof String)) {
+                continue;
+            }
+
+            String key = (String) elements[i];
+            result.put(key, elements[i + 1]);
+        }
+
+        return result;
     }
 
     /**

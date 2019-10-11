@@ -2,7 +2,6 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
@@ -36,12 +35,12 @@ public class Restart extends SubCommand {
 
         JailSystem task = JailSystem.getTask(jailName);
         if (task == null) {
-            Messages.sendMessage(sender, "command.restart.error.failure", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.restart.error.failure", Messages.placeholder("%jail-name%", jailName));
             return false;
         }
 
         task.start();
-        Messages.sendMessage(sender, "command.restart.info.success", Map.of("%jail-name%", jailName));
+        Messages.sendMessage(sender, "command.restart.info.success", Messages.placeholder("%jail-name%", jailName));
 
         return true;
     }

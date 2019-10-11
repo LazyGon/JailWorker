@@ -1,9 +1,9 @@
 package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
@@ -32,15 +32,15 @@ public class AllowedCommand extends SubCommand {
         }
 
         if (!JailConfig.exist(jailName)) {
-            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Messages.placeholder("%jail-name%", jailName));
             return false;
         }
 
         if (arg.equals("list")) {
             List<String> commands = JailConfig.getAllowedCommands(jailName);
-            Messages.sendMessage(sender, "command.allowed-command.info.list-header", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.allowed-command.info.list-header", Messages.placeholder("%jail-name%", jailName));
             for (int i = 0; i < commands.size(); i++) {
-                Messages.sendMessage(sender, "command.allowed-command.info.list-command-line", Map.of("%command%", commands.get(i)));
+                Messages.sendMessage(sender, "command.allowed-command.info.list-command-line", Messages.placeholder("%command%", commands.get(i)));
             }
             return true;
         }
@@ -58,14 +58,14 @@ public class AllowedCommand extends SubCommand {
         switch (arg) {
         case "add":
             JailConfig.addAllowedCommands(jailName, commands);
-            Messages.sendMessage(sender, "command.allowed-command.info.add-success", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.allowed-command.info.add-success", Messages.placeholder("%jail-name%", jailName));
             return true;
         case "remove":
             JailConfig.removeAllowedCommands(jailName, commands);
-            Messages.sendMessage(sender, "command.allowed-command.info.remove-success", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.allowed-command.info.remove-success", Messages.placeholder("%jail-name%", jailName));
             return true;
         default:
-            Messages.sendMessage(sender, "command.general.error.missing-argument", Map.of("%missing-argument%", arg));
+            Messages.sendMessage(sender, "command.general.error.missing-argument", Messages.placeholder("%missing-argument%", arg));
             return false;
         }
     }
@@ -73,7 +73,7 @@ public class AllowedCommand extends SubCommand {
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
-        List<String> operations = List.of("add", "remove", "list");
+        List<String> operations = Arrays.asList("add", "remove", "list");
 
         if (args.length == 2) {
             return StringUtil.copyPartialMatches(args[1], operations, result);
@@ -98,7 +98,7 @@ public class AllowedCommand extends SubCommand {
         if (args.length >= 4) {
             if (operation.equals("add")) {
                 return StringUtil.copyPartialMatches(args[args.length - 1],
-                        List.of("<new-allowed-command-with-\"/\">"), result);
+                        Arrays.asList("<new-allowed-command-with-\"/\">"), result);
             } else {
                 List<String> allowedCommands = JailConfig.getAllowedCommands(args[2]);
                 if (args.length > 4) {

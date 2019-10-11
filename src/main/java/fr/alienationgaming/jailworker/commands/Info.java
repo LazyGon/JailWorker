@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -55,10 +55,10 @@ public class Info extends SubCommand {
             }
 
             Messages.sendMessage(sender, "command.info.info.punishment-blocks",
-                    Map.of("%page%", page, "%max-page%", maxPage));
+                    Messages.placeholder("%page%", page, "%max-page%", maxPage));
             punishmentBlocks.stream().skip((page - 1) * 9).limit(9).forEach(material -> {
                 Messages.sendMessage(sender, false, "command.info.info.punishment-blocks-format",
-                        Map.of("%material%", material, "%point%", BlockPoints.getPoint(Material.valueOf(material))));
+                        Messages.placeholder("%material%", material, "%point%", BlockPoints.getPoint(Material.valueOf(material))));
             });
             return true;
         }
@@ -79,7 +79,7 @@ public class Info extends SubCommand {
 
             if (!JailConfig.exist(jailName)) {
                 Messages.sendMessage(sender, "command.general.error.jail-does-not-exist",
-                        Map.of("%jail-name%", jailName));
+                        Messages.placeholder("%jail-name%", jailName));
                 return false;
             }
 
@@ -89,17 +89,17 @@ public class Info extends SubCommand {
             int punishmentBlockInterval = JailConfig.getBlockInterval(jailName);
             String World = JailConfig.getWorld(jailName).getName();
 
-            Messages.sendMessage(sender, "command.info.info.jail-name", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.info.info.jail-name", Messages.placeholder("%jail-name%", jailName));
             Messages.sendMessage(sender, false, "command.general.info.line");
             Messages.sendMessage(sender, false, "command.info.info.jail-is-" + (running ? "" : "not-") + "running");
-            Messages.sendMessage(sender, false, "command.info.info.jail-world-name", Map.of("%world-name%", World));
+            Messages.sendMessage(sender, false, "command.info.info.jail-world-name", Messages.placeholder("%world-name%", World));
             Messages.sendMessage(sender, false, "command.info.info.jail-max-punishment-blocks",
-                    Map.of("%max-punishment-blocks%", maxPunishmentBlock));
+                    Messages.placeholder("%max-punishment-blocks%", maxPunishmentBlock));
             Messages.sendMessage(sender, false, "command.info.info.jail-block-appear-interval",
-                    Map.of("%punishment-block-interval%", punishmentBlockInterval));
+                    Messages.placeholder("%punishment-block-interval%", punishmentBlockInterval));
             Messages.sendMessage(sender, false, "command.info.info.jail-punishment-blocks");
             JailConfig.getPunishmentBlocks(jailName).forEach(material -> Messages.sendMessage(sender, false,
-                    "command.info.info.jail-punishment-blocks-format", Map.of("%material%", material.name())));
+                    "command.info.info.jail-punishment-blocks-format", Messages.placeholder("%material%", material.name())));
             Messages.sendMessage(sender, false, "command.general.info.line");
 
             return true;
@@ -115,43 +115,43 @@ public class Info extends SubCommand {
             OfflinePlayer prisoner = Bukkit.getOfflinePlayer(args[2]);
             if (!prisoner.hasPlayedBefore() || prisoner.getName() == null) {
                 Messages.sendMessage(sender, "command.general.error.player-has-never-played",
-                        Map.of("%player%", args[2]));
+                        Messages.placeholder("%player%", args[2]));
                 return false;
             }
 
             if (!Prisoners.isJailed(prisoner)) {
-                Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Map.of("%player%", args[2]));
+                Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Messages.placeholder("%player%", args[2]));
                 return false;
             }
 
-            Messages.sendMessage(sender, "command.info.info.prisoner-header", Map.of("%player%", prisoner.getName()));
+            Messages.sendMessage(sender, "command.info.info.prisoner-header", Messages.placeholder("%player%", prisoner.getName()));
             Messages.sendMessage(sender, false, "command.general.info.line");
             Messages.sendMessage(sender, false, "command.info.info.prisoner-jail-name",
-                    Map.of("%jail-name%", Prisoners.getJailPlayerIsIn(prisoner)));
+                    Messages.placeholder("%jail-name%", Prisoners.getJailPlayerIsIn(prisoner)));
             String punisherName = "CONSOLE";
             OfflinePlayer punisher = Prisoners.getPunisher(prisoner);
             if (punisher != null && punisher.getName() != null) {
                 punisherName = punisher.getName();
             }
             Messages.sendMessage(sender, false, "command.info.info.prisoner-punisher-name",
-                    Map.of("%punisher%", punisherName));
+                    Messages.placeholder("%punisher%", punisherName));
             Messages.sendMessage(sender, false, "command.info.info.prisoner-punishment-point",
-                    Map.of("%point%", Prisoners.getPunishmentPoint(prisoner)));
+                    Messages.placeholder("%point%", Prisoners.getPunishmentPoint(prisoner)));
             Messages.sendMessage(sender, false, "command.info.info.prisoner-cause",
-                    Map.of("%reason%", Prisoners.getCause(prisoner)));
+                    Messages.placeholder("%reason%", Prisoners.getCause(prisoner)));
 
             long unixTime = Prisoners.getJailedDate(prisoner);
             LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(unixTime),
                     ZoneId.systemDefault());
             String time = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            Messages.sendMessage(sender, false, "command.info.info.prisoner-punishment-time", Map.of("%time%", time));
+            Messages.sendMessage(sender, false, "command.info.info.prisoner-punishment-time", Messages.placeholder("%time%", time));
             Messages.sendMessage(sender, false, "command.general.info.line");
 
             return true;
 
         } else {
             Messages.sendMessage(sender, "command.general.error.missing-argument",
-                    Map.of("%missing-argument%", args[1]));
+                    Messages.placeholder("%missing-argument%", args[1]));
             return false;
         }
     }
@@ -159,7 +159,7 @@ public class Info extends SubCommand {
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
-        List<String> subCommands = List.of("jail", "prisoner", "blocks");
+        List<String> subCommands = Arrays.asList("jail", "prisoner", "blocks");
         if (args.length == 2) {
             return StringUtil.copyPartialMatches(args[1], subCommands, result);
         }

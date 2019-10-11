@@ -1,8 +1,8 @@
 package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -38,12 +38,12 @@ public class Free extends SubCommand {
         @SuppressWarnings("deprecation")
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
         if (!target.hasPlayedBefore() || target.getName() == null) {
-            Messages.sendMessage(sender, "command.general.error.player-has-never-played", Map.of("%player%", args[1]));
+            Messages.sendMessage(sender, "command.general.error.player-has-never-played", Messages.placeholder("%player%", args[1]));
             return false;
         }
 
         if (!Prisoners.isJailed(target) && !WantedPlayers.isWanted(target)) {
-            Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Map.of("%player%", args[1]));
+            Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Messages.placeholder("%player%", args[1]));
             return false;
         }
 
@@ -52,7 +52,7 @@ public class Free extends SubCommand {
             jailName = WantedPlayers.getJail(target);
         }
         Messages.sendMessage(sender, "command.free.info.free-player",
-                Map.of("%player%", target.getName(), "%jail-name%", jailName));
+                Messages.placeholder("%player%", target.getName(), "%jail-name%", jailName));
 
         PlayerFreedEvent freedEvent = new PlayerFreedEvent(target);
         Bukkit.getPluginManager().callEvent(freedEvent);
@@ -62,7 +62,7 @@ public class Free extends SubCommand {
 
         if (target.isOnline()) {
             Messages.sendMessage(target.getPlayer(), "command.free.info.you-are-now-free",
-                    Map.of("%sender%", sender.getName(), "%jail-name%", jailName));
+                    Messages.placeholder("%sender%", sender.getName(), "%jail-name%", jailName));
             Prisoners.freePlayer(target.getPlayer());
 
             if (args.length > 2) {
@@ -72,7 +72,7 @@ public class Free extends SubCommand {
                 }
                 String reason = ChatColor.translateAlternateColorCodes('&', reasonBuilder.toString());
                 Messages.sendMessage(target.getPlayer(), "command.free.info.display-reason",
-                        Map.of("%reason%", reason));
+                        Messages.placeholder("%reason%", reason));
             }
         } else {
             WantedPlayers.removeWantedPlayer(target);
@@ -95,7 +95,7 @@ public class Free extends SubCommand {
         }
 
         if (args.length == 3) {
-            return StringUtil.copyPartialMatches(args[2], List.of("[reason]"), result);
+            return StringUtil.copyPartialMatches(args[2], Arrays.asList("[reason]"), result);
         }
 
         return result;

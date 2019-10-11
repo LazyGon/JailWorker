@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.stevecohen.jailworker</groupId>
     <artifactId>JailWorker</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
     <repositories>
         <repository>
             <id>spigot-repo</id>
@@ -64,8 +64,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <target>9</target>
-                    <source>9</source>
+                    <target>1.8</target>
+                    <source>1.8</source>
                     <encoding>UTF-8</encoding>
                     <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
@@ -75,7 +75,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>9</java.version>
+        <java.version>8</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
     </properties>
 </project>

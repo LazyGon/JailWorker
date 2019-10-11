@@ -53,13 +53,13 @@ public class Goto extends SubCommand {
         }
 
         if (!JailConfig.exist(jailName)) {
-            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Messages.placeholder("%jail-name%", jailName));
             return false;
         }
 
         previousLocations.put((Player) sender, ((Player) sender).getLocation());
         ((Player) sender).teleport(JailConfig.getSpawnLocation(jailName));
-        Messages.sendMessage(sender, "command.goto.info.welcome", Map.of("%jail-name%", jailName));
+        Messages.sendMessage(sender, "command.goto.info.welcome", Messages.placeholder("%jail-name%", jailName));
         Messages.sendMessage(sender, "command.goto.info.to-leave-jail-tips");
 
         return true;

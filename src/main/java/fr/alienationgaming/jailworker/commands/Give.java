@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -41,12 +40,12 @@ public class Give extends SubCommand {
         @SuppressWarnings("deprecation")
         Player target = Bukkit.getPlayer(args[1]);
         if (target == null) {
-            Messages.sendMessage(sender, "command.general.error.player-is-offline", Map.of("%player%", args[1]));
+            Messages.sendMessage(sender, "command.general.error.player-is-offline", Messages.placeholder("%player%", args[1]));
             return false;
         }
 
         if (!Prisoners.isJailed(target)) {
-            Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Map.of("%player%", args[1]));
+            Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Messages.placeholder("%player%", args[1]));
             return false;
         }
 
@@ -54,7 +53,7 @@ public class Give extends SubCommand {
         try {
             item = Material.valueOf(args[2].toUpperCase());
         } catch (IllegalArgumentException e) {
-            Messages.sendMessage(sender, "command.general.error.material-does-not-exist", Map.of("%material%", args[2].toUpperCase(Locale.ROOT)));
+            Messages.sendMessage(sender, "command.general.error.material-does-not-exist", Messages.placeholder("%material%", args[2].toUpperCase(Locale.ROOT)));
             return false;
         }
 
@@ -74,8 +73,8 @@ public class Give extends SubCommand {
         }
 
         target.getInventory().addItem(givenEvent.getItem());
-        Messages.sendMessage(target, "command.give.info.given-item", Map.of("%sender%", sender.getName(), "%mateiral%", item.toString(), "%amount%", String.valueOf(amount)));
-        Messages.sendMessage(sender, "command.give.info.give-item", Map.of("%player%", target.getName(), "%material%", item.toString(), "%amount%", String.valueOf(amount)));
+        Messages.sendMessage(target, "command.give.info.given-item", Messages.placeholder("%sender%", sender.getName(), "%mateiral%", item.toString(), "%amount%", String.valueOf(amount)));
+        Messages.sendMessage(sender, "command.give.info.give-item", Messages.placeholder("%player%", target.getName(), "%material%", item.toString(), "%amount%", String.valueOf(amount)));
 
         return true;
     }
@@ -102,7 +101,7 @@ public class Give extends SubCommand {
         }
 
         if (args.length == 4) {
-            return StringUtil.copyPartialMatches(args[3], List.of("1", "10", "100", "1000"), result);
+            return StringUtil.copyPartialMatches(args[3], Arrays.asList("1", "10", "100", "1000"), result);
         }
 
         return result;

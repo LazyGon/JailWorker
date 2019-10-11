@@ -1,9 +1,9 @@
 package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -40,20 +40,20 @@ public class PunishPoint extends SubCommand {
 
         if (subCommand.equals("add") && subCommand.equals("remove") && subCommand.equals("set")) {
             Messages.sendMessage(sender, "command.general.error.missing-argument",
-                    Map.of("%missing-argument%", subCommand));
+                    Messages.placeholder("%missing-argument%", subCommand));
             return false;
         }
 
         @SuppressWarnings("deprecation")
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
         if (!target.hasPlayedBefore() || target.getName() == null) {
-            Messages.sendMessage(sender, "command.general.error.player-has-never-played", Map.of("%player%", args[2]));
+            Messages.sendMessage(sender, "command.general.error.player-has-never-played", Messages.placeholder("%player%", args[2]));
             return false;
         }
 
         // player not on jail
         if (!Prisoners.isJailed(target) && !WantedPlayers.isWanted(target)) {
-            Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Map.of("%player%", args[2]));
+            Messages.sendMessage(sender, "command.general.error.player-is-not-jailed", Messages.placeholder("%player%", args[2]));
             return false;
         }
 
@@ -93,19 +93,19 @@ public class PunishPoint extends SubCommand {
 
         if (dif >= 0) {
             Messages.sendMessage(sender, "command.punish-point.info.notice-increase-sender",
-                    Map.of("%player%", target.getName(), "%point%", dif, "%new-point%", newValue));
+                    Messages.placeholder("%player%", target.getName(), "%point%", dif, "%new-point%", newValue));
         } else {
             Messages.sendMessage(sender, "command.punish-point.info.notice-decrease-sender",
-                    Map.of("%player%", target.getName(), "%point%", dif, "%new-point%", newValue));
+                    Messages.placeholder("%player%", target.getName(), "%point%", dif, "%new-point%", newValue));
         }
 
         if (target.isOnline()) {
             if (dif >= 0) {
                 Messages.sendMessage(target.getPlayer(), "command.punish-point.info.notice-increase-target",
-                        Map.of("%sender%", sender.getName(), "%point%", dif, "%new-point%", newValue));
+                        Messages.placeholder("%sender%", sender.getName(), "%point%", dif, "%new-point%", newValue));
             } else {
                 Messages.sendMessage(target.getPlayer(), "command.punish-point.info.notice-decrease-target",
-                        Map.of("%sender%", sender.getName(), "%point%", dif, "%new-point%", newValue));
+                        Messages.placeholder("%sender%", sender.getName(), "%point%", dif, "%new-point%", newValue));
             }
 
             if (args.length > 4) {
@@ -115,7 +115,7 @@ public class PunishPoint extends SubCommand {
                 }
                 String reason = ChatColor.translateAlternateColorCodes('&', reasonBuilder.toString());
                 Messages.sendMessage(target.getPlayer(), "command.punish-point.info.display-reason",
-                        Map.of("%reason%", reason));
+                        Messages.placeholder("%reason%", reason));
             }
         }
 
@@ -132,7 +132,7 @@ public class PunishPoint extends SubCommand {
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
 
-        List<String> subCommands = List.of("add", "set", "remove");
+        List<String> subCommands = Arrays.asList("add", "set", "remove");
         if (args.length == 2) {
             return StringUtil.copyPartialMatches(args[1], subCommands, result);
         }
@@ -149,11 +149,11 @@ public class PunishPoint extends SubCommand {
         }
 
         if (args.length == 4) {
-            return StringUtil.copyPartialMatches(args[3], List.of("1", "10", "100", "1000"), result);
+            return StringUtil.copyPartialMatches(args[3], Arrays.asList("1", "10", "100", "1000"), result);
         }
 
         if (args.length == 5) {
-            return StringUtil.copyPartialMatches(args[4], List.of("[reason]"), result);
+            return StringUtil.copyPartialMatches(args[4], Arrays.asList("[reason]"), result);
         }
 
         return result;

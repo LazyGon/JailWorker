@@ -139,7 +139,7 @@ public final class BlockPoints {
             if (creativeModeTabInvokeObj == null) {
                 return false;
             }
-            if (!name.canAccess(creativeModeTabInvokeObj)) {
+            if (!name.isAccessible()) {
                 name.setAccessible(true);
             }
             return ((String) name.get(creativeModeTabInvokeObj)).equals("buildingBlocks");

@@ -1,6 +1,7 @@
 package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -113,7 +114,7 @@ public class Create extends SubCommand {
                 spawn = pos.add(0.5, 1, 0.5);
                 player.sendMessage(ChatColor.BLUE + "spawn:");
                 printLocation(pos);
-                Messages.sendMessage(player, "command.create.info.finish", Map.of("%jail-name%", jailName));
+                Messages.sendMessage(player, "command.create.info.finish", Messages.placeholder("%jail-name%", jailName));
                 HandlerList.unregisterAll(this);
                 data.remove(player);
                 JailCreateEvent createEvent = new JailCreateEvent(jailName, maxPunishmentBlocks,
@@ -127,7 +128,7 @@ public class Create extends SubCommand {
                     pos2 = createEvent.getPos2();
                     spawn = createEvent.getSpawn();
                     JailConfig.addJail(jailName, maxPunishmentBlocks, punishmentBlockInterval, punishmentBlocks,
-                            List.of(), pos.getWorld(), pos1, pos2, spawn);
+                            new ArrayList<>(), pos.getWorld(), pos1, pos2, spawn);
                 }
             }
         }
@@ -213,7 +214,7 @@ public class Create extends SubCommand {
 
         if (data.containsKey(sender)) {
             Messages.sendMessage(sender, "command.create.error.you-are-already-in-creation",
-                    Map.of("%jail-name%", data.get(sender).jailName));
+                    Messages.placeholder("%jail-name%", data.get(sender).jailName));
             return false;
         }
 
@@ -224,7 +225,7 @@ public class Create extends SubCommand {
         }
 
         if (JailConfig.exist(jailName)) {
-            Messages.sendMessage(sender, "command.create.error.jail-already-exists", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.create.error.jail-already-exists", Messages.placeholder("%jail-name%", jailName));
             return false;
         }
 
@@ -250,7 +251,7 @@ public class Create extends SubCommand {
                 punishmentBlocks.add(Material.valueOf(blockName));
             } catch (IllegalArgumentException ignored) {
                 Messages.sendMessage(sender, "command.general.error.invalid-material",
-                        Map.of("%material%", blockName));
+                        Messages.placeholder("%material%", blockName));
                 return false;
             }
         }
@@ -263,15 +264,15 @@ public class Create extends SubCommand {
     List<String> runTabComplete(CommandSender sender, String[] args) {
         List<String> result = new ArrayList<>();
         if (args.length == 2) {
-            return StringUtil.copyPartialMatches(args[1], List.of("<jail-name>"), result);
+            return StringUtil.copyPartialMatches(args[1], Arrays.asList("<jail-name>"), result);
         }
 
         if (args.length == 3) {
-            return StringUtil.copyPartialMatches(args[2], List.of("10", "20", "30"), result);
+            return StringUtil.copyPartialMatches(args[2], Arrays.asList("10", "20", "30"), result);
         }
 
         if (args.length == 4) {
-            return StringUtil.copyPartialMatches(args[3], List.of("10", "15", "20"), result);
+            return StringUtil.copyPartialMatches(args[3], Arrays.asList("10", "15", "20"), result);
         }
 
         if (args.length >= 5) {

@@ -2,7 +2,6 @@ package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -31,7 +30,7 @@ public class Delete extends SubCommand {
         }
 
         if (!JailConfig.exist(jailName)) {
-            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.general.error.jail-does-not-exist", Messages.placeholder("%jail-name%", jailName));
             return false;
         }
 
@@ -44,9 +43,9 @@ public class Delete extends SubCommand {
         JailConfig.removeJail(jailName);
 
         if (!JailConfig.exist(jailName)) {
-            Messages.sendMessage(sender, "command.delete.info.success", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.delete.info.success", Messages.placeholder("%jail-name%", jailName));
         } else {
-            Messages.sendMessage(sender, "command.delete.error.failure", Map.of("%jail-name%", jailName));
+            Messages.sendMessage(sender, "command.delete.error.failure", Messages.placeholder("%jail-name%", jailName));
             return false;
         }
 

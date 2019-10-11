@@ -1,6 +1,7 @@
 package fr.alienationgaming.jailworker.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,9 +64,9 @@ public class Reload extends SubCommand {
     @Override
     List<String> runTabComplete(CommandSender sender, String[] args) {
         if (args.length == 2) {
-            return StringUtil.copyPartialMatches(args[1], List.of("config", "jailconfig", "prisoners", "messages", "point"), new ArrayList<>());
+            return StringUtil.copyPartialMatches(args[1], Arrays.asList("config", "jailconfig", "prisoners", "messages", "point"), new ArrayList<>());
         } else {
-            return List.of();
+            return new ArrayList<>();
         }
     }
 
