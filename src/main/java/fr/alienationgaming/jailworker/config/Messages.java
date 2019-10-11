@@ -147,12 +147,18 @@ public final class Messages {
         }
 
         Map<String, Object> result = new HashMap<>();
-        for (int i = 0; i < elements.length / 2; i++) {
+        for (int i = 0; i < elements.length; i+=2) {
+            if (elements.length - 1 < i + 1) {
+                break;
+            }
             if (!(elements[i] instanceof String)) {
                 continue;
             }
 
             String key = (String) elements[i];
+            if (key == null || elements[i + 1] == null) {
+                continue;
+            }
             result.put(key, elements[i + 1]);
         }
 

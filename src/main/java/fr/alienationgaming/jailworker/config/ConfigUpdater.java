@@ -65,17 +65,23 @@ public final class ConfigUpdater {
             plugin.getLogger().info("Updating...");
 
             if (oldVersion.equals("3.0.0")) {
-                Config.get().set("plugin.version", "3.1.0");
                 oldVersion = "3.1.0";
+                Config.get().set("plugin.version", oldVersion);
             }
             
             if (oldVersion.equals("3.1.0")) {
-                Config.get().set("plugin.version", "3.1.1");
                 oldVersion = "3.1.1";
+                Config.get().set("plugin.version", oldVersion);
             }
-
+            
             if (oldVersion.equals("3.1.1")) {
-
+                oldVersion = "3.3.1";
+                Config.get().set("plugin.version", oldVersion);
+            }
+            
+            if (oldVersion.equals("3.3.1")) {
+                oldVersion = "3.3.2";
+                Config.get().set("plugin.version", oldVersion);
             }
 
             plugin.getLogger()

@@ -117,7 +117,7 @@ public class JWCommand implements CommandExecutor, TabCompleter {
         SubCommand subCommand = SubCommands.getSubCommand(args[0]);
         if (subCommand == null) {
             Messages.sendMessage(sender, "command.general.error.missing-argument",
-                    Messages.placeholder("%missing-argument%", subCommand));
+                    Messages.placeholder("%missing-argument%", args[0]));
             return false;
         }
 
