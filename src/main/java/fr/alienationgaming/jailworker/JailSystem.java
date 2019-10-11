@@ -72,8 +72,10 @@ public class JailSystem extends BukkitRunnable implements Listener {
                 return;
             }
             Prisoners.getPrisoners().forEach(prisoner -> {
-                event.getRecipients().removeIf(
+                if (prisoner.getName() != null && prisoner.isOnline()) {
+                    event.getRecipients().removeIf(
                         channelPlayer -> channelPlayer.equals(ChannelPlayer.getChannelPlayer(prisoner.getName())));
+                }
             });
         }
     }
