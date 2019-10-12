@@ -34,6 +34,12 @@ public class Info extends SubCommand {
     boolean runCommand(CommandSender sender, String[] args) {
 
         if (args.length > 1 && args[1].equalsIgnoreCase("blocks")) {
+
+            if (!sender.hasPermission(getPermissionNode() + ".punishment-blocks")) {
+                Messages.sendMessage(sender, "command.general.error.no-permission");
+                return false;
+            }
+
             int page = 1;
             if (args.length > 2) {
                 try {
