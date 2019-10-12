@@ -200,9 +200,10 @@ public class JailSystem extends BukkitRunnable implements Listener {
         PunishmentBlockBreakEvent breakEvent = new PunishmentBlockBreakEvent(player, broken);
         Bukkit.getPluginManager().callEvent(breakEvent);
         if (breakEvent.isCancelled()) {
-            event.setCancelled(true);
             return;
         }
+    
+        event.setCancelled(true);
 
         if (Prisoners.isJailed(player) && Prisoners.getJailPlayerIsIn(player).equals(jailName)
                 && punishmentBlocks.contains(broken)) {
@@ -233,8 +234,6 @@ public class JailSystem extends BukkitRunnable implements Listener {
             broken.setType(Material.AIR);
             return;
         }
-
-        event.setCancelled(true);
     }
 
     @EventHandler
