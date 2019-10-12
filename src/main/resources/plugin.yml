@@ -29,11 +29,26 @@ permissions:
       jailworker.command.free: true
       jailworker.command.clean.*: true
       jailworker.command.list: true
-      jailworker.command.info: true
+      jailworker.command.info.*: true
       jailworler.command.goto.*: true
       jailworker.command.give.*: true
       jailworker.command.punish-point: true
     default: op
+  jailworker.command.info.*:
+    description: Give access to all info arguments.
+    children:
+      jailworker.command.info.jail.*: true
+      jailworker.command.info.prisoner: true
+      jailworker.command.info.punishment-blocks: true
+    default: op
+  jailworker.command.info.jail.*:
+    default: false
+  jailworker.command.info.prisoner:
+    default: true
+  jailworker.command.info.punishment-blocks:
+    default: true
+  jailworker.command.goto.*:
+    default: true
   jailworker.bypass.*:
     description: Give ability to bypass all limits.
     children:
