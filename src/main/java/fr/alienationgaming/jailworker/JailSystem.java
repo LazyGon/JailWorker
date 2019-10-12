@@ -188,7 +188,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
         ;
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOWEST)
     private void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Block broken = event.getBlock();
