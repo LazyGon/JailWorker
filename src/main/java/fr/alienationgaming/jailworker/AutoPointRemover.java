@@ -30,32 +30,34 @@ public class AutoPointRemover implements Listener {
         @Override
         public void run() {
             Prisoners.getPrisoners().forEach(prisoner -> {
-                if (prisoner.isOnline()) {
-                    Player player = prisoner.getPlayer();
-                    if (!isAfk(player)) {
-                        int firstPunishmentPoint = Prisoners.getPunishmentPoint(player);
-                        int punishmentPoint = Prisoners.getPunishmentPoint(player);
-                        PunishmentPointChangeEvent changeEvent = new PunishmentPointChangeEvent(player, punishmentPoint, punishmentPoint - 1);
-                        Bukkit.getPluginManager().callEvent(changeEvent);
-                        punishmentPoint = changeEvent.getNewPunishmentPoint();
-                        Prisoners.setPunishmentPoint(player, punishmentPoint);
+                if (!prisoner.isOnline()) {
+                    return;
+                }
+                Player player = prisoner.getPlayer();
+                if (!isAfk(player)) {
+                    int firstPunishmentPoint = Prisoners.getPunishmentPoint(player);
+                    int punishmentPoint = Prisoners.getPunishmentPoint(player);
+                    PunishmentPointChangeEvent changeEvent = new PunishmentPointChangeEvent(player, punishmentPoint,
+                            punishmentPoint - 1);
+                    Bukkit.getPluginManager().callEvent(changeEvent);
+                    punishmentPoint = changeEvent.getNewPunishmentPoint();
+                    Prisoners.setPunishmentPoint(player, punishmentPoint);
 
-                        if (Prisoners.getPunishmentPoint(player) <= 0) {
-                            PlayerFreedEvent freedEvent = new PlayerFreedEvent(player);
-                            Bukkit.getPluginManager().callEvent(freedEvent);
-                            if (freedEvent.isCancelled()) {
-                                Prisoners.setPunishmentPoint(player, firstPunishmentPoint);
-                                return;
-                            }
-
-                            Bukkit.getOnlinePlayers().forEach(onlinePlayer -> Messages.sendMessage(onlinePlayer,
-                                    "in-jail.broadcast-finish-work", Messages.placeholder("%player%", player.getName())));
-                            Prisoners.freePlayer(player);
+                    if (Prisoners.getPunishmentPoint(player) > 0) {
+                        PlayerFreedEvent freedEvent = new PlayerFreedEvent(player);
+                        Bukkit.getPluginManager().callEvent(freedEvent);
+                        if (freedEvent.isCancelled()) {
+                            Prisoners.setPunishmentPoint(player, firstPunishmentPoint);
+                            return;
                         }
-                    } else if (!isAfkWarnFinished.getOrDefault(player, false)) {
-                        isAfkWarnFinished.put(player, true);
-                        Messages.sendMessage(player, "in-jail.you-are-now-afk");
+
+                        Bukkit.getOnlinePlayers().forEach(onlinePlayer -> Messages.sendMessage(onlinePlayer,
+                                "in-jail.broadcast-finish-work", Messages.placeholder("%player%", player.getName())));
+                        Prisoners.freePlayer(player);
                     }
+                } else if (!isAfkWarnFinished.getOrDefault(player, false)) {
+                    isAfkWarnFinished.put(player, true);
+                    Messages.sendMessage(player, "in-jail.you-are-now-afk");
                 }
             });
         }
