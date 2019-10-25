@@ -43,7 +43,7 @@ public class AutoPointRemover implements Listener {
                     punishmentPoint = changeEvent.getNewPunishmentPoint();
                     Prisoners.setPunishmentPoint(player, punishmentPoint);
 
-                    if (Prisoners.getPunishmentPoint(player) > 0) {
+                    if (Prisoners.getPunishmentPoint(player) <= 0) {
                         PlayerFreedEvent freedEvent = new PlayerFreedEvent(player);
                         Bukkit.getPluginManager().callEvent(freedEvent);
                         if (freedEvent.isCancelled()) {

@@ -95,7 +95,8 @@ public final class ConfigUpdater {
             }
             
             if (oldVersion.equals("3.3.4")) {
-                oldVersion = "3.3.5";
+                // 3.3.5 was not released.
+                oldVersion = "3.3.6";
                 Config.get().set("plugin.version", oldVersion);
             }
 
