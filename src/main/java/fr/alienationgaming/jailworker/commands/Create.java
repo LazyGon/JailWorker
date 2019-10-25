@@ -215,7 +215,7 @@ public class Create extends SubCommand {
             return false;
         }
 
-        if (args.length < 5) {
+        if (args.length < 2) {
             Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
             return false;
         }
@@ -237,18 +237,23 @@ public class Create extends SubCommand {
             return false;
         }
 
-        int maxBlocks, blockInterval;
+        int maxBlocks = Config.getDefaultMaxBlocks();
+        int blockInterval = Config.getDefaultBlockInterval();
 
-        try {
-            maxBlocks = Integer.parseInt(args[2]);
-        } catch (NumberFormatException e) {
-            maxBlocks = Config.getDefaultMaxBlocks();
+        if (args.length >= 3) {
+            try {
+                maxBlocks = Integer.parseInt(args[2]);
+            } catch (NumberFormatException e) {
+                maxBlocks = Config.getDefaultMaxBlocks();
+            }
         }
 
-        try {
-            blockInterval = Integer.parseInt(args[3]);
-        } catch (NumberFormatException e) {
-            blockInterval = Config.getDefaultBlockInterval();
+        if (args.length >= 4) {
+            try {
+                blockInterval = Integer.parseInt(args[3]);
+            } catch (NumberFormatException e) {
+                blockInterval = Config.getDefaultBlockInterval();
+            }
         }
 
         Set<Material> punishmentBlocks = new HashSet<>();
