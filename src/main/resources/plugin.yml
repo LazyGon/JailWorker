@@ -7,7 +7,6 @@ commands:
   jailworker:
     description: Base command of this plugin.
     aliases: ["jail", "jw"]
-
 permissions:
   jailworker.*:
     description: Gives access to everything.
@@ -37,10 +36,13 @@ permissions:
   jailworker.command.info.*:
     description: Give access to all info arguments.
     children:
+      jailworker.command.info: true
       jailworker.command.info.jail.*: true
       jailworker.command.info.prisoner: true
       jailworker.command.info.punishment-blocks: true
     default: op
+  jailworker.command.info:
+    default: true
   jailworker.command.info.jail.*:
     default: false
   jailworker.command.info.prisoner:

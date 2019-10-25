@@ -114,6 +114,7 @@ public class Info extends SubCommand {
         } else if (args[1].equalsIgnoreCase("prisoner")) {
 
             if (!sender.hasPermission(getPermissionNode() + ".prisoner")) {
+                sender.sendMessage(getPermissionNode() + ".prisoner");
                 Messages.sendMessage(sender, "command.general.error.no-permission");
                 return false;
             }
