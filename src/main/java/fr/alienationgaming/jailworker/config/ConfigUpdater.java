@@ -97,8 +97,8 @@ public final class ConfigUpdater {
             }
             
             if (oldVersion.equals("3.3.4")) {
-                // 3.3.5, 3.3.6 was not released.
-                oldVersion = "3.3.7";
+                // 3.3.5, 3.3.6, 3.3.7 were not released.
+                oldVersion = "3.3.8";
                 Config.get().set("plugin.version", oldVersion);
                 Map<String, String> localeMessageMap = new HashMap<String, String>() {
                     private static final long serialVersionUID = 1L;
