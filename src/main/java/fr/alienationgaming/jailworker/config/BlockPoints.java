@@ -128,6 +128,7 @@ public final class BlockPoints {
         return jailConfig.getConfig();
     }
 
+    @SuppressWarnings("deprecation")
     private static boolean isBuildingBlocks(Material material) {
         if (getCreativeModeTab == null || name == null) {
             return false;
@@ -139,10 +140,16 @@ public final class BlockPoints {
             if (creativeModeTabInvokeObj == null) {
                 return false;
             }
+            boolean accessChanged = false;
             if (!name.isAccessible()) {
+                accessChanged = true;
                 name.setAccessible(true);
             }
-            return ((String) name.get(creativeModeTabInvokeObj)).equals("buildingBlocks");
+            boolean matche = ((String) name.get(creativeModeTabInvokeObj)).equals("buildingBlocks");
+            if (accessChanged) {
+                name.setAccessible(false);
+            }
+            return matche;
         } catch (IllegalAccessException | InvocationTargetException ignored) {
             return false;
         }
