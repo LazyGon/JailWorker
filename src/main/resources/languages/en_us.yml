@@ -12,7 +12,7 @@ command:
   general:
     info:
       line: "--------------------"
-      usage: "Usage: %usage%"
+      usage: "&9Usage: %usage%"
     error:
       not-enough-arguments: "&cNot enough arguments."
       no-permission: "&cYou do not have permission."

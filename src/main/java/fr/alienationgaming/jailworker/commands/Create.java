@@ -317,6 +317,6 @@ public class Create extends SubCommand {
 
     @Override
     String getUsage() {
-        return "/jailworker create <jail-name> <max-punishment-block> <punishment-block-interval> <punishment-bock-1> [punishment-bock-2]...";
+        return "/jailworker create <jail-name> [max-punishment-block] [punishment-block-interval] [punishment-bock-1] [punishment-bock-2]...";
     }
 }
