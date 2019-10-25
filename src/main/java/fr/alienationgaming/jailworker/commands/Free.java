@@ -32,6 +32,7 @@ public class Free extends SubCommand {
 
         if (args.length == 1) {
             Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
+            Messages.sendMessage(sender, "command.general.info.usage", Messages.placeholder("%usage%", getUsage()));
             return false;
         }
 

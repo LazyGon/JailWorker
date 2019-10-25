@@ -13,6 +13,7 @@ command:
   general:
     info:
       line: "--------------------"
+      usage: "使用法: %usage%"
     error:
       not-enough-arguments: "&c引数が足りません。"
       no-permission: "&c権限がありません。"

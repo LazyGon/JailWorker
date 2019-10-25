@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
+import java.util.Map;
 
 import fr.alienationgaming.jailworker.JailWorker;
 
@@ -95,9 +97,17 @@ public final class ConfigUpdater {
             }
             
             if (oldVersion.equals("3.3.4")) {
-                // 3.3.5 was not released.
-                oldVersion = "3.3.6";
+                // 3.3.5, 3.3.6 was not released.
+                oldVersion = "3.3.7";
                 Config.get().set("plugin.version", oldVersion);
+                Map<String, String> localeMessageMap = new HashMap<String, String>() {
+                    private static final long serialVersionUID = 1L;
+                    {
+                        put("en_us", "Usage: %usage%");
+                        put("ja_jp", "使用法: %usage%");
+                    }
+                };
+                Messages.addKey("command.general.info.usage", localeMessageMap);
             }
 
             plugin.getLogger()

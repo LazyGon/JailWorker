@@ -100,6 +100,7 @@ public class Edit extends SubCommand {
     boolean runCommand(CommandSender sender, String[] args) {
         if (args.length < 3) {
             Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
+            Messages.sendMessage(sender, "command.general.info.usage", Messages.placeholder("%usage%", getUsage()));
             return false;
         }
         String jailName = args[1];
@@ -118,6 +119,7 @@ public class Edit extends SubCommand {
         case "punishmentblock":
             if (args.length < 5) {
                 Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
+            Messages.sendMessage(sender, "command.general.info.usage", Messages.placeholder("%usage%", getUsage()));
                 return false;
             }
 
@@ -155,6 +157,7 @@ public class Edit extends SubCommand {
             int amountOrInterval;
             if (args.length == 3) {
                 Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
+            Messages.sendMessage(sender, "command.general.info.usage", Messages.placeholder("%usage%", getUsage()));
                 return false;
             }
 

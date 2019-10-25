@@ -29,6 +29,7 @@ public class Give extends SubCommand {
 
         if (args.length < 3) {
             Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
+            Messages.sendMessage(sender, "command.general.info.usage", Messages.placeholder("%usage%", getUsage()));
             return false;
         }
 

@@ -12,6 +12,7 @@ command:
   general:
     info:
       line: "--------------------"
+      usage: "Usage: %usage%"
     error:
       not-enough-arguments: "&cPas assez d'arguments."
       no-permission: "&cVous n'avez pas la permission."

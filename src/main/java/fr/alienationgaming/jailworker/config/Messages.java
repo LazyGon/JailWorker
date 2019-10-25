@@ -1,9 +1,12 @@
 package fr.alienationgaming.jailworker.config;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -208,5 +211,44 @@ public final class Messages {
         } else {
             return Config.getDefaultLanguage();
         }
+    }
+
+    private static List<String> getInstalledLanguages() {
+        List<String> result = new ArrayList<>();
+        Path languageFolder = plugin.getDataFolder().toPath().resolve("languages");
+        if (!Files.exists(languageFolder)) {
+            return result;
+        }
+
+        for (File yml : languageFolder.toFile().listFiles()) {
+            String name = yml.getName();
+            if (!name.endsWith(".yml")) {
+                continue;
+            }
+
+            result.add(name.substring(0, name.length() - 4));
+        }
+
+        return result;
+    }
+
+    private static void addLanguageKey(String locale, String key, String message) {
+        Path languageFile = plugin.getDataFolder().toPath().resolve("languages").resolve(locale + ".yml");
+        if (!Files.exists(languageFile)) {
+            return;
+        }
+
+        CustomConfig languageConfig = new CustomConfig(languageFile.toFile());
+        if (!languageConfig.getConfig().isString(key)) {
+            languageConfig.getConfig().set(key, message);
+            languageConfig.saveConfig();
+        }
+    }
+
+    static void addKey(String key, Map<String, String> localeMessageMap) {
+        Messages.getInstalledLanguages().forEach(language -> {
+            String message = localeMessageMap.getOrDefault(language, "en_us");
+            Messages.addLanguageKey(language, "command.general.info.usage", message);
+        });
     }
 }

@@ -217,6 +217,7 @@ public class Create extends SubCommand {
 
         if (args.length < 2) {
             Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
+            Messages.sendMessage(sender, "command.general.info.usage", Messages.placeholder("%usage%", getUsage()));
             return false;
         }
 

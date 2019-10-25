@@ -30,6 +30,7 @@ public class Put extends SubCommand {
     boolean runCommand(CommandSender sender, String[] args) {
         if (args.length < 5) {
             Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
+            Messages.sendMessage(sender, "command.general.info.usage", Messages.placeholder("%usage%", getUsage()));
             return false;
         }
 

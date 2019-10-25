@@ -20,6 +20,7 @@ public class AllowedCommand extends SubCommand {
     boolean runCommand(CommandSender sender, String[] args) {
         if (args.length < 3) {
             Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
+            Messages.sendMessage(sender, "command.general.info.usage", Messages.placeholder("%usage%", getUsage()));
             return false;
         }
 
@@ -47,6 +48,7 @@ public class AllowedCommand extends SubCommand {
 
         if (args.length == 3) {
             Messages.sendMessage(sender, "command.general.error.not-enough-arguments");
+            Messages.sendMessage(sender, "command.general.info.usage", Messages.placeholder("%usage%", getUsage()));
             return false;
         }
 
