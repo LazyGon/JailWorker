@@ -110,6 +110,11 @@ public final class ConfigUpdater {
                 Messages.addKey("command.general.info.usage", localeMessageMap);
             }
 
+            if (oldVersion.equals("3.3.8")) {
+                oldVersion = "3.3.9";
+                Config.get().set("plugin.version", oldVersion);
+            }
+
             plugin.getLogger()
                     .info("Go to http://dev.bukkit.org/bukkit-plugins/jail-worker/ for news and reporting bugs");
             Config.save();
