@@ -59,7 +59,12 @@ public class JailSystem extends BukkitRunnable implements Listener {
         @EventHandler(priority = EventPriority.LOWEST)
         public void onChat(LunaChatChannelChatEvent event) {
             ChannelPlayer player = event.getPlayer();
-            if (Config.canPrisonerSpeak() || !Prisoners.isJailed(player.getPlayer())) {
+            @SuppressWarnings("deprecation")
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(player.getName());
+            if (!offlinePlayer.hasPlayedBefore()) {
+                return;
+            }
+            if (Config.canPrisonerSpeak() || !Prisoners.isJailed(offlinePlayer)) {
                 return;
             }
             event.setCancelled(true);
