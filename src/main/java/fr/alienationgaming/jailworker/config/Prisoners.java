@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
 
 public final class Prisoners {
@@ -89,11 +89,10 @@ public final class Prisoners {
             throw new IllegalArgumentException("The player is null or not jailed");
         }
 
-        ItemStack[] contents = player.getInventory().getContents();
+        PlayerInventory inv = player.getInventory();
         for (int slot = 0; slot < 40; slot++) {
-            contents[slot] = get().getItemStack(player.getUniqueId().toString() + ".inventory." + slot);
+            inv.setItem(slot, get().getItemStack(player.getUniqueId().toString() + ".inventory." + slot));
         }
-        player.getInventory().getContents()[7] = new ItemStack(Material.STONE, 64);
     }
 
     /**
