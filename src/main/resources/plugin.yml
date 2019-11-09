@@ -2,7 +2,6 @@ name: ${project.artifactId}
 version: ${project.version}
 main: fr.alienationgaming.jailworker.JailWorker
 softdepends: [LunaChat, WorldEdit]
-api-version: "1.12"
 commands:
   jailworker:
     description: Base command of this plugin.
