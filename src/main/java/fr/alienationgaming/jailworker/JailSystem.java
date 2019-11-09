@@ -10,8 +10,8 @@ import java.util.Random;
 import java.util.Set;
 
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
-import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelMessageEvent;
+import com.github.ucchyocean.lc.event.LunaChatPreChatEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -57,7 +57,7 @@ public class JailSystem extends BukkitRunnable implements Listener {
         }
 
         @EventHandler(priority = EventPriority.LOWEST)
-        public void onChat(LunaChatChannelChatEvent event) {
+        public void onChat(LunaChatPreChatEvent event) {
             ChannelPlayer player = event.getPlayer();
             @SuppressWarnings("deprecation")
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(player.getName());
