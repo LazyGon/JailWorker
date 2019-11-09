@@ -421,6 +421,7 @@ public final class Prisoners {
         setPreviousGameMode(player);
 
         player.teleport(JailConfig.getSpawnLocation(jailName));
+        player.setGameMode(GameMode.SURVIVAL);
         player.getInventory().clear();
         player.getEquipment().clear();
     }
